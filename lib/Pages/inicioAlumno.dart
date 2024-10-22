@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/Pages/patronAlumno.dart';
 
 class InicioAlumno extends StatelessWidget {
   @override
@@ -20,20 +21,26 @@ class InicioAlumno extends StatelessWidget {
               ),
             ),
             SizedBox(height: 30),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                padding: EdgeInsets.all(20),
-                children: [
-                  _buildCategoryButton('assets/images/tarerio.png', 'Superheroes'),
-                  _buildCategoryButton('assets/images/tarerio.png', 'Dinosaurios'),
-                  _buildCategoryButton('assets/images/tarerio.png', 'Formas'),
-                  _buildCategoryButton('assets/images/tarerio.png', 'Insectos'),
-                ],
+            Expanded(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: GridView.count(
+                    primary: false,
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    padding: EdgeInsets.all(20),
+                    children: [
+                      _buildCategoryButton(context, 'assets/images/superheroes/superheroes0.png', 'Superheroes'),
+                      _buildCategoryButton(context, 'assets/images/dinosaurios/dinosaurios0.png', 'Dinosaurios'),
+                      _buildCategoryButton(context, 'assets/images/formas/formas0.png', 'Formas'),
+                      _buildCategoryButton(context, 'assets/images/insectos/insectos0.png', 'Insectos'),
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
@@ -42,13 +49,18 @@ class InicioAlumno extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryButton(String imagePath, String label) {
+  Widget _buildCategoryButton(BuildContext context, String imagePath, String label) {
     return FractionallySizedBox(
       widthFactor: 1,
       heightFactor: 1,
       child: ElevatedButton(
         onPressed: () {
-          // Define the action for each button here
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PatronAlumno(label: label),
+            ),
+          );
         },
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(

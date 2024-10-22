@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        '/inicioAlumno': (context) => InicioAlumno(), // Define la ruta
+        '/inicioAlumno': (context) => InicioAlumno(), // Define la rutas
       },
     );
   }
