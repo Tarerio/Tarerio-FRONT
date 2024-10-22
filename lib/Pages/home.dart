@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
+
   const Home({super.key});
 
   @override
@@ -15,6 +16,7 @@ class Home extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 // Action when the "Tutores y Administradores" button is pressed
+                Navigator.pushNamed(context, '/inicioAdministrador');
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), // Reduce vertical padding

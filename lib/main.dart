@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/home.dart';
 import 'package:tarerio/Pages/inicioAlumno.dart'; // Importa la página InicioAlumno
+import 'package:tarerio/Pages/inicioAdministrador.dart'; // Importa la página InicioAlumno
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        '/inicioAlumno': (context) => const InicioAlumno(), // Define la rutas
+        '/inicioAlumno': (context) => InicioAlumno(), // Define la rutas
+        '/inicioAdministrador' : (context) => InicioAdministrador(),
       },
     );
   }
