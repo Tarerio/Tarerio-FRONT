@@ -2,27 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/patronAlumno.dart';
 
 class InicioAlumno extends StatelessWidget {
+  const InicioAlumno({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        title: Text('Inicio de sesión'),
+        title: const Text('Inicio de sesión'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Seleccione una categoría:',
               style: TextStyle(
                 fontSize: 35,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: MediaQuery.removePadding(
                   context: context,
@@ -32,7 +34,7 @@ class InicioAlumno extends StatelessWidget {
                     crossAxisCount: 2,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     children: [
                       _buildCategoryButton(context, 'assets/images/superheroes/superheroes0.png', 'Superheroes'),
                       _buildCategoryButton(context, 'assets/images/dinosaurios/dinosaurios0.png', 'Dinosaurios'),
@@ -66,7 +68,7 @@ class InicioAlumno extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -82,10 +84,10 @@ class InicioAlumno extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(imagePath, height: imageSize),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   label,
-                  style: TextStyle(fontSize: 15),
+                  style: const TextStyle(fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
               ],
