@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:tarerio/Models/inicioSesionAPI.dart';
 import 'package:tarerio/Pages/principalAlumno.dart';
-
 
 class PatronAlumno extends StatefulWidget {
   final String label;
 
-  PatronAlumno({required this.label});
+  const PatronAlumno({super.key, required this.label});
 
   @override
   _PatronAlumnoState createState() => _PatronAlumnoState();
@@ -15,54 +13,48 @@ class PatronAlumno extends StatefulWidget {
 
 class _PatronAlumnoState extends State<PatronAlumno> {
   List<String> selectedImages = [];
-  List<String> selectedCodes = []; // New array to store the strings
-  List<int?> selectedIndices = List<int?>.filled(4, null); // Track selected index for each column
-  int currentColumn = 0; // Track the current column allowed for selection
+  List<String> selectedCodes = [];
+  List<int?> selectedIndices = List<int?>.filled(4, null);
+  int currentColumn = 0;
+
+  final InicioSesionAPI _api = InicioSesionAPI();
 
   void _addImage(String imagePath, int columnIndex) {
     setState(() {
       selectedImages.add(imagePath);
-      selectedIndices[columnIndex] = columnIndex; // Store the selected index
+      selectedIndices[columnIndex] = columnIndex;
 
-      // Extract the first letter of the category and the number of the image
       String code = '${widget.label[0].toUpperCase()}${imagePath.replaceAll(RegExp(r'[^0-9]'), '')}';
-      selectedCodes.add(code); // Add the code to the array
+      selectedCodes.add(code);
 
-      currentColumn++; // Move to the next column
+      currentColumn++;
     });
   }
 
   void _refresh() {
     setState(() {
       selectedImages.clear();
-      selectedCodes.clear(); // Clear the codes array
-      selectedIndices = List<int?>.filled(4, null); // Reset the selected indices
-      currentColumn = 0; // Reset to the first column
+      selectedCodes.clear();
+      selectedIndices = List<int?>.filled(4, null);
+      currentColumn = 0;
     });
   }
 
   void _confirmSelection() async {
     if (selectedCodes.length == 4) {
       String concatenatedCodes = selectedCodes.join();
-      print(concatenatedCodes); // Print the codes array to the console
+      print(concatenatedCodes);
 
-      // Send a request to the API
-      String url = 'http://10.0.2.2:3000/usuarios/inicioSesionAlumno?patron=$concatenatedCodes';
       try {
-        final response = await http.get(Uri.parse(url));
-        if (response.statusCode == 200) {
-          var jsonResponse = jsonDecode(response.body);
-          String nickname = jsonResponse['usuario']['nickname'];
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PrincipalAlumno(nickname: nickname)),
-          );
-        } else {
-          print('Request failed with status: ${response.statusCode}');
-          _showErrorModal('Error al iniciar sesión', 'No se encontró un usuario con el patrón ingresado.');
-        }
+        var jsonResponse = await _api.inicioSesionAlumno(concatenatedCodes);
+        String nickname = jsonResponse['usuario']['nickname'];
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PrincipalAlumno(nickname: nickname)),
+        );
       } catch (e) {
         print('Request failed with error: $e');
+        _showErrorModal('Error al iniciar sesión', 'No se encontró un usuario con el patrón ingresado.');
       }
     } else {
       _showErrorModal('Error al mandar patrón', 'Debes escoger 4 imágenes para continuar.');
@@ -74,15 +66,15 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: Icon(Icons.error, size: 50, color: Colors.red),
-          title: Text(title, style: TextStyle(fontSize: 30, color: Colors.red)),
-          content: Text(content, style: TextStyle(fontSize: 20)),
+          icon: const Icon(Icons.error, size: 50, color: Colors.red),
+          title: Text(title, style: const TextStyle(fontSize: 30, color: Colors.red)),
+          content: Text(content, style: const TextStyle(fontSize: 20)),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('De acuerdo', style: TextStyle(fontSize: 20)),
+              child: const Text('De acuerdo', style: TextStyle(fontSize: 20)),
             ),
           ],
         );
@@ -112,11 +104,11 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 shadowColor: Colors.black,
                 elevation: 10,
               ),
-              child: Icon(Icons.refresh, size: 30),
+              child: const Icon(Icons.refresh, size: 30),
             ),
           ),
         ],
@@ -130,15 +122,15 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                 heightFactor: MediaQuery.of(context).size.height * 0.8,
                 widthFactor: MediaQuery.of(context).size.width * 0.8,
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
                   ),
                   itemCount: 16,
                   itemBuilder: (context, index) {
-                    int imageIndex = index ~/ 4; // Calculate image index
-                    int columnIndex = index % 4; // Calculate column index
+                    int imageIndex = index ~/ 4;
+                    int columnIndex = index % 4;
                     String imagePath = images[imageIndex];
                     bool isSelected = selectedIndices[columnIndex] != null;
                     bool isCurrentColumn = columnIndex == currentColumn;
@@ -149,10 +141,10 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         shadowColor: Colors.black,
                         elevation: 10,
-                        backgroundColor: isSelected ? Colors.grey : null, // Highlight selected button
+                        backgroundColor: isSelected ? Colors.grey : null,
                       ),
                       child: Image.asset(imagePath),
                     );
@@ -183,11 +175,11 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       shadowColor: Colors.black,
                       elevation: 10,
                     ),
-                    child: Icon(Icons.thumb_up, size: 30),
+                    child: const Icon(Icons.thumb_up, size: 30),
                   ),
                 ],
               ),

@@ -4,19 +4,21 @@ import 'package:tarerio/Pages/inicioAlumno.dart'; // Importa la página InicioAl
 import 'package:tarerio/Pages/inicioAdministrador.dart'; // Importa la página InicioAlumno
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
+      home: const Home(),
       debugShowCheckedModeBanner: false, // Quita el banner de debug
       theme: ThemeData(
         primarySwatch: Colors.cyan, // Cambia el color principal aquí
         scaffoldBackgroundColor: Colors.white, // Cambia el color de fondo aquí
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           color: Colors.white, // Cambia el color del AppBar aquí
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(

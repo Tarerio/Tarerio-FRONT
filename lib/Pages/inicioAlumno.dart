@@ -24,7 +24,7 @@ class InicioAlumno extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: MediaQuery.removePadding(
                   context: context,
