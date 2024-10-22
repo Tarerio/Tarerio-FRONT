@@ -4,7 +4,7 @@ import 'home.dart'; //
 class PrincipalAlumno extends StatelessWidget {
   final String nickname;
 
-  PrincipalAlumno({required this.nickname});
+  const PrincipalAlumno({super.key, required this.nickname});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class PrincipalAlumno extends StatelessWidget {
       body: Center(
         child: Text(
           'Bienvenido, $nickname!',
-          style: TextStyle(fontSize: 40),
+          style: const TextStyle(fontSize: 40),
         ),
       ),
     );
@@ -31,25 +31,25 @@ class PrincipalAlumno extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: Icon(Icons.person, size: 50),
-          title: Text('Confirmación', style: TextStyle(fontSize: 40)),
-          content: Text('¿Eres $nickname?', style: TextStyle(fontSize: 30)),
+          icon: const Icon(Icons.person, size: 50),
+          title: const Text('Confirmación', style: TextStyle(fontSize: 40)),
+          content: Text('¿Eres $nickname?', style: const TextStyle(fontSize: 30)),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Sí', style: TextStyle(fontSize: 30)),
+              child: const Text('Sí', style: TextStyle(fontSize: 30)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => Home()), // Navigate back to PatronAlumno
+                  MaterialPageRoute(builder: (context) => const Home()), // Navigate back to PatronAlumno
                 );
               },
-              child: Text('No', style: TextStyle(fontSize: 30)),
+              child: const Text('No', style: TextStyle(fontSize: 30)),
             ),
           ],
         );
