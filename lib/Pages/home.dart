@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
+
+  const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,12 +12,21 @@ class Home extends StatelessWidget {
         actions: [
           Container(
             height: 200,
-            margin: EdgeInsets.all(8.0), // Adds margin around the button
+            margin: const EdgeInsets.all(8.0), // Adds margin around the button
             child: ElevatedButton(
               onPressed: () {
                 // Action when the "Tutores y Administradores" button is pressed
+                Navigator.pushNamed(context, '/inicioAdministrador');
               },
-              child: Column(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), // Reduce vertical padding
+                textStyle: const TextStyle(fontSize: 18),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Adds borderRadius
+                ),
+                elevation: 5, // Adds shadow
+              ),
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.person),
@@ -29,14 +41,6 @@ class Home extends StatelessWidget {
                   ),
                 ],
               ),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10), // Reduce vertical padding
-                textStyle: TextStyle(fontSize: 18),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), // Adds borderRadius
-                ),
-                elevation: 5, // Adds shadow
-              ),
             ),
           ),
         ],
@@ -46,8 +50,8 @@ class Home extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('assets/images/tarerio.png', height: 200), // Added image
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Inicia Sesión:',
               style: TextStyle(
                 fontSize: 40,
@@ -55,15 +59,23 @@ class Home extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 60), // Increases space above the button
+            const SizedBox(height: 60), // Increases space above the button
             Container(
               height: 200,
-              margin: EdgeInsets.all(8.0), // Adds margin around the button
+              margin: const EdgeInsets.all(8.0), // Adds margin around the button
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/inicioAlumno'); // Navega a InicioAlumno
                 },
-                child: Column(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), // Reduce vertical padding
+                  textStyle: const TextStyle(fontSize: 38),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10), // Adds borderRadius
+                  ),
+                  elevation: 5, // Adds shadow
+                ),
+                child: const Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -78,14 +90,6 @@ class Home extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10), // Reduce vertical padding
-                  textStyle: TextStyle(fontSize: 38),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10), // Adds borderRadius
-                  ),
-                  elevation: 5, // Adds shadow
                 ),
               ),
             ),
