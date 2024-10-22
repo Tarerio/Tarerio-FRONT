@@ -46,6 +46,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^4.0.0
+  http: ^0.13.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -62,6 +63,24 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/tarerio.png
+    - assets/images/superheroes/superheroes0.png
+    - assets/images/superheroes/superheroes1.png
+    - assets/images/superheroes/superheroes2.png
+    - assets/images/superheroes/superheroes3.png
+    - assets/images/dinosaurios/dinosaurios0.png
+    - assets/images/dinosaurios/dinosaurios1.png
+    - assets/images/dinosaurios/dinosaurios2.png
+    - assets/images/dinosaurios/dinosaurios3.png
+    - assets/images/formas/formas0.png
+    - assets/images/formas/formas1.png
+    - assets/images/formas/formas2.png
+    - assets/images/formas/formas3.png
+    - assets/images/insectos/insectos0.png
+    - assets/images/insectos/insectos1.png
+    - assets/images/insectos/insectos2.png
+    - assets/images/insectos/insectos3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
