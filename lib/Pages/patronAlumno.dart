@@ -47,7 +47,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
 
       try {
         var jsonResponse = await _api.inicioSesionAlumno(concatenatedCodes);
-        String nickname = jsonResponse['usuario']['nickname'];
+        String nickname = jsonResponse['alumno']['nickname'];
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => PrincipalAlumno(nickname: nickname)),
