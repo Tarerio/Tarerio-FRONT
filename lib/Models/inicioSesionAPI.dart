@@ -5,7 +5,7 @@ class InicioSesionAPI {
   static const String _baseUrl = 'http://10.0.2.2:3000';
 
   Future<Map<String, dynamic>> inicioSesionAlumno(String patron) async {
-    String url = '$_baseUrl/usuarios/inicioSesionAlumno?patron=$patron';
+    String url = '$_baseUrl/alumnos/inicioSesionAlumno?patron=$patron';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -16,7 +16,7 @@ class InicioSesionAPI {
 
   // Una petición POST para ver si un usuario se encuentra en la tabla administrador
   Future<Map<String, dynamic>> inicioSesionAdministrador(String nickname, String contrasenia) async {
-    String url = '$_baseUrl/usuarios/inicioSesionAdministrador';
+    String url = '$_baseUrl/administradores/inicioSesionAdministrador';
     final response = await http.post(Uri.parse(url), body: {
       'nickname': nickname,
       'contrasenia': contrasenia,
@@ -30,7 +30,7 @@ class InicioSesionAPI {
 
   // Una petición POST para ver si un usuario se encuentra en la tabla profesor.
   Future<Map<String, dynamic>> inicioSesionProfesor(String nickname, String contrasenia) async {
-    String url = '$_baseUrl/usuarios/inicioSesionProfesor';
+    String url = '$_baseUrl/profesores/inicioSesionProfesor';
     final response = await http.post(Uri.parse(url), body: {
       'nickname': nickname,
       'contrasenia': contrasenia,
