@@ -10,11 +10,11 @@ class PrincipalAdministrador extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bienvenido, administrador'),
+        title: Text('Bienvenido, Administrador'),
       ),
       body: Center(
         child: Text(
-          'Bienvenido, administrador!',
+          'Bienvenido, Administrador!',
           style: const TextStyle(fontSize: 40),
         ),
       ),

@@ -28,7 +28,7 @@ class InicioSesionAPI {
     }
   }
 
-  // Una petición POST para ver si un usuario se encuentra en la tabla profesor
+  // Una petición POST para ver si un usuario se encuentra en la tabla profesor.
   Future<Map<String, dynamic>> inicioSesionProfesor(String nickname, String contrasenia) async {
     String url = '$_baseUrl/usuarios/inicioSesionProfesor';
     final response = await http.post(Uri.parse(url), body: {
