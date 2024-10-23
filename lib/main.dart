@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/home.dart';
 import 'package:tarerio/Pages/inicioAlumno.dart'; // Importa la página InicioAlumno
-import 'package:tarerio/Pages/inicioAdministrador.dart'; // Importa la página InicioAlumno
+import 'package:tarerio/Pages/inicioAdministradorProfesor.dart'; // Importa la página InicioAlumno
 
 void main() {
   runApp(const MyApp());

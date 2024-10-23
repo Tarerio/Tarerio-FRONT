@@ -13,4 +13,32 @@ class InicioSesionAPI {
       throw Exception('Failed to load data');
     }
   }
+
+  // Una petición POST para ver si un usuario se encuentra en la tabla administrador
+  Future<Map<String, dynamic>> inicioSesionAdministrador(String nickname, String contrasenia) async {
+    String url = '$_baseUrl/usuarios/inicioSesionAdministrador';
+    final response = await http.post(Uri.parse(url), body: {
+      'nickname': nickname,
+      'contrasenia': contrasenia,
+    });
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  // Una petición POST para ver si un usuario se encuentra en la tabla profesor.
+  Future<Map<String, dynamic>> inicioSesionProfesor(String nickname, String contrasenia) async {
+    String url = '$_baseUrl/usuarios/inicioSesionProfesor';
+    final response = await http.post(Uri.parse(url), body: {
+      'nickname': nickname,
+      'contrasenia': contrasenia,
+    });
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
 }
