@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/Models/inicioSesionAPI.dart';
+import 'package:tarerio/API/inicioSesionAPI.dart';
 import 'package:tarerio/Pages/principalAlumno.dart';
 
 class PatronAlumno extends StatefulWidget {
