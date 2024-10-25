@@ -16,7 +16,8 @@ class PrincipalAlumno extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: Header(title: nickname, onAccessibilityPressed: () => {}, onCalendarPressed: () => {} , onLogoutPressed: () => {}), 
+
+      appBar: Header(title: nickname , onAccessibilityPressed: () => {}, onCalendarPressed: () => {} , onLogoutPressed: () => {}),
       body: Center(
         child: Text(
           'Bienvenido, $nickname!', 
