@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'home.dart'; //
 
+import '../Widgets/Header.dart';
+
 class PrincipalAlumno extends StatelessWidget {
   final String nickname;
 
@@ -14,12 +16,11 @@ class PrincipalAlumno extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bienvenido, $nickname'),
-      ),
+
+      appBar: Header(title: nickname , onAccessibilityPressed: () => {}, onCalendarPressed: () => {} , onLogoutPressed: () => {}),
       body: Center(
         child: Text(
-          'Bienvenido, $nickname!',
+          'Bienvenido, $nickname!', 
           style: const TextStyle(fontSize: 40),
         ),
       ),
