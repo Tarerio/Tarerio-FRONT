@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tarerio/Models/TareaAPI.dart';
+import 'package:tarerio/API/TareaJuegoAPI.dart';
 
-class CrearTarea extends StatefulWidget {
+class CrearTareaJuego extends StatefulWidget {
+  final int IdAdministrador;
+
+  CrearTareaJuego({required this.IdAdministrador});
+
   @override
-  _CrearTareaState createState() => _CrearTareaState();
+  _CrearTareaJuegoState createState() => _CrearTareaJuegoState();
 }
 
-class _CrearTareaState extends State<CrearTarea> {
+class _CrearTareaJuegoState extends State<CrearTareaJuego> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   String? _titulo;
@@ -37,7 +41,7 @@ class _CrearTareaState extends State<CrearTarea> {
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: const TimeOfDay(hour:0, minute: 0),  // Hora inicial predeterminada
+      initialTime: const TimeOfDay(hour:0, minute: 0),
     );
 
     if (pickedTime != null && pickedTime != _selectedTime) {
@@ -87,7 +91,7 @@ class _CrearTareaState extends State<CrearTarea> {
     }
 
     try {
-      var jsonResponse = await _api.crearTareaJuego(_titulo!, _descripcion!, _url!, _selectedDate!, _selectedTime!);
+      var jsonResponse = await _api.crearTareaJuego(_titulo!, _descripcion!, _url!, _selectedDate!, _selectedTime!, widget.IdAdministrador);
       print(jsonResponse);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -122,34 +126,49 @@ class _CrearTareaState extends State<CrearTarea> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Creando Tarea'),
+        title: const Text('Creando Tarea Juego'),
+        iconTheme: const IconThemeData(
+          color: Color(0xFF2EC4B6),
+          size: 48,
+        ),
+        titleTextStyle: const TextStyle(
+          color: Color(0xFF2EC4B6),
+          fontSize: 48,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(
+          left: 48.0,
+          top: 16.0,
+          right: 48.0,
+          bottom: 16.0,
+        ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              // Nombre de la actividad
               const Text(
                 'Nombre de la actividad',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color(0xFF2EC4B6), fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              TextField(
-                onChanged: (String value) {
-                  _setTitulo(value);
-                },
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Nombre de la actividad',
+              SizedBox(
+                width: 500.0,
+                child: TextField(
+                  onChanged: (String value) {
+                    _setTitulo(value);
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Nombre de la actividad',
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
-              // Descripción de la actividad
               const Text(
                 'Descripción de la actividad',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color(0xFF2EC4B6),fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               TextField(
@@ -163,7 +182,7 @@ class _CrearTareaState extends State<CrearTarea> {
               const SizedBox(height: 20),
               const Text(
                 'Fecha y Hora estimada de cierre',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color(0xFF2EC4B6),fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Column(
                 children: <Widget>[
@@ -171,13 +190,22 @@ class _CrearTareaState extends State<CrearTarea> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          _selectDate(context); // Llama al selector de fecha
+                          _selectDate(context);
                         },
-                        child: Text('Seleccionar fecha'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF2EC4B6),
+                        ),
+                        child: const SizedBox(
+                          width: 120,
+                          child: Text(
+                            'Seleccionar fecha',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                      SizedBox(width: 20), // Espacio entre el botón y el texto con icono
+                      SizedBox(width: 20),
                       Icon(Icons.calendar_today),
-                      SizedBox(width: 10), // Espacio entre el icono y el texto
+                      SizedBox(width: 10),
                       Text(
                         _selectedDate != null
                             ? DateFormat('dd-MM').format(_selectedDate!)
@@ -190,13 +218,22 @@ class _CrearTareaState extends State<CrearTarea> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          _selectTime(context); // Llama al selector de hora
+                          _selectTime(context);
                         },
-                        child: Text('Seleccionar hora'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF2EC4B6),
+                        ),
+                        child: const SizedBox(
+                          width: 120,
+                          child:Text(
+                            'Seleccionar hora',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        )
                       ),
-                      SizedBox(width: 20), // Espacio entre el botón y el texto con icono
+                      SizedBox(width: 20),
                       Icon(Icons.access_time),
-                      SizedBox(width: 10), // Espacio entre el icono y el texto
+                      SizedBox(width: 10),
                       Text(
                         _selectedTime != null
                             ? _formatTime(_selectedTime!)
@@ -208,10 +245,9 @@ class _CrearTareaState extends State<CrearTarea> {
                 ],
               ),
               const SizedBox(height: 20),
-              // Url del juego
               const Text(
                 'Url del juego/aplicación',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(color: Color(0xFF2EC4B6), fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               TextField(
@@ -222,7 +258,7 @@ class _CrearTareaState extends State<CrearTarea> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -230,7 +266,10 @@ class _CrearTareaState extends State<CrearTarea> {
                     onPressed: () {
                       _crearTarea(context);
                     },
-                    child: const Text('Crear Tarea'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF2EC4B6),
+                    ),
+                    child: const Text('Crear Tarea', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                 ],
               )

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class TareaAPI {
   static const String _baseUrl = 'http://10.0.2.2:3000';
 
-  Future<Map<String, dynamic>> crearTareaJuego(String titulo, String descripcion, String url, DateTime dueDate, TimeOfDay dueTime) async {
+  Future<Map<String, dynamic>?> crearTareaJuego(String titulo, String descripcion, String urlJuego, DateTime dueDate, TimeOfDay dueTime, int IdAdministrador) async {
     String url = '$_baseUrl/tareaJuego';
 
     final DateTime fullDueDateTime = DateTime(
@@ -22,8 +22,8 @@ class TareaAPI {
       "Titulo": titulo,
       "Descripcion": descripcion,
       "Fecha_estimada_cierre": formattedDueDate,
-      "Enlace": url,
-      "creatorId": 1 // El ID del creador (esto podría cambiar si es dinámico)
+      "Enlace": urlJuego,
+      "creatorId": IdAdministrador
     };
 
     final response = await http.post(
