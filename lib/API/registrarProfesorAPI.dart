@@ -1,18 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class RegistrarAlumnoAPI {
+class RegistrarProfesorAPI {
   static const String _baseUrl = 'http://localhost:3000';
 
-  Future<Map<String, dynamic>> registrarAlumno(String nickname, String patron, bool texto, bool imagenes, bool pictograma, bool video) async {
-    String url = '$_baseUrl/alumnos/crear';
-
-    var perfil = {'texto': texto, 'imagenes': imagenes, 'pictograma': pictograma, 'video': video};
+  Future<Map<String, dynamic>> registrarProfesor(String nickname, String patron) async {
+    String url = '$_baseUrl/profesores/crear';
 
     final Map<String, dynamic> data = {
       'nickname': nickname,
       'patron': patron,
-      'perfil': perfil,
     };
 
     final String jsonBody = json.encode(data);
@@ -25,6 +22,7 @@ class RegistrarAlumnoAPI {
       },
       body:  jsonBody,
     );
+    
     return json.decode(response.body);
   }
 }

@@ -1,32 +1,51 @@
 import 'package:flutter/material.dart';
-import 'RegistrarAlumno.dart';
+import 'registrarAlumno.dart';
 
 class PrincipalAdministrador extends StatelessWidget {
-  const PrincipalAdministrador({super.key});
+  
+  final List<String> listElements = ['Registrar Alumno', 'Registrar Profesor', 'Mi Perfil' ,'Ajustes'];
+  final List<String> listRoutes = ['/administrador/registrarAlumno', '/administrador/registrarProfesor', '/administrador/perfil' ,'administrador/ajustes'];
+  
+  PrincipalAdministrador({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bienvenido, Administrador'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.person_add),
-            onPressed: () {
-              // Navegar a la página de registro de alumno
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RegistrarAlumno()),
-              );
-            },
+        title: const Text('Bienvenido, Administrador'),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
           ),
-        ],
+        ),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Bienvenido, Administrador!',
-          style: const TextStyle(fontSize: 40),
+          style: TextStyle(fontSize: 40),
         ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Menú', style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+            for (var i = 0; i < listElements.length; i++)
+              ListTile(
+                title: Text(listElements[i]),
+                onTap: () {
+                  // Navegar a la página correspondiente
+                  Navigator.pushNamed(context, listRoutes[i]);
+                },
+              ),
+          ],
+        )
       ),
     );
   }
