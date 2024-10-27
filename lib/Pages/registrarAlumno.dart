@@ -27,7 +27,6 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
 
   // Controladores de texto para el nickname y la contraseña
   final TextEditingController _nicknameController = TextEditingController();
-  final TextEditingController _patronController = TextEditingController();
 
   //Variables para la imagen
   File? _image;
@@ -37,6 +36,18 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
   bool _imagenes = false;
   bool _pictograma = false;
   bool _video = false;
+
+  // Función para agregar una imagen al patrón
+  List<String> _selectedImages = [];
+  List<String> _selectedCodes = [];
+  List<Map<String, String>> _selectedCategoryImages = [];
+  int _currentColumn = 0;
+  final List<String> _category = [
+    'superheroes',
+    'insectos',
+    'formas',
+    'dinosaurios'
+  ];
 
   void _showErrorModal(BuildContext context, String title, String content) {
     showDialog(
@@ -80,27 +91,63 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
   void _restablecerCampos() {
     setState(() {
       _nicknameController.clear();
-      _patronController.clear();
       _image = null;
       _texto = false;
       _imagenes = false;
       _pictograma = false;
       _video = false;
+      _restablecerPatron();
+    });
+  }
+
+  void _restablecerPatron() {
+    setState(() {
+      _selectedCategoryImages.clear();
+      _selectedCodes.clear();
+      _selectedImages.clear();
+    });
+  }
+
+  void _selectCategory(String category) {
+    setState(() {
+      //Actualizar las imágenes de la categoría seleccionada
+      _selectedCategoryImages = [
+        for (int i = 0; i < 4; i++)
+          {
+            'imagePath':
+                'assets/images/${category.toLowerCase()}/${category.toLowerCase()}$i.png',
+            'category': category,
+          }
+      ];
+    });
+  }
+
+  void _addImage(String imagePath, String category) {
+    setState(() {
+      _selectedImages.add(imagePath);
+
+      String code =
+          '${category[0].toUpperCase()}${imagePath.replaceAll(RegExp(r'[^0-9]'), '')}';
+
+      _selectedCodes.add(code);
+
+      _currentColumn++;
     });
   }
 
   Future<String> _testAlumno(BuildContext context) async {
+    String concatenatedCodes = _selectedCodes.join();
     var jsonResponse = await _api.registrarAlumno(_nicknameController.text,
-        _patronController.text, _texto, _imagenes, _pictograma, _video);
+        concatenatedCodes, _texto, _imagenes, _pictograma, _video);
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(
-          context, 'Error al registrar alumno', jsonResponse['message']);
+          context, 'Error al registrar alumno', 'El nickname y patrón deben ser únicos.');
     }
     return jsonResponse['alumno']['nickname'];
   }
 
   void _registrarAlumno(BuildContext context) async {
-    if (_nicknameController.text.isEmpty || _patronController.text.isEmpty) {
+    if (_nicknameController.text.isEmpty || _selectedCodes.isEmpty) {
       _showErrorModal(context, 'Falta el nickname o el patrón',
           'Por favor, llena todos los campos.');
     } else if (_texto == false &&
@@ -114,14 +161,23 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
       if (alumno != '') {
         _showSuccessModal(context, 'Alumno creado correctamente',
             'El alumno $alumno ha sido creado correctamente.');
-        _nicknameController.clear();
-        _patronController.clear();
+        _restablecerCampos();
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, String>> images = _category.asMap().entries.map((entry) {
+      int index = entry.key;
+      String category = entry.value;
+      return {
+        'imagePath':
+            'assets/images/${category.toLowerCase()}/${category.toLowerCase()}$index.png',
+        'category': category,
+      };
+    }).toList();
+
     return Scaffold(
       appBar: AppBarDefault(
         title: 'Registrar Alumno',
@@ -147,13 +203,21 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFieldDefault(
-                  label: 'Nombre de usuario',
-                  padding: const EdgeInsets.only(top: 10.0, left: 100.0),
-                  controller: _nicknameController,
-                  labelColor: Color(colorPrincipal),
-                  labelFontSize: 30.0,
-                  width: 350.0,
+                Row(
+                  children: [
+                    TextFieldDefault(
+                      label: 'Nombre de usuario',
+                      padding: const EdgeInsets.only(top: 10.0, left: 100.0),
+                      controller: _nicknameController,
+                      labelColor: Color(colorPrincipal),
+                      labelFontSize: 30.0,
+                      width: 350.0,
+                      information: true,
+                      titleInformation: 'Nombre de usuario',
+                      textInformation:
+                          'El nombre de usuario debe ser único en el sistema.',
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -170,7 +234,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20.0, top: 20.0),
+                      padding: const EdgeInsets.only(left: 10.0, top: 20.0),
                       child: IconButton(
                         icon: const Icon(
                           Icons.help,
@@ -178,13 +242,135 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                           color: Color(0xFF2EC4B6),
                         ),
                         onPressed: () {
-                          _showInformationModal(context, 'Patrón del alumno', 'El patrón del alumno es una secuencia de 4 imágenes que el alumno deberá ingresar para acceder a su perfil.');
+                          _showInformationModal(context, 'Patrón del alumno',
+                              'El patrón del alumno es una secuencia de 4 imágenes que el alumno deberá ingresar para acceder a su perfil.');
                         },
                       ),
+                    ),
+                    const SizedBox(width: 20),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: images.map((imageData) {
+                        return SizedBox(
+                          width: 80,
+                          height: 80,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (imageData['category'] != null) {
+                                _selectCategory(imageData['category']!);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(20),
+                              shadowColor: Colors.black,
+                              elevation: 10,
+                            ),
+                            child: Image.asset(imageData['imagePath'] ?? ''),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
+                if (_selectedCategoryImages.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 360.0, top: 20.0),
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: _selectedCategoryImages.map((imageData) {
+                        return SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: ElevatedButton(
+                            onPressed: () => {
+                              if (_selectedCodes.length < 4 &&
+                                  imageData['category'] != null &&
+                                  imageData['imagePath'] != null)
+                                {
+                                  _addImage(imageData['imagePath']!,
+                                      imageData['category']!)
+                                }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(20),
+                              shadowColor: Colors.black,
+                              elevation: 10,
+                            ),
+                            child: Image.asset(imageData['imagePath'] ?? ''),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _restablecerPatron,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(
+                            10.0), // Ajusta el padding si es necesario
+                        shape: const CircleBorder(), // Hace el botón circular
+                        backgroundColor: Colors.white,
+                      ),
+                      child: Icon(
+                        Icons.refresh,
+                        color: Color(colorPrincipal),
+                        size: 50.0,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 50.0, top: 20.0),
+                      child: Container(
+                        padding: const EdgeInsets.all(35.0), // Padding interno
+                        decoration: BoxDecoration(
+                          color: Colors.grey[400], // Color gris más oscuro
+                          border: Border.all(
+                              color: Colors.white, width: 2.0), // Borde blanco
+                          borderRadius: BorderRadius.circular(
+                              8.0), // Esquinas redondeadas
+                        ),
+                        child: SizedBox(
+                          height:
+                              120, // Altura fija para que el contenedor no colapse
+                          width:
+                              480, // Ancho ajustado para el espacio reservado
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: _selectedImages.isNotEmpty
+                                  ? _selectedImages.map((imagePath) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: SizedBox(
+                                          width: 120,
+                                          height: 120,
+                                          child: Image.asset(imagePath),
+                                        ),
+                                      );
+                                    }).toList()
+                                  : [
+                                      Container()
+                                    ], // Evita que el contenedor colapse
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
             // Segunda columna (derecha)
