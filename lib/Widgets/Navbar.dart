@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Navbar extends StatelessWidget {
-  
-  final int colorPrincipal = 0xFF2EC4B6;
+  final List<String> listElements = const ['Registrar Alumno', 'Registrar Profesor', 'Mi Perfil', 'Ajustes'];
+  final List<String> listRoutes = const ['/administrador/registrarAlumno', '/administrador/registrarProfesor', '/administrador/perfil', '/administrador/ajustes'];
 
-  final List<String> listElements;
-  
-  const Navbar({
-    super.key,
-    required this.listElements,
-  });
-  
+  Navbar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -18,7 +13,7 @@ class Navbar extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Color(colorPrincipal),
+              color: Colors.cyan[500],
             ),
             child: const Text(
               'Menú',
@@ -28,18 +23,16 @@ class Navbar extends StatelessWidget {
               ),
             ),
           ),
-          for (var element in listElements)
+          for (var i = 0; i < listElements.length; i++)
             ListTile(
-              title: Text(element),
+              title: Text(listElements[i]),
               onTap: () {
-                // Navegar a la página correspondiente
-                Navigator.pushNamed(context, element);
+                // Navigate to the corresponding page
+                Navigator.pushNamed(context, listRoutes[i]);
               },
             ),
         ],
       ),
     );
   }
-
-  
 }
