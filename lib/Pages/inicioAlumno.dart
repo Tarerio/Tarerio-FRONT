@@ -1,99 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/API/inicioSesionAPI.dart';
 import 'package:tarerio/Pages/patronAlumno.dart';
 
-class InicioAlumno extends StatelessWidget {
+class InicioAlumno extends StatefulWidget {
   const InicioAlumno({super.key});
+
+  @override
+  _InicioAlumnoState createState() => _InicioAlumnoState();
+}
+
+class _InicioAlumnoState extends State<InicioAlumno> {
+  final InicioSesionAPI _api = InicioSesionAPI();
+  List<dynamic> alumnos = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAlumnos();
+  }
+
+  Future<void> _fetchAlumnos() async {
+    try {
+      final data = await _api.getAlumnos();
+      setState(() {
+        alumnos = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Failed to load data: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Color _getColorFromInitial(String initial) {
+    final int hash = initial.codeUnitAt(0);
+    final int colorIndex = hash % Colors.primaries.length;
+    return Colors.primaries[colorIndex];
+  }
+
+  String _getLabelFromPassword(String password) {
+    if (password.isEmpty) return 'Unknown';
+    switch (password[0].toUpperCase()) {
+      case 'S':
+        return 'superheroes';
+      case 'I':
+        return 'insectos';
+      case 'F':
+        return 'formas';
+      case 'D':
+        return 'dinosaurios';
+      default:
+        return 'Unknown';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
-        title: const Text('Inicio de sesión'),
+        title: const Text('Inicio de sesión', style: TextStyle(fontSize: 30)),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Seleccione una categoría:',
-              style: TextStyle(
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  child: GridView.count(
-                    primary: false,
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    padding: const EdgeInsets.all(20),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        padding: const EdgeInsets.all(20),
+        itemCount: alumnos.length,
+        itemBuilder: (context, index) {
+          var alumno = alumnos[index];
+          String nickname = alumno['nickname'] ?? 'Unknown';
+          String password = alumno['contrasenia'] ?? '';
+          String initial = nickname.isNotEmpty ? nickname[0] : 'U';
+          Color avatarColor = _getColorFromInitial(initial);
+          String label = _getLabelFromPassword(password);
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
+              child: Card(
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                child: ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildCategoryButton(context, 'assets/images/superheroes/superheroes0.png', 'Superheroes'),
-                      _buildCategoryButton(context, 'assets/images/dinosaurios/dinosaurios0.png', 'Dinosaurios'),
-                      _buildCategoryButton(context, 'assets/images/formas/formas0.png', 'Formas'),
-                      _buildCategoryButton(context, 'assets/images/insectos/insectos0.png', 'Insectos'),
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundColor: avatarColor,
+                        child: Text(
+                          initial,
+                          style: const TextStyle(color: Colors.white, fontSize: 30),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        nickname,
+                        style: const TextStyle(fontSize: 25),
+                      ),
                     ],
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PatronAlumno(
+                          label: label,
+                          nickname: nickname,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryButton(BuildContext context, String imagePath, String label) {
-    return FractionallySizedBox(
-      widthFactor: 1,
-      heightFactor: 1,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PatronAlumno(label: label),
             ),
           );
         },
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.all(20),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            double imageSize;
-            if (constraints.maxWidth > 400) {
-              imageSize = 200; // Larger size for widths greater than 600px
-            } else if (constraints.maxWidth > 200) {
-              imageSize = 125; // Medium size for widths between 400px and 600px
-            } else {
-              imageSize = 75; // Smaller size for widths less than 400px
-            }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(imagePath, height: imageSize),
-                const SizedBox(height: 10),
-                Text(
-                  label,
-                  style: const TextStyle(fontSize: 15),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            );
-          },
-        ),
       ),
     );
   }

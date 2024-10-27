@@ -4,8 +4,9 @@ import 'package:tarerio/Pages/principalAlumno.dart';
 
 class PatronAlumno extends StatefulWidget {
   final String label;
+  final String nickname;
 
-  const PatronAlumno({super.key, required this.label});
+  const PatronAlumno({super.key, required this.label, required this.nickname});
 
   @override
   _PatronAlumnoState createState() => _PatronAlumnoState();
@@ -14,15 +15,13 @@ class PatronAlumno extends StatefulWidget {
 class _PatronAlumnoState extends State<PatronAlumno> {
   List<String> selectedImages = [];
   List<String> selectedCodes = [];
-  List<int?> selectedIndices = List<int?>.filled(4, null);
   int currentColumn = 0;
 
   final InicioSesionAPI _api = InicioSesionAPI();
 
-  void _addImage(String imagePath, int columnIndex) {
+  void _addImage(String imagePath) {
     setState(() {
       selectedImages.add(imagePath);
-      selectedIndices[columnIndex] = columnIndex;
 
       String code = '${widget.label[0].toUpperCase()}${imagePath.replaceAll(RegExp(r'[^0-9]'), '')}';
       selectedCodes.add(code);
@@ -35,7 +34,6 @@ class _PatronAlumnoState extends State<PatronAlumno> {
     setState(() {
       selectedImages.clear();
       selectedCodes.clear();
-      selectedIndices = List<int?>.filled(4, null);
       currentColumn = 0;
     });
   }
@@ -46,7 +44,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       print(concatenatedCodes);
 
       try {
-        var jsonResponse = await _api.inicioSesionAlumno(concatenatedCodes);
+        var jsonResponse = await _api.inicioSesionAlumno(widget.nickname, concatenatedCodes);
         String nickname = jsonResponse['alumno']['nickname'];
         Navigator.push(
           context,
@@ -94,7 +92,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 110,
-        title: Text('Categoría seleccionada: ${widget.label}'),
+        title: Text('Bienvenido: ${widget.nickname}', style: const TextStyle(fontSize: 30)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -116,43 +114,45 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Center(
-                heightFactor: MediaQuery.of(context).size.height * 0.8,
-                widthFactor: MediaQuery.of(context).size.width * 0.8,
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
+            Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: Text(
+                    'Ingrese su patrón:',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  itemCount: 16,
-                  itemBuilder: (context, index) {
-                    int imageIndex = index ~/ 4;
-                    int columnIndex = index % 4;
-                    String imagePath = images[imageIndex];
-                    bool isSelected = selectedIndices[columnIndex] != null;
-                    bool isCurrentColumn = columnIndex == currentColumn;
-
-                    return ElevatedButton(
-                      onPressed: isSelected || !isCurrentColumn ? null : () => _addImage(imagePath, columnIndex),
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.all(20),
-                        shadowColor: Colors.black,
-                        elevation: 10,
-                        backgroundColor: isSelected ? Colors.grey : null,
-                      ),
-                      child: Image.asset(imagePath),
-                    );
-                  },
                 ),
-              ),
+                const SizedBox(height: 20),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: images.map((imagePath) {
+                    return SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: ElevatedButton(
+                        onPressed: selectedImages.length >= 4 ? null : () => _addImage(imagePath),
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.all(20),
+                          shadowColor: Colors.black,
+                          elevation: 10,
+                        ),
+                        child: Image.asset(imagePath),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
-            Padding(
+            Container(
+              height: 150, // Adjust the height as needed
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
@@ -163,7 +163,11 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                         children: selectedImages
                             .map((imagePath) => Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: Image.asset(imagePath, height: 100),
+                          child: SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: Image.asset(imagePath),
+                          ),
                         ))
                             .toList(),
                       ),
