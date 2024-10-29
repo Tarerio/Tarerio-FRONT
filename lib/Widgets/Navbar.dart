@@ -12,7 +12,7 @@ class ExampleDestination {
 const List<ExampleDestination> destinations = <ExampleDestination>[
   ExampleDestination('Tareas', Icon(Icons.task_alt_outlined), Icon(Icons.task_alt_rounded), ''),
   ExampleDestination('Menús', Icon(Icons.restaurant_menu), Icon(Icons.restaurant_menu_outlined), ''),
-  ExampleDestination('Aulas', Icon(Icons.class_), Icon(Icons.class_outlined), '/administrador/registrarAula'),
+  ExampleDestination('Aulas', Icon(Icons.class_), Icon(Icons.class_outlined), '/administrador/aulas'),
   ExampleDestination('Educadores', Icon(Icons.person), Icon(Icons.person_outline),'/administrador/registrarProfesor' ),
   ExampleDestination('Alumnos', Icon(Icons.school), Icon(Icons.school_outlined), '/administrador/registrarAlumno'),
   ExampleDestination('Ajustes', Icon(Icons.settings), Icon(Icons.settings), '/administrador/perfil'),
