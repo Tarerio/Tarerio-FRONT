@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/AulaCard.dart';
+import 'package:tarerio/Widgets/Navbar.dart';
 
 class AulasPage extends StatelessWidget {
   AulasPage({super.key});
@@ -38,6 +39,12 @@ class AulasPage extends StatelessWidget {
               // Lógica para asignar aula
             },
           );
+        },
+      ),
+      drawer: Navbar(
+        screenIndex: 2,
+        onLogout: () {
+          print("Cerrar sesión");
         },
       ),
     );
