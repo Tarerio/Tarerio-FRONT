@@ -36,6 +36,7 @@ class PrincipalAdministrador extends StatelessWidget {
         ),
       ),
       drawer: Navbar(
+        screenIndex: 0,
         onLogout: () {
           print("Cerrar sesión");
         },

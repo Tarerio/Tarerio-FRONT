@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/Pages/aulas.dart';
 import 'package:tarerio/Pages/home.dart';
 import 'package:tarerio/Pages/inicioAlumno.dart'; // Importa la página InicioAlumno
 import 'package:tarerio/Pages/inicioAdministradorProfesor.dart';
@@ -38,7 +39,8 @@ class MyApp extends StatelessWidget {
         '/inicioAlumno': (context) =>const  InicioAlumno(), // Define la rutas
         '/inicioAdministrador' : (context) => InicioAdministrador(),
         '/administrador/registrarAlumno' : (context) => const RegistrarAlumno(),
-        '/administrador/registrarProfesor' : (context) => const RegistrarProfesor()
+        '/administrador/registrarProfesor' : (context) => const RegistrarProfesor(),
+        '/administrador/aulas' : (context) =>  AulasPage()
       },
     );
   }
