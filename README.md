@@ -61,14 +61,14 @@ Para el desarrollo de la interfaz se han diseñado mockups y wireframes que se i
 
 ### Pantalla Principal
 
-```markdown
+
 ![Mockup de Pantalla Principal](mockups/pantalla0.png)
-```
+
 ## Diagrama de navegación de la aplicación
 
-```markdown
+
 ![Diagrama de Navegación](mockups/diagrama.png)
-```
+
 
 ## Configuración e instalación
 
