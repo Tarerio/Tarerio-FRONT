@@ -12,7 +12,7 @@ class ExampleDestination {
 
 const List<ExampleDestination> destinations = <ExampleDestination>[
   ExampleDestination('Tareas', Icon(Icons.task_alt_outlined),
-      Icon(Icons.task_alt_rounded), '/tareas'), // Asigna rutas válidas
+      Icon(Icons.task_alt_rounded), '/administrador/tareas'), // Asigna rutas válidas
   ExampleDestination('Menús', Icon(Icons.restaurant_menu),
       Icon(Icons.restaurant_menu_outlined), '/menus'), // Asigna rutas válidas
   ExampleDestination('Aulas', Icon(Icons.class_), Icon(Icons.class_outlined),
@@ -67,9 +67,18 @@ class _NavbarState extends State<Navbar> {
           const Divider(),
           const Spacer(),
           ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Cerrar sesión'),
-            onTap: widget.onLogout,
+            leading: const Icon(
+                Icons.logout,
+                color: Colors.red,
+            ),
+            title: const Text(
+                'Cerrar sesión',
+                style: TextStyle(color: Colors.red),
+            ),
+            onTap: () {
+              widget.onLogout?.call(); // Llama a la función de cierre de sesión
+              Navigator.pushReplacementNamed(context, '/home'); // Cambia '/home' por la ruta de tu página de inicio
+            },
           ),
         ],
       ),
