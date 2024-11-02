@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TareaCard extends StatelessWidget {
+class TareaPorPasosCard extends StatelessWidget {
   final String titulo;
   final String descripcion;
-  final String tipo;
-  final String imagenUrl;
+  final String horaCierre; // Nueva propiedad para la hora de cierre
   final VoidCallback onEdit;
   final VoidCallback onAssign;
+  final VoidCallback onDelete;
 
-  const TareaCard({
+  const TareaPorPasosCard({
     required this.titulo,
     required this.descripcion,
-    required this.tipo,
-    required this.imagenUrl,
+    required this.horaCierre, // Asegúrate de agregar este parámetro
     required this.onEdit,
     required this.onAssign,
+    required this.onDelete,
     super.key,
   });
 
@@ -33,13 +33,7 @@ class TareaCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.network(
-                imagenUrl,
-                height: 100,
-                width: 100,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 10),
+              // Muestra el título
               Text(
                 titulo,
                 style: const TextStyle(
@@ -49,22 +43,34 @@ class TareaCard extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
+              // Muestra la descripción
               Text(
                 descripcion,
                 style: const TextStyle(fontSize: 14),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
+              // Muestra la hora de cierre
+              Text(
+                horaCierre,
+                style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit),
+                    icon: Icon(Icons.edit),
                     onPressed: onEdit,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.assignment),
+                    icon: Icon(Icons.check),
                     onPressed: onAssign,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: onDelete,
                   ),
                 ],
               ),

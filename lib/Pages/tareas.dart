@@ -3,7 +3,7 @@ import 'package:tarerio/Widgets/TareaPorPasosCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Pages/crearTareaJuego.dart';
 import 'package:tarerio/Pages/crearTareaPorPasos.dart';
-import 'package:tarerio/API/TareaPorPasosAPI.dart'; // Asegúrate de importar tu API
+import 'package:tarerio/API/TareaPorPasosAPI.dart';
 import 'dart:async';
 
 class TareasPage extends StatefulWidget {
@@ -26,7 +26,7 @@ class _TareasPageState extends State<TareasPage> {
   Future<void> fetchTareas() async {
     try {
       TareaPorPasosAPI _api = TareaPorPasosAPI();
-      final response = await _api.obtenerTareas(); // Implementa este método en TareaPorPasosAPI
+      final response = await _api.obtenerTareas();
       setState(() {
         tareas = response; // Actualiza la lista de tareas
         isLoading = false; // Cambia el estado de carga
@@ -65,7 +65,7 @@ class _TareasPageState extends State<TareasPage> {
         },
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator()) // Mostrar indicador de carga
+          ? Center(child: CircularProgressIndicator())
           : GridView.builder(
         padding: const EdgeInsets.all(10.0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -77,16 +77,18 @@ class _TareasPageState extends State<TareasPage> {
         itemCount: tareas.length,
         itemBuilder: (context, index) {
           final tarea = tareas[index];
-          return TareaCard(
+          return TareaPorPasosCard(
             titulo: tarea['Titulo'] ?? 'Sin Titulo',
             descripcion: tarea['Descripcion'] ?? 'Sin Descripción',
-            tipo: tarea['tipo'] ?? 'desconocido',
-            imagenUrl: tarea['Imagen'] ?? '',
+            horaCierre: tarea['horaCierre'] ?? 'Sin hora', // Asegúrate de pasar la hora de cierre
             onEdit: () {
               // Logic to edit task
             },
             onAssign: () {
               // Logic to assign task
+            },
+            onDelete: () {
+              // Logic to delete task
             },
           );
         },
@@ -138,4 +140,45 @@ class _TareasPageState extends State<TareasPage> {
       },
     );
   }
+
+  void _confirmDelete(String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Eliminación'),
+          content: const Text('¿Estás seguro de que deseas eliminar esta tarea?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+                await _deleteTask(id); // Llama a la función para eliminar la tarea
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteTask(String id) async {
+    try {
+      TareaPorPasosAPI _api = TareaPorPasosAPI();
+      await _api.eliminarTarea(id); // Llama al método de eliminación
+      setState(() {
+        tareas.removeWhere((tarea) => tarea['id'] == id); // Actualiza la lista de tareas
+      });
+    } catch (e) {
+      print("Error al eliminar tarea: $e");
+      // Manejar el error de eliminación
+    }
+  }
+
 }

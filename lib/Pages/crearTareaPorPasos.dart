@@ -167,9 +167,6 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
       );
       return;
     }
-
-    print("Entro a crear la tarea");
-
     try {
       // Capturamos la hora de creación actual
       DateTime fechaCreacion = DateTime.now();
@@ -184,8 +181,6 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
           _subtareas // Enviar la lista de subtareas
       );
 
-      //var jsonResponse = await _api.crearTareaPorPasos(nuevaTarea);
-      print(jsonResponse);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Tarea creada exitosamente'),
@@ -194,6 +189,10 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
         ),
       );
 
+      // Espera a que el SnackBar desaparezca antes de regresar
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.pop(context); // Vuelve a la página anterior
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

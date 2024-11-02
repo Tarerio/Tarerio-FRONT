@@ -18,8 +18,6 @@ class TareaPorPasosAPI {
 
     String url = '$_baseUrl/tareaPorPasos';
 
-    print(url);
-
     final DateTime fullDueDateTime = DateTime(
       dueDate.year,
       dueDate.month,
@@ -47,14 +45,11 @@ class TareaPorPasosAPI {
       }).toList(), // Convertir cada subtarea en un mapa
     };
 
-    print("Antes de response");
     final response = await http.post(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(body)
     );
-
-    print("Despues de response");
 
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
@@ -66,7 +61,7 @@ class TareaPorPasosAPI {
   }
 
   Future<List<Map<String, dynamic>>> obtenerTareas() async {
-    String url = '$_baseUrl/tareaPorPasos'; // Asegúrate de que esta URL sea correcta
+    String url = '$_baseUrl/tareaPorPasos';
 
     final response = await http.get(Uri.parse(url));
 
@@ -76,5 +71,9 @@ class TareaPorPasosAPI {
     } else {
       throw Exception('Failed to load tasks');
     }
+  }
+
+  eliminarTarea(String id) {
+    // impletementar logica de eliminar tarea
   }
 }
