@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'home.dart'; // Import the home screen
-import '../Widgets/Navbar.dart'; // Import the Navbar component
+import 'home.dart';
+import '../Widgets/Navbar.dart';
 
 class PrincipalAdministrador extends StatelessWidget {
-  PrincipalAdministrador({super.key});
+  const PrincipalAdministrador({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bienvenido, Administrador'),
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
+            iconSize: 30,
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
@@ -23,7 +23,7 @@ class PrincipalAdministrador extends StatelessWidget {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => Home()),
-                    (Route<dynamic> route) => false, // Remove all previous routes
+                (Route<dynamic> route) => false,
               );
             },
           ),
@@ -35,7 +35,12 @@ class PrincipalAdministrador extends StatelessWidget {
           style: TextStyle(fontSize: 40),
         ),
       ),
-      drawer: Navbar(), // Use the Navbar component
+      drawer: Navbar(
+        screenIndex: -1,
+        onLogout: () {
+          print("Cerrar sesión");
+        },
+      ),
     );
   }
 }

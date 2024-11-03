@@ -67,6 +67,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/tarerio.png
+    - assets/images/aula.jpg
     - assets/images/superheroes/superheroes0.png
     - assets/images/superheroes/superheroes1.png
     - assets/images/superheroes/superheroes2.png
