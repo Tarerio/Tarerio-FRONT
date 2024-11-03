@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/API/TareaPeticionAPI.dart';
 import 'package:tarerio/Widgets/TareaPorPasosCard.dart';
+import 'package:tarerio/Widgets/TareaPeticionCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Pages/crearTareaJuego.dart';
 import 'package:tarerio/Pages/crearTareaPorPasos.dart';
 import 'package:tarerio/API/TareaPorPasosAPI.dart';
+import 'package:tarerio/API/TareaPeticionAPI.dart';
 import 'dart:async';
 
 class TareasPage extends StatefulWidget {
@@ -20,15 +23,20 @@ class _TareasPageState extends State<TareasPage> {
   @override
   void initState() {
     super.initState();
-    fetchTareas(); // Llamar a la función para obtener las tareas
+    fetchTareas(); // Obtener tareas
   }
 
   Future<void> fetchTareas() async {
     try {
-      TareaPorPasosAPI _api = TareaPorPasosAPI();
-      final response = await _api.obtenerTareas();
+      TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
+      TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
+
+      // Obtén ambas listas de tareas de manera concurrente
+      final tareasPorPasos = await _porPasosAPI.obtenerTareas();
+      final tareasPeticion = await _peticionAPI.obtenerTareas();
+
       setState(() {
-        tareas = response; // Actualiza la lista de tareas
+        tareas = [...tareasPorPasos, ...tareasPeticion]; // Combina ambas listas en 'tareas'
         isLoading = false; // Cambia el estado de carga
       });
     } catch (e) {

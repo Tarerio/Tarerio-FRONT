@@ -45,8 +45,8 @@ class _NavbarState extends State<Navbar> {
           ...destinations.asMap().entries.map((entry) {
             int index = entry.key;
             ExampleDestination destination = entry.value;
-            bool isSelected = index == widget.screenIndex;
-
+            bool isSelected = index == widget.screenIndex && widget.screenIndex != -1;
+            
             return ListTile(
               leading: isSelected ? destination.selectedIcon : destination.icon,
               title: Text(
