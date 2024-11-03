@@ -3,6 +3,7 @@ import 'package:tarerio/Widgets/AulaCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 
 import 'package:tarerio/API/AulasAPI.dart';
+import 'package:tarerio/Pages/crearAula.dart';
 
 class AulasPage extends StatefulWidget {
   AulasPage({super.key});
@@ -78,6 +79,18 @@ class _AulasPageState extends State<AulasPage> {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CrearAula()
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: const Color(0xFF2EC4B6),
       ),
       drawer: Navbar(
         screenIndex: 2,

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 //import '../Pages/crearAula.dart';
@@ -8,30 +7,25 @@ class AulasAPI {
   static const String _baseUrl = 'http://localhost:3000'; // localhost un máquina no se quien es
 
   // Añadir imagen y funcionalidad extra para asignar alumnos
-  Future<Map<String, dynamic>?> crearAula(
-      String clave,
-      int cupo) async {
-
+  Future<Map<String, dynamic>> crearAula(String clave, String cupo) async {
     String url = '$_baseUrl/aulas/crear';
 
-    final Map<String, dynamic> body = {
-      "clave_aula": clave,
-      "cupo": cupo,
+    final Map<String, dynamic> data = {
+      "clave": clave,
+      "capacidad": cupo,
     };
 
-    final response = await http.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body)
-    );
+    final String jsonBody = json.encode(data);
 
-    if (response.statusCode == 201) {
-      return jsonDecode(response.body);
-    } else {
-      print('Error: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      throw Exception('Failed to create classroom');
-    }
+    print('Hacemos la petición');
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:  jsonBody,
+    );
+    return json.decode(response.body);
   }
 
   Future<List<dynamic>> obtenerAulas() async {
