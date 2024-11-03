@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class AulaCard extends StatelessWidget {
-  final String nombreAula;
+  final String claveAula;
+  final int cupoAula;
   final String imagenUrl; // URL o ruta de la imagen
   final VoidCallback onEdit;
   final VoidCallback onAssign;
 
   const AulaCard({
     Key? key,
-    required this.nombreAula,
+    required this.claveAula,
+    required this.cupoAula,
     required this.imagenUrl,
     required this.onEdit,
     required this.onAssign,
@@ -28,7 +30,7 @@ class AulaCard extends StatelessWidget {
             // Imagen del aula
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(15.0)),
-              child: Image.network(
+              child: Image.asset(
                 imagenUrl,
                 height: 150,
                 width: double.infinity,
@@ -39,7 +41,7 @@ class AulaCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                nombreAula,
+                "Aula $claveAula",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
