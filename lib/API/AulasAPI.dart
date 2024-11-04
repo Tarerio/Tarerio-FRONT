@@ -45,7 +45,15 @@ class AulasAPI {
     }
   }
 
-  eliminarAula(String id) {
-    // impletementar logica de eliminar tarea
+  eliminarAula(String id) async{
+    String url = '$_baseUrl/aulas/$id';
+
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to delete data');
+    }
   }
 }
