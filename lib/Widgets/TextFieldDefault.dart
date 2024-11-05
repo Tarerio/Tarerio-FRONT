@@ -38,9 +38,10 @@ class TextFieldDefault extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: padding,
@@ -63,7 +64,8 @@ class TextFieldDefault extends StatelessWidget {
                     color: Color(0xFF2EC4B6),
                   ),
                   onPressed: () {
-                    _showInformationModal(context, titleInformation, textInformation);
+                    _showInformationModal(
+                        context, titleInformation, textInformation);
                   },
                 ),
               ),
