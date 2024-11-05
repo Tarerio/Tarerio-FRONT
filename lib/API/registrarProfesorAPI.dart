@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tarerio/consts.dart';
 
 class RegistrarProfesorAPI {
-  static const String _baseUrl = 'http://localhost:3000';
-
-  Future<Map<String, dynamic>> registrarProfesor(String nickname, String patron) async {
-    String url = '$_baseUrl/profesores/crear';
+  Future<Map<String, dynamic>> registrarProfesor(
+      String nickname, String patron, String image) async {
+    String url = '$_baseUrlTablet/profesores/crear';
 
     final Map<String, dynamic> data = {
       'nickname': nickname,
       'patron': patron,
+      'image': image,
     };
 
     final String jsonBody = json.encode(data);
@@ -20,9 +21,9 @@ class RegistrarProfesorAPI {
       headers: {
         'Content-Type': 'application/json',
       },
-      body:  jsonBody,
+      body: jsonBody,
     );
-    
+
     return json.decode(response.body);
   }
 }

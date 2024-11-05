@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 //import '../Pages/crearAula.dart';
+import 'package:tarerio/consts.dart';
 
 // API de Aulas
 class AulasAPI {
   static const String _baseUrl =
       'http://localhost:3000'; // localhost un máquina no se quien es
 
+
   // Añadir imagen y funcionalidad extra para asignar alumnos
   Future<Map<String, dynamic>> crearAula(String clave, String cupo) async {
-    String url = '$_baseUrl/aulas/crear';
+    String url = '$baseUrl/aulas/crear';
 
     final Map<String, dynamic> data = {
       "clave": clave,
@@ -29,7 +31,7 @@ class AulasAPI {
   }
 
   Future<List<dynamic>> obtenerAulas() async {
-    String url = '$_baseUrl/aulas';
+    String url = '$baseUrl/aulas';
 
     final response = await http.get(Uri.parse(url));
 
