@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
 
   //Variables para la imagen
   File? _image;
+  String _base64Image = '';
 
   // Variables para almacenar los estados de los checkboxes
   bool _texto = false;
@@ -86,6 +88,9 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
     setState(() {
       _image = File(pickedFile.path);
     });
+
+    final bytes = await _image!.readAsBytes();
+    _base64Image = base64Encode(bytes);
   }
 
   void _restablecerCampos() {
@@ -137,11 +142,17 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
 
   Future<String> _testAlumno(BuildContext context) async {
     String concatenatedCodes = _selectedCodes.join();
-    var jsonResponse = await _api.registrarAlumno(_nicknameController.text,
-        concatenatedCodes, _texto, _imagenes, _pictograma, _video);
+    var jsonResponse = await _api.registrarAlumno(
+        _nicknameController.text,
+        concatenatedCodes,
+        _texto,
+        _imagenes,
+        _pictograma,
+        _video,
+        _base64Image);
     if (jsonResponse['status'] == 'error') {
-      _showErrorModal(
-          context, 'Error al registrar alumno', 'El nickname y patrón deben ser únicos.');
+      _showErrorModal(context, 'Error al registrar alumno',
+          'El nickname y patrón deben ser únicos.');
     }
     return jsonResponse['alumno']['nickname'];
   }
@@ -221,9 +232,10 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                 ),
                 const SizedBox(height: 20),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 100.0, top: 20.0),
+                      padding: const EdgeInsets.only(left: 110.0, top: 20.0),
                       child: Text(
                         'Patrón del alumno',
                         style: TextStyle(
@@ -334,19 +346,15 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                     Padding(
                       padding: const EdgeInsets.only(left: 50.0, top: 20.0),
                       child: Container(
-                        padding: const EdgeInsets.all(35.0), // Padding interno
+                        padding: const EdgeInsets.all(35.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey[400], // Color gris más oscuro
-                          border: Border.all(
-                              color: Colors.white, width: 2.0), // Borde blanco
-                          borderRadius: BorderRadius.circular(
-                              8.0), // Esquinas redondeadas
+                          color: Colors.grey[400],
+                          border: Border.all(color: Colors.white, width: 2.0),
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: SizedBox(
-                          height:
-                              120, // Altura fija para que el contenedor no colapse
-                          width:
-                              480, // Ancho ajustado para el espacio reservado
+                          height: 120,
+                          width: 480,
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -361,9 +369,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                                         ),
                                       );
                                     }).toList()
-                                  : [
-                                      Container()
-                                    ], // Evita que el contenedor colapse
+                                  : [Container()],
                             ),
                           ),
                         ),
@@ -461,7 +467,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   DefaultButton(
                     text: 'Guardar',
                     onPressed: () {
