@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,10 +19,19 @@ class RegistrarProfesor extends StatefulWidget {
 }
 
 class _RegistrarProfesorState extends State<RegistrarProfesor> {
+  final List<String> listElements = [
+    'Registrar Alumno',
+    'Registrar Profesor',
+    'Mi Perfil',
+    'Ajustes'
+  ];
+  final List<String> listRoutes = [
+    '/administrador/registrarAlumno',
+    '/administrador/registrarProfesor',
+    '/administrador/perfil',
+    'administrador/ajustes'
+  ];
 
-   final List<String> listElements = ['Registrar Alumno', 'Registrar Profesor', 'Mi Perfil' ,'Ajustes'];
-  final List<String> listRoutes = ['/administrador/registrarAlumno', '/administrador/registrarProfesor', '/administrador/perfil' ,'administrador/ajustes'];
-  
   final int colorPrincipal = 0xFF2EC4B6;
 
   //Clase para hacer peticiones a la API
@@ -33,6 +43,7 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
 
   //Variables para la imagen
   File? _image;
+  String _base64Image = '';
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -43,11 +54,17 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
     setState(() {
       _image = File(pickedFile.path);
     });
+
+    final bytes = await _image!.readAsBytes();
+    _base64Image = base64Encode(bytes);
   }
 
   Future<String> _testRegistrar(BuildContext context) async {
     var jsonResponse = await _api.registrarProfesor(
-        _nicknameController.text, _patronController.text);
+      _nicknameController.text,
+      _patronController.text,
+      _base64Image,
+    );
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(
           context, 'Error al registrar profesor', jsonResponse['message']);
@@ -64,8 +81,7 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
       if (profesor != '') {
         _showSuccessModal(context, 'Profesor creado correctamente',
             'El profesor $profesor ha sido creado correctamente.');
-        _nicknameController.clear();
-        _patronController.clear();
+        _restablecerCampos();
       }
     }
   }
