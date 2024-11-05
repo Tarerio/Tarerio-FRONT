@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../Pages/crearTareaPeticion.dart';
+import 'package:tarerio/consts.dart';
 
 // API de TareaPorPasos
 class TareaPeticionAPI {
-  static const String _baseUrl = 'http://localhost:3000'; // localhost un máquina no se quien es
-
   Future<Map<String, dynamic>?> crearTareaPeticion(
       String titulo,
       String descripcion,
@@ -15,8 +14,7 @@ class TareaPeticionAPI {
       TimeOfDay dueTime,
       int idAdministrador,
       List<Enunciado> enunciados) async {
-
-    String url = '$_baseUrl/tareaPeticion';
+    String url = '$baseUrl/tareaPeticion';
 
     final DateTime fullDueDateTime = DateTime(
       dueDate.year,
@@ -37,18 +35,17 @@ class TareaPeticionAPI {
       "Fecha_estimada_cierre": formattedDueDate,
       "Fecha_creacion": formattedCreacionDate,
       "creatorId": idAdministrador,
-      "enunciados": enunciados.map((enunciado) => {
-        "Texto": enunciado.texto,
-        "Imagen": enunciado.imagen,
-        "Video": enunciado.video
-      }).toList(), // Convertir cada enunciado en un mapa*/
+      "enunciados": enunciados
+          .map((enunciado) => {
+                "Texto": enunciado.texto,
+                "Imagen": enunciado.imagen,
+                "Video": enunciado.video
+              })
+          .toList(), // Convertir cada enunciado en un mapa*/
     };
 
-    final response = await http.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body)
-    );
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
 
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
@@ -60,13 +57,15 @@ class TareaPeticionAPI {
   }
 
   Future<List<Map<String, dynamic>>> obtenerTareas() async {
-    String url = '$_baseUrl/tareaPeticion';
+    String url = '$baseUrl/tareaPeticion';
 
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = jsonDecode(response.body);
-      return jsonResponse.map((tarea) => tarea as Map<String, dynamic>).toList();
+      return jsonResponse
+          .map((tarea) => tarea as Map<String, dynamic>)
+          .toList();
     } else {
       throw Exception('Failed to load tasks');
     }

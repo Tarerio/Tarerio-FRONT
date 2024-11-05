@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tarerio/consts.dart';
 
 class TareaAPI {
-  static const String _baseUrl = 'http://10.0.2.2:3000';
-
-  Future<Map<String, dynamic>?> crearTareaJuego(String titulo, String descripcion, String urlJuego, DateTime dueDate, TimeOfDay dueTime, int IdAdministrador) async {
-    String url = '$_baseUrl/tareaJuego';
+  Future<Map<String, dynamic>?> crearTareaJuego(
+      String titulo,
+      String descripcion,
+      String urlJuego,
+      DateTime dueDate,
+      TimeOfDay dueTime,
+      int IdAdministrador) async {
+    String url = '$baseUrl/tareaJuego';
 
     final DateTime fullDueDateTime = DateTime(
       dueDate.year,
@@ -26,11 +31,8 @@ class TareaAPI {
       "creatorId": IdAdministrador
     };
 
-    final response = await http.post(
-        Uri.parse(url),
-        headers: { 'Content-Type': 'application/json'},
-        body: jsonEncode(body)
-    );
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {

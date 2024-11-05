@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tarerio/consts.dart';
 
 // API de Profesores
 class ProfesoresAPI {
-  static const String _baseUrl = 'http://10.0.2.2:3000'; // localhost un máquina no se quien es
-
   Future<List<dynamic>> obtenerProfesores() async {
-    String url = '$_baseUrl/profesores';
+    String url = '$baseUrl/profesores';
 
     final response = await http.get(Uri.parse(url));
 
@@ -22,8 +21,9 @@ class ProfesoresAPI {
     }
   }
 
-  cambiarContraseniaProfesor(int id, String contraseniaActual, String contraseniaNueva) async {
-    String url = '$_baseUrl/profesores/$id/cambiarContrasenia';
+  cambiarContraseniaProfesor(
+      int id, String contraseniaActual, String contraseniaNueva) async {
+    String url = '$baseUrl/profesores/$id/cambiarContrasenia';
 
     final Map<String, dynamic> data = {
       "contraseniaActual": contraseniaActual,
@@ -41,7 +41,8 @@ class ProfesoresAPI {
     if (response.statusCode == 201) {
       return json.decode(response.body);
     } else {
-      throw Exception('Failed to change password: ' + json.decode(response.body)['message']);
+      throw Exception('Failed to change password: ' +
+          json.decode(response.body)['message']);
     }
   }
 }
