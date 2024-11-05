@@ -2,92 +2,72 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/AulaCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/API/AulasAPI.dart';
-import 'package:tarerio/API/ProfesoresAPI.dart'; // Asegúrate de importar ProfesoresAPI
+import 'package:tarerio/API/ProfesoresAPI.dart';
 import 'package:tarerio/Pages/crearAula.dart';
 
 class AulasPage extends StatefulWidget {
-  AulasPage({super.key});
+  const AulasPage({super.key});
 
   @override
   _AulasPageState createState() => _AulasPageState();
 }
 
 class _AulasPageState extends State<AulasPage> {
-  List<dynamic> aulas = []; // Lista para almacenar las aulas
-  List<dynamic> profesores = []; // Lista para almacenar los profesores
-  bool isLoadingAulas = true; // Indicador de carga de aulas
-  bool isLoadingProfesores = true; // Indicador de carga de profesores
+  List<dynamic> aulas = [];
+  List<dynamic> profesores = [];
+  bool isLoadingAulas = true;
+  bool isLoadingProfesores = true;
 
   @override
   void initState() {
     super.initState();
-    fetchAulas(); // Llamar a la función para obtener las aulas
-    fetchProfesores(); // Llamar a la función para obtener los profesores
+    fetchAulas();
+    fetchProfesores();
   }
 
   Future<void> fetchAulas() async {
     try {
-      AulasAPI _api = AulasAPI();
-      final response = await _api.obtenerAulas();
+      final response = await AulasAPI().obtenerAulas();
       setState(() {
-        aulas = response; // Actualiza la lista de aulas
-        isLoadingAulas = false; // Cambia el estado de carga de aulas
+        aulas = response;
+        isLoadingAulas = false;
       });
     } catch (e) {
       print("Error al obtener aulas: $e");
-      setState(() {
-        isLoadingAulas =
-            false; // Cambia el estado de carga incluso si hay un error
-      });
+      setState(() => isLoadingAulas = false);
     }
   }
 
   Future<void> fetchProfesores() async {
     try {
-      ProfesoresAPI _api = ProfesoresAPI();
-      final response = await _api.obtenerProfesores();
+      final response = await ProfesoresAPI().obtenerProfesores();
       setState(() {
-        profesores = response; // Actualiza la lista de profesores
-        isLoadingProfesores = false; // Cambia el estado de carga de profesores
+        profesores = response;
+        isLoadingProfesores = false;
       });
     } catch (e) {
       print("Error al obtener profesores: $e");
-      setState(() {
-        isLoadingProfesores =
-            false; // Cambia el estado de carga incluso si hay un error
-      });
+      setState(() => isLoadingProfesores = false);
     }
   }
 
-  void mostrarDialogoProfesores(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Seleccionar Profesor'),
-        content: isLoadingProfesores
-            ? const Center(child: CircularProgressIndicator())
-            : SizedBox(
-                width: double.maxFinite,
-                child: ListView.builder(
-                  itemCount: profesores.length,
-                  itemBuilder: (context, index) {
-                    // Variable para controlar el color de fondo
-                    Color backgroundColor = Colors.white;
-
-                    return MouseRegion(
-                      onEnter: (_) {
-                        // Cambia el color al pasar el ratón
-                        backgroundColor = Color(0xFFE0F7FA); // Color claro al pasar el ratón
-                      },
-                      onExit: (_) {
-                        // Restaura el color original al salir
-                        backgroundColor = Colors.white;
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4.0), // Espacio entre los elementos
+  void mostrarDialogoProfesores(BuildContext context, int idAula) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar Profesor'),
+          content: isLoadingProfesores
+              ? const Center(child: CircularProgressIndicator())
+              : SizedBox(
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                    itemCount: profesores.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
                         decoration: BoxDecoration(
-                          color: backgroundColor,
+                          color: const Color.fromARGB(255, 192, 184, 184),
                           borderRadius: BorderRadius.circular(8.0),
                           boxShadow: [
                             BoxShadow(
@@ -99,30 +79,32 @@ class _AulasPageState extends State<AulasPage> {
                           ],
                         ),
                         child: ListTile(
-                          title: Text(profesores[index]['nickname'] ?? 'Sin nombre'),
-                          onTap: () {
-                            // Acción de selección del profesor
-                            Navigator.of(context).pop(); // Cierra el diálogo
+                          title: Text(
+                              profesores[index]['nickname'] ?? 'Sin nombre'),
+                          onTap: () async {
+                            int idUsuario = profesores[index]['id_usuario'];
+                            try {
+                              await AulasAPI()
+                                  .asignarProfesorAula(idAula, idUsuario);                
+                            } catch (e) {
+                              print(e);
+                            }
                           },
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cerrar'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,17 +119,15 @@ class _AulasPageState extends State<AulasPage> {
               itemBuilder: (context, index) {
                 final aula = aulas[index];
                 return AulaCard(
-                  claveAula: aula['clave_aula'] ?? "Sin clave",
-                  cupoAula: aula['cupo'] ?? 0,
-                  imagenUrl: 'assets/images/aula.jpg', // aula['imagenUrl']!
-                  onEdit: () {
-                    // Lógica para editar aula
-                  },
-                  onAssign: () {
-                    mostrarDialogoProfesores(
-                        context); // Mostrar diálogo de selección de profesores
-                  },
-                );
+                    claveAula: aula['clave_aula'] ?? "Sin clave",
+                    cupoAula: aula['cupo'] ?? 0,
+                    imagenUrl: 'assets/images/aula.jpg',
+                    onEdit: () {
+                      // Lógica para editar aula
+                    },
+                    onAssign: () => {
+                          mostrarDialogoProfesores(context, aula['id_aula']),
+                        });
               },
             ),
       floatingActionButton: FloatingActionButton(
@@ -164,9 +144,7 @@ class _AulasPageState extends State<AulasPage> {
       ),
       drawer: Navbar(
         screenIndex: 2,
-        onLogout: () {
-          print("Cerrar sesión");
-        },
+        onLogout: () => print("Cerrar sesión"),
       ),
     );
   }
