@@ -6,6 +6,7 @@ class AulaCard extends StatelessWidget {
   final String imagenUrl; // URL o ruta de la imagen
   final VoidCallback onEdit;
   final VoidCallback onAssign;
+  final VoidCallback onDelete;
 
   const AulaCard({
     Key? key,
@@ -14,6 +15,7 @@ class AulaCard extends StatelessWidget {
     required this.imagenUrl,
     required this.onEdit,
     required this.onAssign,
+    required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -27,15 +29,37 @@ class AulaCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Imagen del aula
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(15.0)),
-              child: Image.asset(
-                imagenUrl,
-                height: 150,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+            Stack(
+              children: [
+                // Imagen del aula
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(15.0)),
+                  child: Image.asset(
+                    imagenUrl,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                //Boton de eliminar aula
+                Positioned(
+                  top: 8.0,
+                  right: 8.0,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.teal,
+                    radius: 16,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                      onPressed: onDelete, // Añade aquí la función que deseas para el botón
+                      padding: EdgeInsets.zero, // Elimina el padding por defecto del IconButton
+                    ),
+                  ),
+                ),
+              ],
             ),
             // Nombre del aula
             Padding(

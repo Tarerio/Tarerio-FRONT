@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/aulas.dart';
+import 'package:tarerio/Pages/profesores.dart';
 import 'package:tarerio/Pages/tareas.dart';
 import 'package:tarerio/Pages/crearTareaJuego.dart';
 import 'package:tarerio/Pages/crearTareaPorPasos.dart';
@@ -7,7 +8,8 @@ import 'package:tarerio/Pages/home.dart';
 import 'package:tarerio/Pages/inicioAlumno.dart'; // Importa la página InicioAlumno
 import 'package:tarerio/Pages/inicioAdministradorProfesor.dart';
 import 'package:tarerio/Pages/registrarAlumno.dart';
-import 'package:tarerio/Pages/registrarProfesor.dart'; // Importa la página RegistrarAlumno
+import 'package:tarerio/Pages/registrarProfesor.dart';
+import 'Pages/editarContraseniaProfesor.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,7 +49,9 @@ class MyApp extends StatelessWidget {
         '/inicioAlumno': (context) => const InicioAlumno(),
         '/inicioAdministrador': (context) => InicioAdministrador(),
         '/administrador/registrarAlumno': (context) => const RegistrarAlumno(),
-        '/administrador/registrarProfesor': (context) => const RegistrarProfesor(),
+        '/administrador/profesores': (context) => ProfesoresPage(),
+        '/administrador/profesores/registrarProfesor': (context) => const RegistrarProfesor(),
+        '/administrador/profesores/editarContrasenia': (context) => const EditarContraseniaProfesor(),
         '/administrador/aulas': (context) => AulasPage(),
         '/administrador/tareas': (context) => TareasPage(),
         '/administrador/tareas/tareaPorPasos': (context) => CrearTareaPorPasos(idAdministrador: 1)

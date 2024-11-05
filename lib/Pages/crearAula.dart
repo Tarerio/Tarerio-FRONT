@@ -79,7 +79,7 @@ void _showErrorModal(BuildContext context, String title, String content) {
     return jsonResponse['aula']['clave_aula'];
   }
 
-  void _crearClase(BuildContext context) async {
+  void _crearAula(BuildContext context) async {
 
     if (_claveController.text.isEmpty || _cupoController.text.isEmpty) {
       _showErrorModal(context, 'Falta la clave o el cupo',
@@ -87,8 +87,8 @@ void _showErrorModal(BuildContext context, String title, String content) {
     } else {
       String aula = await _testAula(context);
       if (aula != '') {
-        _showSuccessModal(context, 'Alumno creado correctamente',
-            'El alumno $aula ha sido creado correctamente.');
+        _showSuccessModal(context, 'Aula creada correctamente',
+            'El aula $aula ha sido creada correctamente.');
         _claveController.clear();
         _cupoController.clear();
       }
@@ -178,7 +178,7 @@ void _showErrorModal(BuildContext context, String title, String content) {
                   DefaultButton(
                     text: 'Guardar',
                     onPressed: () {
-                      _crearClase(context);
+                      _crearAula(context);
                     },
                     color: Color(colorPrincipal),
                   )

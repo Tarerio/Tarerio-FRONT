@@ -4,9 +4,12 @@ import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/API/AulasAPI.dart';
 import 'package:tarerio/API/ProfesoresAPI.dart';
 import 'package:tarerio/Pages/crearAula.dart';
+import 'package:tarerio/Widgets/ErrorModal.dart';
+import 'package:tarerio/Widgets/SuccessModal.dart';
 
 class AulasPage extends StatefulWidget {
-  const AulasPage({super.key});
+  AulasPage({super.key});
+
 
   @override
   _AulasPageState createState() => _AulasPageState();
@@ -23,6 +26,24 @@ class _AulasPageState extends State<AulasPage> {
     super.initState();
     fetchAulas();
     fetchProfesores();
+  }
+
+void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
   }
 
   Future<void> fetchAulas() async {
@@ -106,30 +127,72 @@ class _AulasPageState extends State<AulasPage> {
     );
   }
 
+  void _confirmarEliminacion(String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Eliminación'),
+          content: const Text('¿Estás seguro de que deseas eliminar este Aula?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+                await _borrarAula(id); // Llama a la función para eliminar la tarea
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _borrarAula(String id) async {
+    try {
+      AulasAPI _api = AulasAPI();
+      await _api.eliminarAula(id); // Llama al método de eliminación
+      setState(() {
+        aulas.removeWhere((aula) => aula['id'] == id); // Actualiza la lista de tareas
+      });
+      _showSuccessModal(context, "Exito", "Exito al eliminar el aula");
+    } catch (e) {
+      print("Error al eliminar aula: $e");
+      _showErrorModal(context, "Error", "Error al eliminar el aula");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Aulas'),
       ),
-      body: isLoadingAulas
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: aulas.length,
-              itemBuilder: (context, index) {
-                final aula = aulas[index];
-                return AulaCard(
-                    claveAula: aula['clave_aula'] ?? "Sin clave",
-                    cupoAula: aula['cupo'] ?? 0,
-                    imagenUrl: 'assets/images/aula.jpg',
-                    onEdit: () {
-                      // Lógica para editar aula
-                    },
-                    onAssign: () => {
-                          mostrarDialogoProfesores(context, aula['id_aula']),
-                        });
-              },
-            ),
+      body: isLoading
+        ? Center(child: CircularProgressIndicator())
+        : ListView.builder(
+        itemCount: aulas.length,
+        itemBuilder: (context, index) {
+          final aula = aulas[index];
+          return AulaCard(
+            claveAula: aula['clave_aula'] ?? "Sin clave",
+            cupoAula: aula['cupo'] ?? 0,
+            imagenUrl: 'assets/images/aula.jpg',  //aula['imagenUrl']! //
+            onEdit: () {
+              // Lógica para editar aula
+            },
+            onAssign: () {
+              // Lógica para asignar aula
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
