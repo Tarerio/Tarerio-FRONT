@@ -7,7 +7,7 @@ class InicioSesionAPI {
 
   // A GET request to fetch all students from the system.
   Future<List<dynamic>> getAlumnos() async {
-    String url = '$_baseUrl/alumnos';
+    String url = '$_baseUrlTablet/alumnos';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -42,7 +42,7 @@ class InicioSesionAPI {
   // Una petición POST para ver si un usuario se encuentra en la tabla administrador
   Future<Map<String, dynamic>> inicioSesionAdministrador(
       String nickname, String contrasenia) async {
-    String url = '$_baseUrl/administradores/inicioSesionAdministrador';
+    String url = '$_baseUrlTablet/administradores/inicioSesionAdministrador';
     final response = await http.post(Uri.parse(url), body: {
       'nickname': nickname,
       'contrasenia': contrasenia,

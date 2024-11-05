@@ -7,7 +7,7 @@ class RegistrarProfesorAPI {
 
   Future<Map<String, dynamic>> registrarProfesor(
       String nickname, String patron, String image) async {
-    String url = '$_baseUrl/profesores/crear';
+    String url = '$_baseUrlTablet/profesores/crear';
 
     final Map<String, dynamic> data = {
       'nickname': nickname,

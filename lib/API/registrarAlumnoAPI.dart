@@ -13,7 +13,7 @@ class RegistrarAlumnoAPI {
       bool pictograma,
       bool video,
       String image) async {
-    String url = '$_baseUrl/alumnos/crear';
+    String url = '$_baseUrlTablet/alumnos/crear';
 
     var perfil = {
       'texto': texto,
