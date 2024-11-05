@@ -3,10 +3,12 @@ import 'package:http/http.dart' as http;
 
 // API de Profesores
 class ProfesoresAPI {
-  static const String _baseUrl = 'http://10.0.2.2:3000'; // localhost un máquina no se quien es
+  static const String _baseUrlTablet = 'http://10.0.2.2:3000';
+  static const String _baseUrl =
+      'http://localhost:3000'; // localhost un máquina no se quien es
 
   Future<List<dynamic>> obtenerProfesores() async {
-    String url = '$_baseUrl/profesores';
+    String url = '$_baseUrlTablet/profesores';
 
     final response = await http.get(Uri.parse(url));
 
@@ -22,8 +24,9 @@ class ProfesoresAPI {
     }
   }
 
-  cambiarContraseniaProfesor(int id, String contraseniaActual, String contraseniaNueva) async {
-    String url = '$_baseUrl/profesores/$id/cambiarContrasenia';
+  cambiarContraseniaProfesor(
+      int id, String contraseniaActual, String contraseniaNueva) async {
+    String url = '$_baseUrlTablet/profesores/$id/cambiarContrasenia';
 
     final Map<String, dynamic> data = {
       "contraseniaActual": contraseniaActual,
@@ -41,7 +44,8 @@ class ProfesoresAPI {
     if (response.statusCode == 201) {
       return json.decode(response.body);
     } else {
-      throw Exception('Failed to change password: ' + json.decode(response.body)['message']);
+      throw Exception('Failed to change password: ' +
+          json.decode(response.body)['message']);
     }
   }
 }
