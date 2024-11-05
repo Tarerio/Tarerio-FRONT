@@ -18,7 +18,7 @@ const List<ExampleDestination> destinations = <ExampleDestination>[
   ExampleDestination('Aulas', Icon(Icons.class_), Icon(Icons.class_outlined),
       '/administrador/aulas'),
   ExampleDestination('Educadores', Icon(Icons.person),
-      Icon(Icons.person_outline), '/administrador/registrarProfesor'),
+      Icon(Icons.person_outline), '/administrador/profesores'),
   ExampleDestination('Alumnos', Icon(Icons.school), Icon(Icons.school_outlined),
       '/administrador/registrarAlumno'),
   ExampleDestination('Ajustes', Icon(Icons.settings), Icon(Icons.settings),
