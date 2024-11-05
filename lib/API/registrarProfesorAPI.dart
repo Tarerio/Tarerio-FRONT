@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tarerio/consts.dart';
 
 class RegistrarProfesorAPI {
-  static const String _baseUrl = 'http://localhost:3000';
-  static const String _baseUrlTablet = 'http://10.0.2.2:3000';
-
   Future<Map<String, dynamic>> registrarProfesor(
       String nickname, String patron, String image) async {
     String url = '$_baseUrlTablet/profesores/crear';
