@@ -5,6 +5,7 @@ import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/API/AulasAPI.dart';
 import 'package:tarerio/Pages/crearAula.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
+import 'package:tarerio/API/ProfesoresAPI.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 
 class AulasPage extends StatefulWidget {
@@ -28,18 +29,21 @@ class AulasPage extends StatefulWidget {
   ];
 */
 }
+
 class _AulasPageState extends State<AulasPage> {
-  //List<Map<String, dynamic>> aulas = []; // Lista para almacenar las aulas
   List<dynamic> aulas = [];
-  bool isLoading = true; // Indicador de carga
+  List<dynamic> profesores = [];
+  bool isloadingAulas = true;
+  bool isLoadingProfesores = true;
 
   @override
   void initState() {
     super.initState();
-    fetchAulas(); // Llamar a la función para obtener las tareas
+    fetchAulas();
+    fetchProfesores();
   }
 
-void _showErrorModal(BuildContext context, String title, String content) {
+  void _showErrorModal(BuildContext context, String title, String content) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -63,14 +67,27 @@ void _showErrorModal(BuildContext context, String title, String content) {
       final response = await _api.obtenerAulas();
       setState(() {
         aulas = response; // Actualiza la lista de tareas
-        isLoading = false; // Cambia el estado de carga
+        isloadingAulas = false; // Cambia el estado de carga
       });
-
     } catch (e) {
       print("Error al obtener aulas: $e");
       setState(() {
-        isLoading = false; // Cambia el estado de carga incluso si hay un error
+        isloadingAulas =
+            false; // Cambia el estado de carga incluso si hay un error
       });
+    }
+  }
+
+  Future<void> fetchProfesores() async {
+    try {
+      final response = await ProfesoresAPI().obtenerProfesores();
+      setState(() {
+        profesores = response;
+        isLoadingProfesores = false;
+      });
+    } catch (e) {
+      print("Error al obtener profesores: $e");
+      setState(() => isLoadingProfesores = false);
     }
   }
 
@@ -80,7 +97,8 @@ void _showErrorModal(BuildContext context, String title, String content) {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar Eliminación'),
-          content: const Text('¿Estás seguro de que deseas eliminar este Aula?'),
+          content:
+              const Text('¿Estás seguro de que deseas eliminar este Aula?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -91,7 +109,8 @@ void _showErrorModal(BuildContext context, String title, String content) {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop(); // Cerrar el diálogo
-                await _borrarAula(id); // Llama a la función para eliminar la tarea
+                await _borrarAula(
+                    id); // Llama a la función para eliminar la tarea
               },
               child: const Text('Eliminar'),
             ),
@@ -106,7 +125,8 @@ void _showErrorModal(BuildContext context, String title, String content) {
       AulasAPI _api = AulasAPI();
       await _api.eliminarAula(id); // Llama al método de eliminación
       setState(() {
-        aulas.removeWhere((aula) => aula['id'] == id); // Actualiza la lista de tareas
+        aulas.removeWhere(
+            (aula) => aula['id'] == id); // Actualiza la lista de tareas
       });
       _showSuccessModal(context, "Exito", "Exito al eliminar el aula");
     } catch (e) {
@@ -121,35 +141,34 @@ void _showErrorModal(BuildContext context, String title, String content) {
       appBar: AppBar(
         title: const Text('Aulas'),
       ),
-      body: isLoading
-        ? Center(child: CircularProgressIndicator())
-        : ListView.builder(
-        itemCount: aulas.length,
-        itemBuilder: (context, index) {
-          final aula = aulas[index];
-          return AulaCard(
-            claveAula: aula['clave_aula'] ?? "Sin clave",
-            cupoAula: aula['cupo'] ?? 0,
-            imagenUrl: 'assets/images/aula.jpg',  //aula['imagenUrl']! //
-            onEdit: () {
-              // Lógica para editar aula
-            },
-            onAssign: () {
-              // Lógica para asignar aula
-            },
-            onDelete: () {
-              _confirmarEliminacion(aula["id_aula"].toString());
-            },
-          );
-        },
-      ),
+      body: isloadingAulas
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: aulas.length,
+              itemBuilder: (context, index) {
+                final aula = aulas[index];
+                int idAula = aula['id_aula'];
+                return AulaCard(
+                  claveAula: aula['clave_aula'] ?? "Sin clave",
+                  cupoAula: aula['cupo'] ?? 0,
+                  imagenUrl: 'assets/images/aula.jpg', //aula['imagenUrl']! //
+                  onEdit: () {
+                    // Lógica para editar aula
+                  },
+                  onAssign: () {
+                    mostrarDialogoProfesores(context, idAula);
+                  },
+                  onDelete: () {
+                    _confirmarEliminacion(aula["id_aula"].toString());
+                  },
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => CrearAula()
-            ),
+            MaterialPageRoute(builder: (context) => CrearAula()),
           );
         },
         child: const Icon(Icons.add),
@@ -161,6 +180,62 @@ void _showErrorModal(BuildContext context, String title, String content) {
           print("Cerrar sesión");
         },
       ),
+    );
+  }
+
+  void mostrarDialogoProfesores(BuildContext context, int idAula) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar Profesor'),
+          content: isloadingAulas
+              ? const Center(child: CircularProgressIndicator())
+              : SizedBox(
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                    itemCount: profesores.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 192, 184, 184),
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text(
+                              profesores[index]['nickname'] ?? 'Sin nombre'),
+                          onTap: () async {
+                            int idUsuario = profesores[index][
+                                'id_usuario']; // Convertimos id_usuario a String
+                            try {
+                              await AulasAPI()
+                                  .asignarProfesorAula(idAula, idUsuario);
+                            } catch (e) {
+                              print("Error al asignar profesor $e");
+                            }
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
