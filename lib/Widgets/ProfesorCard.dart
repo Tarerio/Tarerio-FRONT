@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
@@ -18,7 +17,9 @@ class ProfesorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container( // Establecer el ancho deseado aquí
+    return SizedBox(
+      width: 200, // Set the desired width
+      height: 300, // Set the desired height
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -31,11 +32,11 @@ class ProfesorCard extends StatelessWidget {
             SizedBox(height: 15),
             // Imagen del profesor
             imagenBase64 != null && imagenBase64.isNotEmpty
-            ? CircleAvatar(
-              radius: 100, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenBase64))
+                ? CircleAvatar(
+              radius: 50, // Adjust the size as needed
+              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
             )
-            : Avatar(image: null, size: 150),
+                : Avatar(image: null, size: 100),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -57,7 +58,7 @@ class ProfesorCard extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamed(context, '/administrador/profesores/editarContrasenia', arguments: id_usuario);
                   },
-                  icon: const Icon(Icons.key , color: Colors.teal),
+                  icon: const Icon(Icons.key, color: Colors.teal),
                   label: const Text('Editar Contraseña'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
