@@ -4,18 +4,17 @@ import 'package:tarerio/consts.dart';
 
 // API de Profesores
 class ProfesoresAPI {
+  /// Método para obtener todos los profesores
   Future<List<dynamic>> obtenerProfesores() async {
     String url = '$baseUrl/profesores';
 
+    // Realizar la solicitud GET
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
+      // Decodificar la respuesta JSON
       final Map<String, dynamic> data = jsonDecode(response.body);
-      if (data.containsKey('usuarios') && data['usuarios'] != null) {
-        return data['usuarios'];
-      } else {
-        throw Exception('Key "usuarios" not found or is null');
-      }
+      return data['usuarios']; // Retorna la lista de profesores
     } else {
       throw Exception('Failed to load data');
     }

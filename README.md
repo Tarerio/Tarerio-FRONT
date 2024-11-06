@@ -93,8 +93,60 @@ flutter pub get
 flutter run
 ```
 
+## Mockups TARERIO
+
+### Pantalla de Selección de Tipo de Usuario
+Selecciona entre "Alumno" o "Administrador/Profesor".
+![Pantalla de selección de tipo de usuario](https://github.com/user-attachments/assets/5b360f0b-e779-402b-be1f-c8845a4333fe)
+
+### Formulario de Acceso de Administrador/Profesor
+Formulario de inicio de sesión para el acceso de administradores o profesores.
+![Formulario de acceso de administrador/profesor](https://github.com/user-attachments/assets/d46a5c89-3687-4c22-932f-96a6323b43b2)
+
+### Panel de Gestión del Administrador - Panel de Aulas
+Vista del panel de gestión de aulas para el administrador.
+![Panel de gestión del administrador - Panel de Aulas](https://github.com/user-attachments/assets/afb74d58-4cf6-41b8-bd1f-4b305d620637)
+
+### Pantalla de Creación de Aulas
+Formulario para crear una nueva aula.
+![Pantalla de creación de aulas](https://github.com/user-attachments/assets/162f8cab-669c-42b8-9aea-aaf6683c76b2)
+
+### Pantalla de Edición de Aulas
+Interfaz para editar la información de un aula existente.
+![Pantalla de edición de aulas](https://github.com/user-attachments/assets/f5f024d9-966f-4ee1-9068-9b42b7926d80)
+
+### Diálogo para Asignar Profesor a un Aula
+Diálogo de selección para asignar un profesor a un aula específica.
+![Diálogo para asignar profesor a un aula](https://github.com/user-attachments/assets/e426394a-07bc-40b0-939a-e3c8b6996f1a)
+
+### Panel de Gestión del Administrador - Panel de Educadores
+Vista del panel de gestión de educadores para el administrador.
+![Panel de gestión del administrador - Panel de Educadores](https://github.com/user-attachments/assets/19024397-92b2-4fe2-afc0-da5e20f2acb1)
+
+### Pantalla de Creación de Educadores
+Formulario para registrar un nuevo educador.
+![Pantalla de creación de educadores](https://github.com/user-attachments/assets/28578dcb-b493-4ef1-b97d-a10c87c276c2)
+
+### Pantalla de Edición de Profesores
+Interfaz para modificar los datos de un profesor registrado.
+![Pantalla de edición de profesores](https://github.com/user-attachments/assets/7f28a5b3-90c8-4ddc-856a-f78c6e557d3c)
+
+### Panel de Gestión del Administrador - Panel de Alumnos
+Vista del panel de gestión de alumnos para el administrador
+![Panel de Gestión del Administrador - Panel de Alumnos ](https://github.com/user-attachments/assets/3b7665cc-134b-430e-ba9c-b2b70094e128)
+
+### Pantalla de Creación de Alumnos
+Formulario para registrar un nuevo alumno.
+![Pantalla de Creación de Alumnos](https://github.com/user-attachments/assets/9dd6cb81-e04a-43f2-abb4-5335943107b8)
+
+### Pantalla de Selección del Perfil del Alumno
+Vista para que el alumno seleccione su perfil.
+![Pantalla de selección del perfil del alumno](https://github.com/user-attachments/assets/274a2424-adf8-47b0-8d78-eab1f8b35fb6)
+
+### Pantalla de Selección del Patrón del Alumno
+Interfaz para que el alumno seleccione su patrón para iniciar sesión.
+![Pantalla de selección del patrón del alumno](https://github.com/user-attachments/assets/4ddca717-c05e-487a-9403-217a71a87837)
+
 <br>
 
 ¡Gracias por tu interés en TARERIO!
-
-

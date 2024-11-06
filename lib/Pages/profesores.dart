@@ -6,7 +6,6 @@ import 'package:tarerio/Widgets/ProfesorCard.dart';
 import '../API/profesoresAPI.dart';
 import '../consts.dart';
 
-
 class ProfesoresPage extends StatefulWidget {
   ProfesoresPage({super.key});
 
@@ -49,25 +48,26 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: MediaQuery.of(context).size.width > 800 ? 4 : 2, // Número de elementos por fila
-          childAspectRatio: 1,
+          : Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          spacing: 8.0, // Space between cards horizontally
+          runSpacing: 8.0, // Space between cards vertically
+          children: profesores.map((profesor) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width > 800 ? 200 : 150, // Adjust width based on screen size
+              child: ProfesorCard(
+                id_usuario: profesor['id_usuario'],
+                imagenBase64: profesor['imagenBase64'] ?? '',
+                nickname: profesor["nickname"],
+                onAssign: () {
+                  // Lógica para asignar profesor
+                },
+              ),
+            );
+          }).toList(),
         ),
-        itemCount: profesores.length,
-        itemBuilder: (context, index) {
-          final profesor = profesores[index];
-          return ProfesorCard(
-            id_usuario: profesor['id_usuario'],
-            imagenBase64: profesor['imagenBase64'] ?? '',
-            nickname: profesor["nickname"],
-            onAssign: () {
-              // Lógica para asignar profesor
-            },
-          );
-        },
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -81,7 +81,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
         backgroundColor: const Color(0xFF2EC4B6),
       ),
       drawer: Navbar(
-        screenIndex: 2,
+        screenIndex: 3, // Asegúrate de que este índice sea el correcto para la página de profesores
         onLogout: () {
           print("Cerrar sesión");
         },

@@ -5,13 +5,9 @@ import 'package:tarerio/consts.dart';
 
 // API de Aulas
 class AulasAPI {
-  static const String _baseUrl =
-      'http://localhost:3000'; // localhost un máquina no se quien es
-
-
   // Añadir imagen y funcionalidad extra para asignar alumnos
   Future<Map<String, dynamic>> crearAula(String clave, String cupo) async {
-    String url = '$baseUrl/aulas/crear';
+    String url = '$baseUrl/aulas/create';
 
     final Map<String, dynamic> data = {
       "clave": clave,
@@ -48,7 +44,7 @@ class AulasAPI {
   }
 
   eliminarAula(String id) async {
-    String url = '$_baseUrl/aulas/$id';
+    String url = '$baseUrl/aulas/$id';
 
     final response = await http.delete(Uri.parse(url));
 
@@ -62,7 +58,7 @@ class AulasAPI {
   //Asignar profesor a aula
   Future<Map<String, dynamic>> asignarProfesorAula(
       int idAula, int idUsuario) async {
-    String url = '$_baseUrl/aulas/asignar-profesor';
+    String url = '$baseUrl/aulas/asignar-profesor';
     final Map<String, dynamic> data = {
       "id_aula": idAula,
       "id_usuario": idUsuario,
