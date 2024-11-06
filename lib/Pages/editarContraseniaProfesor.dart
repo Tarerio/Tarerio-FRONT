@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
@@ -14,7 +13,8 @@ class EditarContraseniaProfesor extends StatefulWidget {
   const EditarContraseniaProfesor({Key? key}) : super(key: key);
 
   @override
-  _EditarContraseniaProfesorState createState() => _EditarContraseniaProfesorState();
+  _EditarContraseniaProfesorState createState() =>
+      _EditarContraseniaProfesorState();
 }
 
 class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
@@ -89,6 +89,7 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final int idUsuario = ModalRoute.of(context)!.settings.arguments as int;
@@ -107,10 +108,10 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextFieldDefault(
-                  label: "Contraseña actual",
-                  controller: _contraseniaActualController,
-                  labelColor: Color(0xFF2EC4B6),
-                  padding: const EdgeInsets.only(top: 10.0),
+                label: "Contraseña actual",
+                controller: _contraseniaActualController,
+                labelColor: Color(0xFF2EC4B6),
+                padding: const EdgeInsets.only(top: 10.0),
                 obscureText: true,
               ),
               const SizedBox(height: 16.0),
@@ -128,20 +129,18 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
                   style: const TextStyle(color: Colors.red),
                 ),
               const SizedBox(height: 8.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _isLoading
-                  ? CircularProgressIndicator()
-                  : DefaultButton(
-                      text: "Cambiar Contraseña",
-                      onPressed: () {
-                        _cambiarContrasenia(idUsuario);
-                      },
-                      color: Color(0xFF2EC4B6),
-                    width: 400,
-                  ),
-                  /*: ElevatedButton(
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                _isLoading
+                    ? CircularProgressIndicator()
+                    : DefaultButton(
+                        text: "Cambiar Contraseña",
+                        onPressed: () {
+                          _cambiarContrasenia(idUsuario);
+                        },
+                        color: Color(0xFF2EC4B6),
+                        width: 400,
+                      ),
+                /*: ElevatedButton(
                     onPressed: () {
                       _cambiarContrasenia(idUsuario);
                     },
@@ -149,8 +148,7 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
                     style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF2EC4B6)),
                     child: const Text('Cambiar Contraseña', style: TextStyle(fontSize: 18.0, color: Colors.white)),
                   ),*/
-                ]
-              )
+              ])
             ],
           ),
         ),
