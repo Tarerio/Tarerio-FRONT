@@ -139,7 +139,7 @@ class _AulasPageState extends State<AulasPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Aulas'),
+          title: const Text('Aulas', style: TextStyle(color: const Color(0xFF2EC4B6), fontSize: 24, fontWeight: FontWeight.bold))
       ),
       body: isloadingAulas
           ? const Center(child: CircularProgressIndicator())

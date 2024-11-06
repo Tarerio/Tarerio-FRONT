@@ -5,8 +5,10 @@ import 'package:tarerio/Widgets/DefaultButton.dart';
 import 'package:tarerio/Widgets/TextFieldDefault.dart';
 
 import '../API/profesoresAPI.dart';
+import '../Widgets/AppBarDefault.dart';
 import '../Widgets/ErrorModal.dart';
 import '../Widgets/SuccessModal.dart';
+import '../consts.dart';
 
 class EditarContraseniaProfesor extends StatefulWidget {
   const EditarContraseniaProfesor({Key? key}) : super(key: key);
@@ -92,8 +94,10 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
     final int idUsuario = ModalRoute.of(context)!.settings.arguments as int;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Editar Contraseña'),
+      appBar: AppBarDefault(
+        title: 'Editar contraseña educador',
+        titleColor: Color(colorPrincipal),
+        iconColor: Color(colorPrincipal),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -382,28 +382,29 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
             // Segunda columna (derecha)
             Padding(
               padding: const EdgeInsets.only(right: 40.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Avatar(
-                    image: _image,
-                    radius: 100.0,
-                    backgroundColor: Colors.grey[300]!,
-                    placeholderIcon: const Icon(Icons.person,
-                        size: 150.0, color: Colors.white),
-                    onClear: () {
-                      setState(() {
-                        _image = null;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  DefaultButton(
-                    text: 'Subir Foto',
-                    onPressed: _pickImage,
-                    color: Color(colorPrincipal),
-                  ),
-                  Padding(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Avatar(
+                      image: _image,
+                      radius: 100.0,
+                      backgroundColor: Colors.grey[300]!,
+                      placeholderIcon: const Icon(Icons.person, size: 150.0, color: Colors.white),
+                      onClear: () {
+                        setState(() {
+                          _image = null;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    DefaultButton(
+                      text: 'Subir Foto',
+                      onPressed: _pickImage,
+                      color: Color(colorPrincipal),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.only(top: 20.0, right: 10.0),
                       child: Text(
                         'Tipo de Interfaz',
@@ -412,70 +413,73 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                           fontWeight: FontWeight.w600,
                           color: Color(colorPrincipal),
                         ),
-                      )),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Column(
-                      children: [
-                        DefaultSwitch(
-                          label: 'Texto:',
-                          value: _texto,
-                          activeColor: Colors.white,
-                          activeTrackColor: Color(colorPrincipal),
-                          onChanged: (bool value) {
-                            setState(() {
-                              _texto = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        DefaultSwitch(
-                          label: 'Pictogramas:',
-                          value: _pictograma,
-                          activeColor: Colors.white,
-                          activeTrackColor: Color(colorPrincipal),
-                          onChanged: (bool value) {
-                            setState(() {
-                              _pictograma = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        DefaultSwitch(
-                          label: 'Video:',
-                          value: _video,
-                          activeColor: Colors.white,
-                          activeTrackColor: Color(colorPrincipal),
-                          onChanged: (bool value) {
-                            setState(() {
-                              _video = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        DefaultSwitch(
-                          label: 'Imagenes:',
-                          value: _imagenes,
-                          activeColor: Colors.white,
-                          activeTrackColor: Color(colorPrincipal),
-                          onChanged: (bool value) {
-                            setState(() {
-                              _imagenes = value;
-                            });
-                          },
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  DefaultButton(
-                    text: 'Guardar',
-                    onPressed: () {
-                      _registrarAlumno(context);
-                    },
-                    color: Color(colorPrincipal),
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          DefaultSwitch(
+                            label: 'Texto:',
+                            value: _texto,
+                            activeColor: Colors.white,
+                            activeTrackColor: Color(colorPrincipal),
+                            onChanged: (bool value) {
+                              setState(() {
+                                _texto = value;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          DefaultSwitch(
+                            label: 'Pictogramas:',
+                            value: _pictograma,
+                            activeColor: Colors.white,
+                            activeTrackColor: Color(colorPrincipal),
+                            onChanged: (bool value) {
+                              setState(() {
+                                _pictograma = value;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          DefaultSwitch(
+                            label: 'Video:',
+                            value: _video,
+                            activeColor: Colors.white,
+                            activeTrackColor: Color(colorPrincipal),
+                            onChanged: (bool value) {
+                              setState(() {
+                                _video = value;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          DefaultSwitch(
+                            label: 'Imagenes:',
+                            value: _imagenes,
+                            activeColor: Colors.white,
+                            activeTrackColor: Color(colorPrincipal),
+                            onChanged: (bool value) {
+                              setState(() {
+                                _imagenes = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    DefaultButton(
+                      text: 'Guardar',
+                      onPressed: () {
+                        _registrarAlumno(context);
+                      },
+                      color: Color(colorPrincipal),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

@@ -107,19 +107,9 @@ void _showErrorModal(BuildContext context, String title, String content) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarDefault(
-        title: 'Crear Aula',
+        title: 'Creación de aula',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              size: 50.0,
-            ),
-            onPressed: _restablecerCampos,
-            color: Color(colorPrincipal),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
