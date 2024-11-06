@@ -83,7 +83,7 @@ class _AlumnosState extends State<AlumnosPage> {
       ),
       drawer: Navbar(
         screenIndex:
-            3, // Asegúrate de que este índice sea el correcto para la página de Alumnos
+            4, // Asegúrate de que este índice sea el correcto para la página de Alumnos
         onLogout: () {
           print("Cerrar sesión");
         },

@@ -5,7 +5,7 @@ import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/API/AulasAPI.dart';
 import 'package:tarerio/Pages/crearAula.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
-import 'package:tarerio/API/ProfesoresAPI.dart';
+import 'package:tarerio/API/profesoresAPI.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 
 class AulasPage extends StatefulWidget {
