@@ -391,7 +391,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       image: _image,
                       radius: 100.0,
                       backgroundColor: Colors.grey[300]!,
-                      placeholderIcon: const Icon(Icons.person, size: 150.0, color: Colors.white),
+                      placeholderIcon: const Icon(Icons.person,
+                          size: 150.0, color: Colors.white),
                       onClear: () {
                         setState(() {
                           _image = null;

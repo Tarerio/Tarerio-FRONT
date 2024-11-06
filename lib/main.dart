@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/Pages/alumnos.dart';
 import 'package:tarerio/Pages/aulas.dart';
 import 'package:tarerio/Pages/profesores.dart';
 import 'package:tarerio/Pages/tareas.dart';
@@ -48,13 +49,17 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const Home(), // Define la rutas
         '/inicioAlumno': (context) => const InicioAlumno(),
         '/inicioAdministrador': (context) => InicioAdministrador(),
+        '/administrador/alumnos': (context) => AlumnosPage(),
         '/administrador/registrarAlumno': (context) => const RegistrarAlumno(),
         '/administrador/profesores': (context) => ProfesoresPage(),
-        '/administrador/profesores/registrarProfesor': (context) => const RegistrarProfesor(),
-        '/administrador/profesores/editarContrasenia': (context) => const EditarContraseniaProfesor(),
+        '/administrador/profesores/registrarProfesor': (context) =>
+            const RegistrarProfesor(),
+        '/administrador/profesores/editarContrasenia': (context) =>
+            const EditarContraseniaProfesor(),
         '/administrador/aulas': (context) => AulasPage(),
         '/administrador/tareas': (context) => TareasPage(),
-        '/administrador/tareas/tareaPorPasos': (context) => CrearTareaPorPasos(idAdministrador: 1)
+        '/administrador/tareas/tareaPorPasos': (context) =>
+            CrearTareaPorPasos(idAdministrador: 1)
       },
     );
   }

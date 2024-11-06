@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
-class ProfesorCard extends StatelessWidget {
+class AlumnoCard extends StatelessWidget {
   final int id_usuario;
   final String imagenBase64; // URL o ruta de la imagen
   final String nickname;
   final VoidCallback onAssign;
-  const ProfesorCard({
+  const AlumnoCard({
     Key? key,
     required this.id_usuario,
     required this.imagenBase64,
@@ -33,9 +33,9 @@ class ProfesorCard extends StatelessWidget {
             // Imagen del profesor
             imagenBase64 != null && imagenBase64.isNotEmpty
                 ? CircleAvatar(
-              radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
-            )
+                    radius: 50, // Adjust the size as needed
+                    backgroundImage: MemoryImage(base64Decode(imagenBase64)),
+                  )
                 : Avatar(image: null, size: 50),
             // Nombre del aula
             Padding(
@@ -53,22 +53,24 @@ class ProfesorCard extends StatelessWidget {
             OverflowBar(
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                // Botón de Editar
+                // Botón de Editar alumno del alumno
                 TextButton.icon(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/administrador/profesores/editarContrasenia', arguments: id_usuario);
+                    Navigator.pushNamed(
+                        context, '/administrador/alumnos/editarAlumno',
+                        arguments: id_usuario);
                   },
                   icon: const Icon(Icons.key, color: Colors.teal),
-                  label: const Text('Editar Contraseña'),
+                  label: const Text('Editar alumno'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Botón de Asignar
+                // Botón de Eliminar
                 TextButton.icon(
                   onPressed: onAssign,
-                  icon: const Icon(Icons.person_add, color: Colors.teal),
-                  label: const Text('Asignar'),
+                  icon: const Icon(Icons.delete, color: Colors.teal),
+                  label: const Text('Eliminar'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),

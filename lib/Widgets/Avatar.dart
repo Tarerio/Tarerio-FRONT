@@ -14,7 +14,7 @@ class Avatar extends StatelessWidget {
   const Avatar({
     Key? key,
     this.image,
-    this.radius = 100.0,
+    this.radius = 50.0,
     this.size = 150.0,
     this.backgroundColor = const Color(0xFFB0BEC5),
     Icon? placeholderIcon,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:tarerio/consts.dart';
 
 // API de Profesores
 class ProfesoresAPI {
@@ -17,8 +18,32 @@ class ProfesoresAPI {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return data['usuarios']; // Retorna la lista de profesores
     } else {
-      // Lanzar una excepción si hay un error
-      throw Exception('Error al cargar los profesores: ${response.statusCode}');
+      throw Exception('Failed to load data');
+    }
+  }
+
+  cambiarContraseniaProfesor(
+      int id, String contraseniaActual, String contraseniaNueva) async {
+    String url = '$baseUrl/profesores/$id/cambiarContrasenia';
+
+    final Map<String, dynamic> data = {
+      "contraseniaActual": contraseniaActual,
+      "contraseniaNueva": contraseniaNueva,
+    };
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to change password: ' +
+          json.decode(response.body)['message']);
     }
   }
 }
