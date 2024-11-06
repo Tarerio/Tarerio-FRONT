@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tarerio/API/TareaJuegoAPI.dart';
 
+import '../Widgets/AppBarDefault.dart';
+import '../consts.dart';
+
 class CrearTareaJuego extends StatefulWidget {
   final int IdAdministrador;
 
@@ -119,23 +122,10 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Text('Creando Tarea Juego'),
-        iconTheme: const IconThemeData(
-          color: Color(0xFF2EC4B6),
-          size: 48,
-        ),
-        titleTextStyle: const TextStyle(
-          color: Color(0xFF2EC4B6),
-          fontSize: 48,
-          fontWeight: FontWeight.w600,
-        ),
+      appBar: AppBarDefault(
+        title: 'Creación tarea juego',
+        titleColor: Color(colorPrincipal),
+        iconColor: Color(colorPrincipal),
       ),
       body: Padding(
         padding: const EdgeInsets.only(
@@ -186,61 +176,67 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
               ),
               Column(
                 children: <Widget>[
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _selectDate(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF2EC4B6),
-                        ),
-                        child: const SizedBox(
-                          width: 120,
-                          child: Text(
-                            'Seleccionar fecha',
-                            style: TextStyle(color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _selectDate(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF2EC4B6),
+                          ),
+                          child: const SizedBox(
+                            width: 120,
+                            child: Text(
+                              'Seleccionar fecha',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 20),
-                      Icon(Icons.calendar_today),
-                      SizedBox(width: 10),
-                      Text(
-                        _selectedDate != null
-                            ? DateFormat('dd-MM').format(_selectedDate!)
-                            : 'Selecciona una fecha',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
+                        SizedBox(width: 20),
+                        Icon(Icons.calendar_today),
+                        SizedBox(width: 10),
+                        Text(
+                          _selectedDate != null
+                              ? DateFormat('dd-MM').format(_selectedDate!)
+                              : 'Selecciona una fecha',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          _selectTime(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF2EC4B6),
-                        ),
-                        child: const SizedBox(
-                          width: 120,
-                          child:Text(
-                            'Seleccionar hora',
-                            style: TextStyle(color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            _selectTime(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF2EC4B6),
                           ),
-                        )
-                      ),
-                      SizedBox(width: 20),
-                      Icon(Icons.access_time),
-                      SizedBox(width: 10),
-                      Text(
-                        _selectedTime != null
-                            ? _formatTime(_selectedTime!)
-                            : 'Selecciona una hora',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
+                          child: const SizedBox(
+                            width: 120,
+                            child:Text(
+                              'Seleccionar hora',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ),
+                        SizedBox(width: 20),
+                        Icon(Icons.access_time),
+                        SizedBox(width: 10),
+                        Text(
+                          _selectedTime != null
+                              ? _formatTime(_selectedTime!)
+                              : 'Selecciona una hora',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

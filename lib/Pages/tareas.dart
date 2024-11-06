@@ -9,6 +9,8 @@ import 'package:tarerio/API/TareaPorPasosAPI.dart';
 import 'package:tarerio/API/TareaPeticionAPI.dart';
 import 'dart:async';
 
+import 'crearTareaPeticion.dart';
+
 class TareasPage extends StatefulWidget {
   TareasPage({super.key});
 
@@ -64,7 +66,7 @@ class _TareasPageState extends State<TareasPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tareas'),
+        title: const Text('Tareas', style: TextStyle(color: const Color(0xFF2EC4B6), fontSize: 24, fontWeight: FontWeight.bold)),
       ),
       drawer: Navbar(
         screenIndex: 0,
@@ -111,43 +113,55 @@ class _TareasPageState extends State<TareasPage> {
     );
   }
 
-  void _showTaskTypeDialog(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.format_list_bulleted),
-              title: const Text('Tarea por Juego'),
-              onTap: () {
-                Navigator.pop(context); // Close the dialog
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CrearTareaJuego(IdAdministrador: 1)),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.gamepad),
-              title: const Text('Tarea de Por Pasos'),
-              onTap: () {
-                Navigator.pop(context); // Close the dialog
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CrearTareaPorPasos(idAdministrador: 1)),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+void _showTaskTypeDialog(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.games),
+            title: const Text('Tarea por Juego'),
+            onTap: () {
+              Navigator.pop(context); // Close the dialog
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CrearTareaJuego(IdAdministrador: 1)),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.list),
+            title: const Text('Tarea de Por Pasos'),
+            onTap: () {
+              Navigator.pop(context); // Close the dialog
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CrearTareaPorPasos(idAdministrador: 1)),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.request_quote),
+            title: const Text('Tarea de Petición'),
+            onTap: () {
+              Navigator.pop(context); // Close the dialog
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CrearTareaPeticion(idAdministrador: 1)),
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   void _confirmDelete(String id) {
     showDialog(

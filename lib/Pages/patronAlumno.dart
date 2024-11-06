@@ -91,8 +91,9 @@ class _PatronAlumnoState extends State<PatronAlumno> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Color(0xFF2EC4B6), size: 30),
         toolbarHeight: 110,
-        title: Text('Bienvenido: ${widget.nickname}', style: const TextStyle(fontSize: 30)),
+        title: Text('Bienvenido: ${widget.nickname}', style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: const Color(0xFF2EC4B6))),
         actions: [
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -122,7 +123,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                   padding: EdgeInsets.only(top: 20.0),
                   child: Text(
                     'Ingrese su patrón:',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: const Color(0xFF2EC4B6)),
                   ),
                 ),
                 const SizedBox(height: 20),

@@ -4,7 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:tarerio/API/TareaPeticionAPI.dart';
 import 'package:tarerio/Pages/tareas.dart';
 
-class Respuesta{
+import '../Widgets/AppBarDefault.dart';
+import '../consts.dart';
+
+class Respuesta {
   String? respuesta;
   bool? realizado;
 
@@ -102,7 +105,8 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                 children: [
                   TextField(
                     onChanged: (value) => texto = value,
-                    decoration: const InputDecoration(labelText: 'Texto del enunciado'),
+                    decoration:
+                        const InputDecoration(labelText: 'Texto del enunciado'),
                   ),
                   TextField(
                     onChanged: (value) => imagen = value,
@@ -126,10 +130,8 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
             TextButton(
               onPressed: () {
                 if (texto != null) {
-                  Navigator.of(context).pop(Enunciado(
-                      texto: texto,
-                      imagen: imagen,
-                      video: video));
+                  Navigator.of(context).pop(
+                      Enunciado(texto: texto, imagen: imagen, video: video));
                 }
               },
               child: const Text('Añadir'),
@@ -180,7 +182,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
           _selectedTime!,
           widget.idAdministrador,
           _enunciados // Enviar la lista de enunciados
-      );
+          );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -204,29 +206,14 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => TareasPage()),
-            );
-          },
-        ),
-        title: const Text('Crear Tarea Peticion'),
-        iconTheme: const IconThemeData(
-          color: Color(0xFF2EC4B6),
-          size: 48,
-        ),
-        titleTextStyle: const TextStyle(
-          color: Color(0xFF2EC4B6),
-          fontSize: 48,
-          fontWeight: FontWeight.w600,
-        ),
+      appBar: AppBarDefault(
+        title: 'Creación tarea petición',
+        titleColor: Color(colorPrincipal),
+        iconColor: Color(colorPrincipal),
       ),
       body: Padding(
         padding: const EdgeInsets.only(
@@ -292,19 +279,19 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                 // Layout de Fecha y Hora
                 isSmallScreen
                     ? Column(
-                  children: [
-                    _buildDateSelection(),
-                    const SizedBox(height: 10),
-                    _buildTimeSelection(),
-                  ],
-                )
+                        children: [
+                          _buildDateSelection(),
+                          const SizedBox(height: 10),
+                          _buildTimeSelection(),
+                        ],
+                      )
                     : Row(
-                  children: [
-                    _buildDateSelection(),
-                    const SizedBox(width: 40),
-                    _buildTimeSelection(),
-                  ],
-                ),
+                        children: [
+                          _buildDateSelection(),
+                          const SizedBox(width: 40),
+                          _buildTimeSelection(),
+                        ],
+                      ),
                 const SizedBox(height: 20),
                 const Text(
                   'Enunciados',
@@ -335,13 +322,18 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                                   Row(
                                     children: [
                                       Text(
-                                        "${index + 1}. ",  // Enumeración de los enunciados
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        "${index + 1}. ", // Enumeración de los enunciados
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       Flexible(
                                         child: Text(
-                                          _enunciados[index].texto ?? 'Título del enunciado',
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                          _enunciados[index].texto ??
+                                              'Título del enunciado',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -349,7 +341,8 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                                   ),
                                   const SizedBox(height: 10),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Imagen: ${_enunciados[index].imagen ?? 'No disponible'}",
@@ -387,7 +380,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF2EC4B6),
                       ),
-                      child: const Text('Añadir Subtarea',
+                      child: const Text('Añadir Enunciado',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,

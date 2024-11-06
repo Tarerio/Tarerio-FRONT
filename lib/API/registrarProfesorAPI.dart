@@ -5,7 +5,7 @@ import 'package:tarerio/consts.dart';
 class RegistrarProfesorAPI {
   Future<Map<String, dynamic>> registrarProfesor(
       String nickname, String patron, String image) async {
-    String url = '$_baseUrlTablet/profesores/crear';
+    String url = '$baseUrl/profesores/crear';
 
     final Map<String, dynamic> data = {
       'nickname': nickname,

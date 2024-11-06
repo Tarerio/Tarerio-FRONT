@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/API/inicioSesionAPI.dart';
 import 'package:tarerio/Pages/principalAdministrador.dart';
 
+import '../Widgets/AppBarDefault.dart';
+import '../consts.dart';
+
 class InicioAdministrador extends StatelessWidget {
   InicioAdministrador({super.key});
 
@@ -79,9 +82,11 @@ class InicioAdministrador extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 100,
-      ),
+      appBar: AppBarDefault(
+      title: 'Inicio de sesión',
+      titleColor: Color(colorPrincipal),
+      iconColor: Color(colorPrincipal),
+    ),
       body: Center(
         child: SizedBox(
           width: 350, // Establece un ancho fijo para el Card

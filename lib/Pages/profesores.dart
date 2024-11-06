@@ -4,6 +4,7 @@ import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/ProfesorCard.dart';
 
 import '../API/profesoresAPI.dart';
+import '../consts.dart';
 
 
 class ProfesoresPage extends StatefulWidget {
@@ -44,7 +45,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Educadores'),
+        title: const Text('Educadores', style: TextStyle(color: const Color(0xFF2EC4B6), fontSize: 24, fontWeight: FontWeight.bold)),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

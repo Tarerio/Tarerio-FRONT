@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:tarerio/API/TareaPorPasosAPI.dart';
 import 'package:tarerio/Pages/tareas.dart';
 
+import '../Widgets/AppBarDefault.dart';
+import '../consts.dart';
+
 // Modelo para la Subtarea
 class Subtarea {
   String? texto;
@@ -206,26 +209,10 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => TareasPage()),
-            );
-          },
-        ),
-        title: const Text('Crear Tarea por Pasos'),
-        iconTheme: const IconThemeData(
-          color: Color(0xFF2EC4B6),
-          size: 48,
-        ),
-        titleTextStyle: const TextStyle(
-          color: Color(0xFF2EC4B6),
-          fontSize: 48,
-          fontWeight: FontWeight.w600,
-        ),
+      appBar: AppBarDefault(
+        title: 'Creación tarea por pasos',
+        titleColor: Color(colorPrincipal),
+        iconColor: Color(colorPrincipal),
       ),
       body: Padding(
         padding: const EdgeInsets.only(
