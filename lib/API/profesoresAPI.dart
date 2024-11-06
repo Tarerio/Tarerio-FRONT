@@ -21,8 +21,7 @@ class ProfesoresAPI {
     }
   }
 
-  cambiarContraseniaProfesor(
-      int id, String contraseniaActual, String contraseniaNueva) async {
+  cambiarContraseniaProfesor (int id, String contraseniaActual, String contraseniaNueva) async {
     String url = '$baseUrl/profesores/$id/cambiarContrasenia';
 
     final Map<String, dynamic> data = {

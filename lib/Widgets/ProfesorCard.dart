@@ -36,7 +36,7 @@ class ProfesorCard extends StatelessWidget {
               radius: 50, // Adjust the size as needed
               backgroundImage: MemoryImage(base64Decode(imagenBase64)),
             )
-                : Avatar(image: null, size: 100),
+                : Avatar(image: null, size: 50),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
