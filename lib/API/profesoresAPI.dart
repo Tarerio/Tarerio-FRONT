@@ -4,11 +4,9 @@ import 'package:tarerio/consts.dart';
 
 // API de Profesores
 class ProfesoresAPI {
-  static const String _baseUrl = 'http://localhost:3000';
-
   /// Método para obtener todos los profesores
   Future<List<dynamic>> obtenerProfesores() async {
-    String url = '$_baseUrl/profesores';
+    String url = '$baseUrl/profesores';
 
     // Realizar la solicitud GET
     final response = await http.get(Uri.parse(url));
