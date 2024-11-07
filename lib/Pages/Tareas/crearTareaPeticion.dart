@@ -213,6 +213,12 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
         title: 'Creación tarea petición',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TareasPage()),
+          );
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.only(

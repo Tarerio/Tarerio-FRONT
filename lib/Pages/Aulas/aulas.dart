@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/Widgets/AulaCard.dart';
+import 'package:tarerio/Widgets/Cards/AulaCard.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/API/aulasAPI.dart';

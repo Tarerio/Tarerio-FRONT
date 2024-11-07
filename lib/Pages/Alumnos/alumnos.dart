@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
-import 'package:tarerio/Widgets/AlumnoCard.dart';
+import 'package:tarerio/Widgets/Cards/AlumnoCard.dart';
 import '../../API/alumnosAPI.dart';
 import '../../consts.dart';
 

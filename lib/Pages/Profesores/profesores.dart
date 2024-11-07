@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
-import 'package:tarerio/Widgets/ProfesorCard.dart';
+import 'package:tarerio/Widgets/Cards/ProfesorCard.dart';
 
 import '../../API/profesoresAPI.dart';
 import '../../consts.dart';
@@ -44,7 +44,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Educadores', style: TextStyle(color: const Color(0xFF2EC4B6), fontSize: 24, fontWeight: FontWeight.bold)),
+        title: const Text('Profesores', style: TextStyle(color: const Color(0xFF2EC4B6), fontSize: 24, fontWeight: FontWeight.bold)),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
@@ -81,7 +81,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
         backgroundColor: const Color(0xFF2EC4B6),
       ),
       drawer: Navbar(
-        screenIndex: 3, // Asegúrate de que este índice sea el correcto para la página de profesores
+        screenIndex: 3,
         onLogout: () {
           print("Cerrar sesión");
         },

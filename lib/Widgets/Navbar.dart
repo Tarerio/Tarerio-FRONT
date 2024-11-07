@@ -12,20 +12,35 @@ class ExampleDestination {
 
 const List<ExampleDestination> destinations = <ExampleDestination>[
   ExampleDestination(
-      'Tareas',
+      'Tareas', // Tareas
       Icon(Icons.task_alt_outlined),
       Icon(Icons.task_alt_rounded),
-      '/administrador/tareas'), // Asigna rutas válidas
-  ExampleDestination('Menús', Icon(Icons.restaurant_menu),
-      Icon(Icons.restaurant_menu_outlined), '/menus'), // Asigna rutas válidas
-  ExampleDestination('Aulas', Icon(Icons.class_), Icon(Icons.class_outlined),
-      '/administrador/aulas'),
-  ExampleDestination('Educadores', Icon(Icons.person),
-      Icon(Icons.person_outline), '/administrador/profesores'),
-  ExampleDestination('Alumnos', Icon(Icons.school), Icon(Icons.school_outlined),
-      '/administrador/alumnos'),
-  ExampleDestination('Ajustes', Icon(Icons.settings), Icon(Icons.settings),
-      '/administrador/perfil'),
+      '/administrador/tareas'), // ruta
+  ExampleDestination(
+      'Menús',
+      Icon(Icons.restaurant_menu),
+      Icon(Icons.restaurant_menu_outlined),
+      '/administrador/menus'), // ruta
+  ExampleDestination(
+      'Aulas',
+      Icon(Icons.class_),
+      Icon(Icons.class_outlined),
+      '/administrador/aulas'), // ruta
+  ExampleDestination(
+      'Profesores',
+      Icon(Icons.person),
+      Icon(Icons.person_outline),
+      '/administrador/profesores'), // ruta
+  ExampleDestination(
+      'Alumnos',
+      Icon(Icons.school),
+      Icon(Icons.school_outlined),
+      '/administrador/alumnos'), // ruta
+  ExampleDestination(
+      'Ajustes',
+      Icon(Icons.settings),
+      Icon(Icons.settings_outlined),
+      '/administrador/perfil'), // ruta
 ];
 
 class Navbar extends StatefulWidget {
@@ -82,8 +97,7 @@ class _NavbarState extends State<Navbar> {
             ),
             onTap: () {
               widget.onLogout?.call(); // Llama a la función de cierre de sesión
-              Navigator.pushReplacementNamed(context,
-                  '/home'); // Cambia '/home' por la ruta de tu página de inicio
+              Navigator.pushReplacementNamed(context, '/home'); // Cambia '/home' por la ruta de tu página de inicio
             },
           ),
         ],

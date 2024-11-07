@@ -7,6 +7,7 @@ class AlumnoCard extends StatelessWidget {
   final String imagenBase64; // URL o ruta de la imagen
   final String nickname;
   final VoidCallback onAssign;
+
   const AlumnoCard({
     Key? key,
     required this.id_usuario,
