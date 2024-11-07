@@ -129,7 +129,7 @@ class _TareasPageState extends State<TareasPage> {
           children: [
             ListTile(
               leading: const Icon(Icons.games),
-              title: const Text('Tarea por Juego'),
+              title: const Text('Tarea Juego'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog
                 Navigator.push(
@@ -142,7 +142,7 @@ class _TareasPageState extends State<TareasPage> {
             ),
             ListTile(
               leading: const Icon(Icons.list),
-              title: const Text('Tarea de Por Pasos'),
+              title: const Text('Tarea Por Pasos'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog
                 Navigator.push(
@@ -155,7 +155,7 @@ class _TareasPageState extends State<TareasPage> {
             ),
             ListTile(
               leading: const Icon(Icons.request_quote),
-              title: const Text('Tarea de Petición'),
+              title: const Text('Tarea Petición'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog
                 Navigator.push(
