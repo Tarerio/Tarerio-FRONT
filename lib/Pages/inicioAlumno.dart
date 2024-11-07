@@ -97,13 +97,13 @@ class _InicioAlumnoState extends State<InicioAlumno> {
           Expanded(
             child: Center(
               child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Color(colorSecundario), size: 40),
+                icon: Icon(Icons.arrow_back, color: Color(colorSecundario), size: 90),
                 onPressed: _previousPage,
               ),
             ),
           ),
           Expanded(
-            flex: 15,
+            flex: 8,
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Wrap(
@@ -177,7 +177,7 @@ class _InicioAlumnoState extends State<InicioAlumno> {
           Expanded(
             child: Center(
               child: IconButton(
-                icon: Icon(Icons.arrow_forward, color: Color(colorSecundario), size: 40),
+                icon: Icon(Icons.arrow_forward, color: Color(colorSecundario), size: 90),
                 onPressed: _nextPage,
               ),
             ),

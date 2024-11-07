@@ -53,9 +53,11 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       } catch (e) {
         print('Request failed with error: $e');
         _showErrorModal('Error al iniciar sesión', 'No se encontró un usuario con el patrón ingresado.');
+        // Vaciar los códigos seleccionados
+        _refresh();
       }
     } else {
-      _showErrorModal('Error al mandar patrón', 'Debes escoger 4 imágenes para continuar.');
+      _showErrorModal('Error al mandar patrón', 'El patrón debe constar de 4 imágenes. Sólo marcaste ${selectedCodes.length}.');
     }
   }
 
