@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tarerio/API/registrarAlumnoAPI.dart';
+import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/Widgets/AppBarDefault.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
@@ -24,7 +24,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
   final int colorPrincipal = 0xFF2EC4B6;
 
   //Clase para hacer peticiones a la API
-  final RegistrarAlumnoAPI _api = RegistrarAlumnoAPI();
+  final AlumnosAPI _api = AlumnosAPI();
 
   // Controladores de texto para el nickname y la contraseña
   final TextEditingController _nicknameController = TextEditingController();
@@ -383,9 +383,9 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
             Padding(
               padding: const EdgeInsets.only(right: 40.0),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Avatar(
                       image: _image,
@@ -418,60 +418,62 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          DefaultSwitch(
-                            label: 'Texto:',
-                            value: _texto,
-                            activeColor: Colors.white,
-                            activeTrackColor: Color(colorPrincipal),
-                            onChanged: (bool value) {
-                              setState(() {
-                                _texto = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          DefaultSwitch(
-                            label: 'Pictogramas:',
-                            value: _pictograma,
-                            activeColor: Colors.white,
-                            activeTrackColor: Color(colorPrincipal),
-                            onChanged: (bool value) {
-                              setState(() {
-                                _pictograma = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          DefaultSwitch(
-                            label: 'Video:',
-                            value: _video,
-                            activeColor: Colors.white,
-                            activeTrackColor: Color(colorPrincipal),
-                            onChanged: (bool value) {
-                              setState(() {
-                                _video = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          DefaultSwitch(
-                            label: 'Imagenes:',
-                            value: _imagenes,
-                            activeColor: Colors.white,
-                            activeTrackColor: Color(colorPrincipal),
-                            onChanged: (bool value) {
-                              setState(() {
-                                _imagenes = value;
-                              });
-                            },
-                          ),
-                        ],
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 200),
+                        child: Column(
+                          children: [
+                            DefaultSwitch(
+                              label: 'Texto:',
+                              value: _texto,
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(colorPrincipal),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _texto = value;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            DefaultSwitch(
+                              label: 'Pictogramas:',
+                              value: _pictograma,
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(colorPrincipal),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _pictograma = value;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            DefaultSwitch(
+                              label: 'Vídeo:',
+                              value: _video,
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(colorPrincipal),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _video = value;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            DefaultSwitch(
+                              label: 'Imágenes:',
+                              value: _imagenes,
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(colorPrincipal),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _imagenes = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 20),
                     DefaultButton(
                       text: 'Guardar',
                       onPressed: () {

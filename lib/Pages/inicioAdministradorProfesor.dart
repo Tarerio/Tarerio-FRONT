@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/API/inicioSesionAPI.dart';
-import 'package:tarerio/Pages/principalAdministrador.dart';
+import 'package:tarerio/Pages/Administrador/principalAdministrador.dart';
 
 import '../Widgets/AppBarDefault.dart';
 import '../consts.dart';
@@ -68,8 +68,7 @@ class InicioAdministrador extends StatelessWidget {
     } else if (admin != '') {
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => PrincipalAdministrador()),
+        MaterialPageRoute(builder: (context) => PrincipalAdministrador()),
       );
     } else if (profesor != '') {
       print('Profesor');
@@ -83,10 +82,10 @@ class InicioAdministrador extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarDefault(
-      title: 'Inicio de sesión',
-      titleColor: Color(colorPrincipal),
-      iconColor: Color(colorPrincipal),
-    ),
+        title: 'Inicio de sesión',
+        titleColor: Color(colorPrincipal),
+        iconColor: Color(colorPrincipal),
+      ),
       body: Center(
         child: SizedBox(
           width: 350, // Establece un ancho fijo para el Card

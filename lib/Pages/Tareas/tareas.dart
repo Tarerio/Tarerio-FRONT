@@ -5,10 +5,10 @@ import 'package:tarerio/Widgets/TareaPeticionCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaJuego.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPorPasos.dart';
+import 'package:tarerio/Pages/Tareas/crearTareaPeticion.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'dart:async';
-import 'Tareas/crearTareaPeticion.dart';
 
 class TareasPage extends StatefulWidget {
   TareasPage({super.key});
@@ -129,7 +129,7 @@ class _TareasPageState extends State<TareasPage> {
           children: [
             ListTile(
               leading: const Icon(Icons.games),
-              title: const Text('Tarea por Juego'),
+              title: const Text('Tarea Juego'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog
                 Navigator.push(
@@ -142,7 +142,7 @@ class _TareasPageState extends State<TareasPage> {
             ),
             ListTile(
               leading: const Icon(Icons.list),
-              title: const Text('Tarea de Por Pasos'),
+              title: const Text('Tarea Por Pasos'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog
                 Navigator.push(
@@ -155,7 +155,7 @@ class _TareasPageState extends State<TareasPage> {
             ),
             ListTile(
               leading: const Icon(Icons.request_quote),
-              title: const Text('Tarea de Petición'),
+              title: const Text('Tarea Petición'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog
                 Navigator.push(

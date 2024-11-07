@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
 import 'package:tarerio/Widgets/TextFieldDefault.dart';
 
-import '../API/profesoresAPI.dart';
-import '../Widgets/AppBarDefault.dart';
-import '../Widgets/ErrorModal.dart';
-import '../Widgets/SuccessModal.dart';
-import '../consts.dart';
+import '../../API/profesoresAPI.dart';
+import '../../Widgets/AppBarDefault.dart';
+import '../../Widgets/ErrorModal.dart';
+import '../../Widgets/SuccessModal.dart';
+import '../../consts.dart';
 
 class EditarContraseniaProfesor extends StatefulWidget {
   const EditarContraseniaProfesor({Key? key}) : super(key: key);

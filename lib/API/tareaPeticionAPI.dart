@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../Pages/crearTareaPorPasos.dart';
+import '../Pages/Tareas/crearTareaPeticion.dart';
 import 'package:tarerio/consts.dart';
 
 // API de TareaPorPasos
-class TareaPorPasosAPI {
-  Future<Map<String, dynamic>?> crearTareaPorPasos(
+class TareaPeticionAPI {
+  Future<Map<String, dynamic>?> crearTareaPeticion(
       String titulo,
       String descripcion,
       DateTime fechaCreacion,
       DateTime dueDate,
       TimeOfDay dueTime,
       int idAdministrador,
-      List<Subtarea> subtareas) async {
-    String url = '$baseUrl/tareaPorPasos';
+      List<Enunciado> enunciados) async {
+    String url = '$baseUrl/tareaPeticion';
 
     final DateTime fullDueDateTime = DateTime(
       dueDate.year,
@@ -35,14 +35,13 @@ class TareaPorPasosAPI {
       "Fecha_estimada_cierre": formattedDueDate,
       "Fecha_creacion": formattedCreacionDate,
       "creatorId": idAdministrador,
-      "subtareas": subtareas
-          .map((subtarea) => {
-                "Texto": subtarea.texto,
-                "Imagen": subtarea.imagen,
-                "Pictograma": subtarea.pictograma,
-                "Video": subtarea.video
+      "enunciados": enunciados
+          .map((enunciado) => {
+                "Texto": enunciado.texto,
+                "Imagen": enunciado.imagen,
+                "Video": enunciado.video
               })
-          .toList(), // Convertir cada subtarea en un mapa
+          .toList(), // Convertir cada enunciado en un mapa*/
     };
 
     final response = await http.post(Uri.parse(url),
@@ -58,7 +57,7 @@ class TareaPorPasosAPI {
   }
 
   Future<List<Map<String, dynamic>>> obtenerTareas() async {
-    String url = '$baseUrl/tareaPorPasos';
+    String url = '$baseUrl/tareaPeticion';
 
     final response = await http.get(Uri.parse(url));
 

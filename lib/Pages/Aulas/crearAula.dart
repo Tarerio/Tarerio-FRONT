@@ -10,7 +10,7 @@ import 'package:tarerio/Widgets/SuccessModal.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/TextFieldDefault.dart';
 
-import 'package:tarerio/API/AulasAPI.dart';
+import 'package:tarerio/API/aulasAPI.dart';
 
 class CrearAula extends StatefulWidget {
 

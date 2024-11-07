@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home.dart'; //
+import '../home.dart'; //
 
-import '../Widgets/Header.dart';
+import '../../Widgets/Header.dart';
 
 class PrincipalAlumno extends StatelessWidget {
   final String nickname;
