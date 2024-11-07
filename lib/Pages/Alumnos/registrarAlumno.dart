@@ -447,7 +447,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                             ),
                             const SizedBox(height: 10),
                             DefaultSwitch(
-                              label: 'Video:',
+                              label: 'Vídeo:',
                               value: _video,
                               activeColor: Colors.white,
                               activeTrackColor: Color(colorPrincipal),
@@ -459,7 +459,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                             ),
                             const SizedBox(height: 10),
                             DefaultSwitch(
-                              label: 'Imagenes:',
+                              label: 'Imágenes:',
                               value: _imagenes,
                               activeColor: Colors.white,
                               activeTrackColor: Color(colorPrincipal),
