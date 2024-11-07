@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tarerio/API/registrarAlumnoAPI.dart';
+import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/Widgets/AppBarDefault.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
@@ -24,7 +24,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
   final int colorPrincipal = 0xFF2EC4B6;
 
   //Clase para hacer peticiones a la API
-  final RegistrarAlumnoAPI _api = RegistrarAlumnoAPI();
+  final AlumnosAPI _api = AlumnosAPI();
 
   // Controladores de texto para el nickname y la contraseña
   final TextEditingController _nicknameController = TextEditingController();

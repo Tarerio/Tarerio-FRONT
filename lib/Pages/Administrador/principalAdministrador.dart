@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
-import '../Widgets/Navbar.dart';
+import '../home.dart';
+import '../../Widgets/Navbar.dart';
 
 class PrincipalAdministrador extends StatelessWidget {
   const PrincipalAdministrador({super.key});

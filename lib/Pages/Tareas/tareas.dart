@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/API/TareaPeticionAPI.dart';
+import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'package:tarerio/Widgets/TareaPorPasosCard.dart';
 import 'package:tarerio/Widgets/TareaPeticionCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaJuego.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPorPasos.dart';
-import 'package:tarerio/API/TareaPorPasosAPI.dart';
-import 'package:tarerio/API/TareaPeticionAPI.dart';
+import 'package:tarerio/Pages/Tareas/crearTareaPeticion.dart';
+import 'package:tarerio/API/tareaPorPasosAPI.dart';
+import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'dart:async';
-import 'Tareas/crearTareaPeticion.dart';
 
 class TareasPage extends StatefulWidget {
   TareasPage({super.key});

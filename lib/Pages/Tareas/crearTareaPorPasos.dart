@@ -1,45 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tarerio/API/TareaPeticionAPI.dart';
-import 'package:tarerio/Pages/tareas.dart';
+import 'package:tarerio/API/tareaPorPasosAPI.dart';
+import 'package:tarerio/Pages/Tareas/tareas.dart';
 
-import '../Widgets/AppBarDefault.dart';
-import '../consts.dart';
+import '../../Widgets/AppBarDefault.dart';
+import '../../consts.dart';
 
-class Respuesta {
-  String? respuesta;
-  bool? realizado;
-
-  Respuesta({this.respuesta, this.realizado});
-}
-
-class Enunciado {
+// Modelo para la Subtarea
+class Subtarea {
   String? texto;
   String? imagen;
+  String? pictograma;
   String? video;
-  Respuesta? respuesta;
 
-  Enunciado({this.texto, this.imagen, this.video});
+  Subtarea({this.texto, this.imagen, this.pictograma, this.video});
 }
 
-class CrearTareaPeticion extends StatefulWidget {
+class CrearTareaPorPasos extends StatefulWidget {
   final int idAdministrador;
 
-  CrearTareaPeticion({required this.idAdministrador});
+  CrearTareaPorPasos({required this.idAdministrador});
 
   @override
-  _CrearTareaPeticionState createState() => _CrearTareaPeticionState();
+  _CrearTareaPorPasosState createState() => _CrearTareaPorPasosState();
 }
 
-class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
+class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   String? _titulo;
   String? _descripcion;
-  List<Enunciado> _enunciados = []; // Lista de enunciados
+  List<Subtarea> _subtareas = []; // Lista de subtareas
 
-  final TareaPeticionAPI _api = TareaPeticionAPI();
+  final TareaPorPasosAPI _api = TareaPorPasosAPI();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -87,16 +81,17 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
     });
   }
 
-  void _addEnunciado() async {
-    final Enunciado? newEnunciado = await showDialog<Enunciado>(
+  void _addSubtarea() async {
+    final Subtarea? newSubtarea = await showDialog<Subtarea>(
       context: context,
       builder: (BuildContext context) {
         String? texto;
         String? imagen;
+        String? pictograma;
         String? video;
 
         return AlertDialog(
-          title: const Text('Añadir Enunciado'),
+          title: const Text('Añadir Subtarea'),
           content: SingleChildScrollView(
             child: Container(
               width: MediaQuery.of(context).size.width * 0.8, // Ajusta el ancho
@@ -105,12 +100,17 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                 children: [
                   TextField(
                     onChanged: (value) => texto = value,
-                    decoration:
-                        const InputDecoration(labelText: 'Texto del enunciado'),
+                    decoration: const InputDecoration(
+                        labelText: 'Texto de la Subtarea'),
                   ),
                   TextField(
                     onChanged: (value) => imagen = value,
                     decoration: const InputDecoration(labelText: 'Imagen URL'),
+                  ),
+                  TextField(
+                    onChanged: (value) => pictograma = value,
+                    decoration:
+                        const InputDecoration(labelText: 'Pictograma URL'),
                   ),
                   TextField(
                     onChanged: (value) => video = value,
@@ -130,8 +130,11 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
             TextButton(
               onPressed: () {
                 if (texto != null) {
-                  Navigator.of(context).pop(
-                      Enunciado(texto: texto, imagen: imagen, video: video));
+                  Navigator.of(context).pop(Subtarea(
+                      texto: texto,
+                      imagen: imagen,
+                      pictograma: pictograma,
+                      video: video));
                 }
               },
               child: const Text('Añadir'),
@@ -141,27 +144,27 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
       },
     );
 
-    if (newEnunciado != null) {
+    if (newSubtarea != null) {
       setState(() {
-        _enunciados.add(newEnunciado);
+        _subtareas.add(newSubtarea);
       });
     }
   }
 
-  void _eliminarEnunciado(int index) {
+  void _eliminarSubtarea(int index) {
     setState(() {
-      _enunciados.removeAt(index);
+      _subtareas.removeAt(index);
     });
   }
 
-  void _crearTareaPeticion(BuildContext context) async {
+  void _crearTareaPorPasos(BuildContext context) async {
     if (_titulo == null ||
         _titulo!.isEmpty ||
         _descripcion == null ||
         _descripcion!.isEmpty ||
         _selectedDate == null ||
         _selectedTime == null ||
-        _enunciados.isEmpty) {
+        _subtareas.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Por favor, completa todos los campos'),
@@ -169,19 +172,18 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
       );
       return;
     }
-
     try {
       // Capturamos la hora de creación actual
       DateTime fechaCreacion = DateTime.now();
 
-      var jsonResponse = await _api.crearTareaPeticion(
+      var jsonResponse = await _api.crearTareaPorPasos(
           _titulo!,
           _descripcion!,
           fechaCreacion,
           _selectedDate!,
           _selectedTime!,
           widget.idAdministrador,
-          _enunciados // Enviar la lista de enunciados
+          _subtareas // Enviar la lista de subtareas
           );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -194,24 +196,22 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
 
       // Espera a que el SnackBar desaparezca antes de regresar
       Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context);
+        Navigator.pop(context); // Vuelve a la página anterior
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Error al crear la tarea de petición'),
-          backgroundColor: Colors.red,
-        ),
+            content: Text('Error al crear la tarea'),
+            backgroundColor: Colors.red),
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarDefault(
-        title: 'Creación tarea petición',
+        title: 'Creación tarea por pasos',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
       ),
@@ -294,16 +294,16 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                       ),
                 const SizedBox(height: 20),
                 const Text(
-                  'Enunciados',
+                  'Subtareas',
                   style: TextStyle(
                       color: Color(0xFF2EC4B6),
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
-                // Lista de enunciados
+                // Lista de subtareas
                 Expanded(
                   child: ListView.builder(
-                    itemCount: _enunciados.length,
+                    itemCount: _subtareas.length,
                     itemBuilder: (context, index) {
                       return Container(
                         margin: const EdgeInsets.symmetric(vertical: 4),
@@ -322,15 +322,15 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                                   Row(
                                     children: [
                                       Text(
-                                        "${index + 1}. ", // Enumeración de los enunciados
+                                        "${index + 1}. ", // Enumeración de las subtareas
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Flexible(
                                         child: Text(
-                                          _enunciados[index].texto ??
-                                              'Título del enunciado',
+                                          _subtareas[index].texto ??
+                                              'Título de la subtarea',
                                           style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold),
@@ -345,12 +345,17 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Imagen: ${_enunciados[index].imagen ?? 'No disponible'}",
+                                        "Imagen: ${_subtareas[index].imagen ?? 'No disponible'}",
                                         style: TextStyle(fontSize: 16),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
-                                        "Video: ${_enunciados[index].video ?? 'No disponible'}",
+                                        "Pictograma: ${_subtareas[index].pictograma ?? 'No disponible'}",
+                                        style: TextStyle(fontSize: 16),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        "Video: ${_subtareas[index].video ?? 'No disponible'}",
                                         style: TextStyle(fontSize: 16),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -363,7 +368,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                             IconButton(
                               icon: Icon(Icons.close, color: Colors.red),
                               onPressed: () {
-                                _eliminarEnunciado(index);
+                                _eliminarSubtarea(index);
                               },
                             ),
                           ],
@@ -376,11 +381,11 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
-                      onPressed: _addEnunciado,
+                      onPressed: _addSubtarea,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF2EC4B6),
                       ),
-                      child: const Text('Añadir Enunciado',
+                      child: const Text('Añadir Subtarea',
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -388,7 +393,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _crearTareaPeticion(context);
+                        _crearTareaPorPasos(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF2EC4B6),

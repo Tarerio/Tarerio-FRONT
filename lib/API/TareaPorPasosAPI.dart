@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../Pages/crearTareaPorPasos.dart';
+import '../Pages/Tareas/crearTareaPorPasos.dart';
 import 'package:tarerio/consts.dart';
 
 // API de TareaPorPasos

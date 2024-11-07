@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/Pages/registrarAlumno.dart';
-import 'package:tarerio/Pages/registrarProfesor.dart';
+import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
+import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/AlumnoCard.dart';
-import '../API/inicioSesionAPI.dart';
-import '../consts.dart';
+import '../../API/alumnosAPI.dart';
+import '../../consts.dart';
 
 class AlumnosPage extends StatefulWidget {
   AlumnosPage({super.key});
@@ -25,7 +25,7 @@ class _AlumnosState extends State<AlumnosPage> {
 
   Future<void> fetchAlumnos() async {
     try {
-      InicioSesionAPI _api = InicioSesionAPI();
+      AlumnosAPI _api = AlumnosAPI();
       final response = await _api.getAlumnos();
       setState(() {
         Alumnos = response; // Actualiza la lista de tareas

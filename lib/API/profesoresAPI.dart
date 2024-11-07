@@ -4,6 +4,31 @@ import 'package:tarerio/consts.dart';
 
 // API de Profesores
 class ProfesoresAPI {
+  //Método para registrar un profesor
+  Future<Map<String, dynamic>> registrarProfesor(
+      String nickname, String patron, String image) async {
+    String url = '$baseUrl/profesores/crear';
+
+    final Map<String, dynamic> data = {
+      'nickname': nickname,
+      'patron': patron,
+      'image': image,
+    };
+
+    final String jsonBody = json.encode(data);
+
+    print('Hacemos la petición');
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    );
+
+    return json.decode(response.body);
+  }
+
   /// Método para obtener todos los profesores
   Future<List<dynamic>> obtenerProfesores() async {
     String url = '$baseUrl/profesores';

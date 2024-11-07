@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/API/inicioSesionAPI.dart';
-import 'package:tarerio/Pages/principalAlumno.dart';
+import 'package:tarerio/API/alumnosAPI.dart';
+import 'package:tarerio/Pages/Alumnos/principalAlumno.dart';
 
 class PatronAlumno extends StatefulWidget {
   final String label;
@@ -17,13 +17,14 @@ class _PatronAlumnoState extends State<PatronAlumno> {
   List<String> selectedCodes = [];
   int currentColumn = 0;
 
-  final InicioSesionAPI _api = InicioSesionAPI();
+  final AlumnosAPI _api = AlumnosAPI();
 
   void _addImage(String imagePath) {
     setState(() {
       selectedImages.add(imagePath);
 
-      String code = '${widget.label[0].toUpperCase()}${imagePath.replaceAll(RegExp(r'[^0-9]'), '')}';
+      String code =
+          '${widget.label[0].toUpperCase()}${imagePath.replaceAll(RegExp(r'[^0-9]'), '')}';
       selectedCodes.add(code);
 
       currentColumn++;
@@ -44,18 +45,22 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       print(concatenatedCodes);
 
       try {
-        var jsonResponse = await _api.inicioSesionAlumno(widget.nickname, concatenatedCodes);
+        var jsonResponse =
+            await _api.inicioSesionAlumno(widget.nickname, concatenatedCodes);
         String nickname = jsonResponse['alumno']['nickname'];
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PrincipalAlumno(nickname: nickname)),
+          MaterialPageRoute(
+              builder: (context) => PrincipalAlumno(nickname: nickname)),
         );
       } catch (e) {
         print('Request failed with error: $e');
-        _showErrorModal('Error al iniciar sesión', 'No se encontró un usuario con el patrón ingresado.');
+        _showErrorModal('Error al iniciar sesión',
+            'No se encontró un usuario con el patrón ingresado.');
       }
     } else {
-      _showErrorModal('Error al mandar patrón', 'Debes escoger 4 imágenes para continuar.');
+      _showErrorModal(
+          'Error al mandar patrón', 'Debes escoger 4 imágenes para continuar.');
     }
   }
 
@@ -65,7 +70,8 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       builder: (BuildContext context) {
         return AlertDialog(
           icon: const Icon(Icons.error, size: 50, color: Colors.red),
-          title: Text(title, style: const TextStyle(fontSize: 30, color: Colors.red)),
+          title: Text(title,
+              style: const TextStyle(fontSize: 30, color: Colors.red)),
           content: Text(content, style: const TextStyle(fontSize: 20)),
           actions: [
             TextButton(
@@ -93,7 +99,11 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Color(0xFF2EC4B6), size: 30),
         toolbarHeight: 110,
-        title: Text('Bienvenido: ${widget.nickname}', style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: const Color(0xFF2EC4B6))),
+        title: Text('Bienvenido: ${widget.nickname}',
+            style: const TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF2EC4B6))),
         actions: [
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -123,7 +133,10 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                   padding: EdgeInsets.only(top: 20.0),
                   child: Text(
                     'Ingrese su patrón:',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: const Color(0xFF2EC4B6)),
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF2EC4B6)),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -136,7 +149,9 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                       width: 150,
                       height: 150,
                       child: ElevatedButton(
-                        onPressed: selectedImages.length >= 4 ? null : () => _addImage(imagePath),
+                        onPressed: selectedImages.length >= 4
+                            ? null
+                            : () => _addImage(imagePath),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -163,13 +178,13 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                       child: Row(
                         children: selectedImages
                             .map((imagePath) => Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: Image.asset(imagePath),
-                          ),
-                        ))
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: Image.asset(imagePath),
+                                  ),
+                                ))
                             .toList(),
                       ),
                     ),

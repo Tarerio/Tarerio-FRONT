@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tarerio/API/TareaJuegoAPI.dart';
+import 'package:tarerio/API/tareaJuegoAPI.dart';
 
-import '../Widgets/AppBarDefault.dart';
-import '../consts.dart';
+import '../../Widgets/AppBarDefault.dart';
+import '../../consts.dart';
 
 class CrearTareaJuego extends StatefulWidget {
   final int IdAdministrador;

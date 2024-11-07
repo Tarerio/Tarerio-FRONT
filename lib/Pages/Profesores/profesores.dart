@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/Pages/registrarProfesor.dart';
+import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/ProfesorCard.dart';
 
-import '../API/profesoresAPI.dart';
-import '../consts.dart';
+import '../../API/profesoresAPI.dart';
+import '../../consts.dart';
 
 class ProfesoresPage extends StatefulWidget {
   ProfesoresPage({super.key});

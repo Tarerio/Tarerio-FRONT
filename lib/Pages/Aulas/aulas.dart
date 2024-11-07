@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/AulaCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 
-import 'package:tarerio/API/AulasAPI.dart';
-import 'package:tarerio/Pages/crearAula.dart';
+import 'package:tarerio/API/aulasAPI.dart';
+import 'package:tarerio/Pages/Aulas/crearAula.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/API/profesoresAPI.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';

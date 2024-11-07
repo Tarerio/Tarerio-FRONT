@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/Pages/alumnos.dart';
-import 'package:tarerio/Pages/aulas.dart';
-import 'package:tarerio/Pages/profesores.dart';
+import 'package:tarerio/Pages/Alumnos/alumnos.dart';
+import 'package:tarerio/Pages/Aulas/aulas.dart';
+import 'package:tarerio/Pages/Profesores/profesores.dart';
 import 'package:tarerio/Pages/tareas.dart';
-import 'package:tarerio/Pages/crearTareaJuego.dart';
-import 'package:tarerio/Pages/crearTareaPorPasos.dart';
+import 'package:tarerio/Pages/Tareas/crearTareaJuego.dart';
+import 'package:tarerio/Pages/Tareas/crearTareaPorPasos.dart';
 import 'package:tarerio/Pages/home.dart';
-import 'package:tarerio/Pages/inicioAlumno.dart'; // Importa la página InicioAlumno
+import 'package:tarerio/Pages/Alumnos/inicioAlumno.dart'; // Importa la página InicioAlumno
 import 'package:tarerio/Pages/inicioAdministradorProfesor.dart';
-import 'package:tarerio/Pages/registrarAlumno.dart';
-import 'package:tarerio/Pages/registrarProfesor.dart';
-import 'Pages/editarContraseniaProfesor.dart';
+import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
+import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
+import 'Pages/Profesores/editarContraseniaProfesor.dart';
 
 void main() {
   runApp(const MyApp());
