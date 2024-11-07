@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tarerio/API/alumnosAPI.dart';
+import 'package:tarerio/API/inicioSesionAPI.dart';
 import 'package:tarerio/Pages/Alumnos/patronAlumno.dart';
 import '../../Widgets/AppBarDefault.dart'; // Import the AppBarDefault component
 import 'package:tarerio/consts.dart';
@@ -13,7 +13,7 @@ class InicioAlumno extends StatefulWidget {
 }
 
 class _InicioAlumnoState extends State<InicioAlumno> {
-  final AlumnosAPI _api = AlumnosAPI();
+  final InicioSesionAPI _api = InicioSesionAPI();
   List<dynamic> alumnos = [];
   bool isLoading = true;
   int currentPage = 0;
@@ -100,13 +100,13 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                   child: Center(
                     child: IconButton(
                       icon: Icon(Icons.arrow_back,
-                          color: Color(colorSecundario), size: 40),
+                          color: Color(colorSecundario), size: 90),
                       onPressed: _previousPage,
                     ),
                   ),
                 ),
                 Expanded(
-                  flex: 15,
+                  flex: 8,
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Wrap(
@@ -184,7 +184,7 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                   child: Center(
                     child: IconButton(
                       icon: Icon(Icons.arrow_forward,
-                          color: Color(colorSecundario), size: 40),
+                          color: Color(colorSecundario), size: 90),
                       onPressed: _nextPage,
                     ),
                   ),
