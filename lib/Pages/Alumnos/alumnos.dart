@@ -82,8 +82,7 @@ class _AlumnosState extends State<AlumnosPage> {
         backgroundColor: const Color(0xFF2EC4B6),
       ),
       drawer: Navbar(
-        screenIndex:
-            4, // Asegúrate de que este índice sea el correcto para la página de Alumnos
+        screenIndex: 4,
         onLogout: () {
           print("Cerrar sesión");
         },
