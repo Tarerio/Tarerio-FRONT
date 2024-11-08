@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/Pages/home.dart';
 
 class ExampleDestination {
   const ExampleDestination(
@@ -96,8 +97,11 @@ class _NavbarState extends State<Navbar> {
               style: TextStyle(color: Colors.red),
             ),
             onTap: () {
-              widget.onLogout?.call(); // Llama a la función de cierre de sesión
-              Navigator.pushReplacementNamed(context, '/home'); // Cambia '/home' por la ruta de tu página de inicio
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => Home()),
+                    (Route<dynamic> route) => false, // elimina todas las rutas anteriores
+              );
             },
           ),
         ],
