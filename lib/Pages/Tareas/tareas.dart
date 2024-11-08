@@ -78,7 +78,7 @@ class _TareasPageState extends State<TareasPage> {
               child: TareaCard(
                 titulo: tarea['Titulo'],
                 descripcion: tarea['Descripcion'],
-                imagenbase64: tarea['imagenBase64'] ?? '', // No hay imagen en las tareas de momento
+                imagenBase64: tarea['imagenBase64'] ?? '', // No hay imagen en las tareas de momento
                 tipo: tarea['tipo'],
                 onEdit: () {},
                 onAssign: () {},

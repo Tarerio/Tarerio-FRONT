@@ -32,12 +32,18 @@ class AlumnoCard extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 15),
             // Imagen del profesor
-            imagenBase64 != null && imagenBase64.isNotEmpty
-                ? CircleAvatar(
-                    radius: 50, // Adjust the size as needed
-                    backgroundImage: MemoryImage(base64Decode(imagenBase64)),
-                  )
-                : Avatar(image: null, size: 50),
+            imagenBase64.isNotEmpty ? CircleAvatar(
+              radius: 50, // Adjust the size as needed
+              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
+            )
+                : const Avatar(
+              image: null,
+              size: 50,
+              placeholderIcon: Icon(
+                  Icons.school,
+                  color: Colors.white
+              ),
+            ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),

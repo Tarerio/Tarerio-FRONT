@@ -5,7 +5,7 @@ import 'package:tarerio/Widgets/Avatar.dart';
 class TareaCard extends StatelessWidget {
   final String titulo;
   final String descripcion;
-  final String imagenbase64;
+  final String imagenBase64;
   final String tipo;
   final VoidCallback onEdit;
   final VoidCallback onAssign;
@@ -15,7 +15,7 @@ class TareaCard extends StatelessWidget {
     Key? key,
     required this.titulo,
     required this.descripcion,
-    required this.imagenbase64,
+    required this.imagenBase64,
     required this.tipo,
     required this.onEdit,
     required this.onAssign,
@@ -51,12 +51,18 @@ class TareaCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             // Imagen de la tarea
-            imagenbase64.isNotEmpty
-                ? CircleAvatar(
+            imagenBase64.isNotEmpty ? CircleAvatar(
               radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenbase64)),
+              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
             )
-                : const Avatar(image: null, size: 50),
+                : const Avatar(
+              image: null,
+              size: 50,
+              placeholderIcon: Icon(
+                  Icons.edit_square,
+                  color: Colors.white
+              ),
+            ),
             // Nombre de la tarea
             Padding(
               padding: const EdgeInsets.all(8.0),

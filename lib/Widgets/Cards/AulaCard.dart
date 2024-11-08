@@ -39,12 +39,18 @@ class AulaCard extends StatelessWidget {
           children: <Widget>[
             const SizedBox(height: 15),
             // Imagen del profesor
-            imagenAula.isNotEmpty
-                ? CircleAvatar(
+            imagenAula.isNotEmpty ? CircleAvatar(
               radius: 50, // Adjust the size as needed
               backgroundImage: MemoryImage(base64Decode(imagenAula)),
             )
-                : const Avatar(image: null, size: 50),
+                : const Avatar(
+                  image: null, 
+                  size: 50,
+                  placeholderIcon: Icon(
+                    Icons.table_restaurant_rounded,
+                      color: Colors.white
+                    ),
+                ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
