@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-//import '../Pages/crearAula.dart';
 import 'package:tarerio/consts.dart';
 
 // API de Aulas
@@ -77,7 +76,24 @@ class AulasAPI {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Error al asignar profesor al aula API');
+      throw Exception('Error al asignar profesor al aula');
+    }
+  }
+
+  Future<Map<String, dynamic>> obtenerProfesoresAsignados(int idAula) async {
+    String url = '$baseUrl/aulas/$idAula/profesores';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al recuperar los profesores asignados al aula');
     }
   }
 }
