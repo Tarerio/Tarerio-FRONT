@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
+import 'package:tarerio/Pages/Tareas/tareas.dart';
 
 import '../../Widgets/AppBarDefault.dart';
 import '../../consts.dart';
@@ -22,7 +23,7 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
   String? _descripcion;
   String? _url;
 
-  final TareaAPI _api = TareaAPI();
+  final TareaJuegoAPI _api = TareaJuegoAPI();
 
 
   Future<void> _selectDate(BuildContext context) async {
@@ -95,7 +96,6 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
 
     try {
       var jsonResponse = await _api.crearTareaJuego(_titulo!, _descripcion!, _url!, _selectedDate!, _selectedTime!, widget.IdAdministrador);
-      print(jsonResponse);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Tarea creada exitosamente'),
@@ -126,6 +126,12 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
         title: 'Creación tarea juego',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TareasPage()),
+          );
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.only(

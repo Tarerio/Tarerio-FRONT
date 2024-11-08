@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tarerio/consts.dart';
 
-class TareaAPI {
+// API de TareaJuego
+class TareaJuegoAPI {
   Future<Map<String, dynamic>?> crearTareaJuego(
       String titulo,
       String descripcion,
@@ -37,6 +38,21 @@ class TareaAPI {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load data');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> obtenerTareas() async {
+    String url = '$baseUrl/tareaJuego';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse
+          .map((tarea) => tarea as Map<String, dynamic>)
+          .toList();
+    } else {
+      throw Exception('Failed to load tasks');
     }
   }
 }

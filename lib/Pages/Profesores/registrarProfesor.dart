@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tarerio/API/profesoresAPI.dart';
+import 'package:tarerio/Pages/Profesores/profesores.dart';
 import 'package:tarerio/Widgets/AppBarDefault.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
@@ -129,6 +130,12 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
             color: Color(colorPrincipal),
           ),
         ],
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => ProfesoresPage()),
+          );
+        },
       ),
       body: Center(
         child: Column(

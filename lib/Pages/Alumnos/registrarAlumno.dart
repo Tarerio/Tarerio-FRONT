@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
+import 'package:tarerio/Pages/Alumnos/alumnos.dart';
 import 'package:tarerio/Widgets/AppBarDefault.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
@@ -204,6 +205,12 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
             color: Color(colorPrincipal),
           ),
         ],
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AlumnosPage()),
+          );
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

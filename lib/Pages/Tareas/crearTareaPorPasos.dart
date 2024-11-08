@@ -214,6 +214,12 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
         title: 'Creación tarea por pasos',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TareasPage()),
+          );
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.only(

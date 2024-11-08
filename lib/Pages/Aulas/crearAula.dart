@@ -9,8 +9,8 @@ import 'package:tarerio/Widgets/InformationModal.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/TextFieldDefault.dart';
-
 import 'package:tarerio/API/aulasAPI.dart';
+import 'package:tarerio/Pages/Aulas/aulas.dart';
 
 class CrearAula extends StatefulWidget {
 
@@ -110,6 +110,12 @@ void _showErrorModal(BuildContext context, String title, String content) {
         title: 'Creación de aula',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AulasPage()),
+          );
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

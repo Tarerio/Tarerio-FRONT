@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
-import 'package:tarerio/Widgets/TareaPorPasosCard.dart';
-import 'package:tarerio/Widgets/TareaPeticionCard.dart';
+import 'package:tarerio/API/tareaPorPasosAPI.dart';
+import 'package:tarerio/API/tareaJuegoAPI.dart';
+import 'package:tarerio/Widgets/Cards/TareaCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaJuego.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPorPasos.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPeticion.dart';
-import 'package:tarerio/API/tareaPorPasosAPI.dart';
-import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'dart:async';
 
 class TareasPage extends StatefulWidget {
@@ -18,7 +17,7 @@ class TareasPage extends StatefulWidget {
 }
 
 class _TareasPageState extends State<TareasPage> {
-  List<Map<String, dynamic>> tareas = []; // Lista para almacenar las tareas
+  List<Map<String, dynamic>> Tareas = []; // Lista para almacenar las tareas
   bool isLoading = true; // Indicador de carga
 
   @override
@@ -31,16 +30,19 @@ class _TareasPageState extends State<TareasPage> {
     try {
       TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
       TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
+      TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
 
       // Obtén ambas listas de tareas de manera concurrente
       final tareasPorPasos = await _porPasosAPI.obtenerTareas();
       final tareasPeticion = await _peticionAPI.obtenerTareas();
+      final tareasJuego = await _juegoAPI.obtenerTareas();
 
       setState(() {
-        tareas = [
-          ...tareasPorPasos,
-          ...tareasPeticion
-        ]; // Combina ambas listas en 'tareas'
+        Tareas = [
+          ...tareasPorPasos.map((tarea) => {'tipo': 'Tarea Por Pasos', ...tarea}),
+          ...tareasPeticion.map((tarea) => {'tipo': 'Tarea Peticion', ...tarea}),
+          ...tareasJuego.map((tarea) => {'tipo': 'Tarea Juego', ...tarea}),
+        ]; // Combina las listas en 'tareas'
         isLoading = false; // Cambia el estado de carga
       });
     } catch (e) {
@@ -53,19 +55,6 @@ class _TareasPageState extends State<TareasPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    int crossAxisCount;
-
-    if (screenWidth > 1200) {
-      crossAxisCount = 4;
-    } else if (screenWidth > 800) {
-      crossAxisCount = 3;
-    } else if (screenWidth > 500) {
-      crossAxisCount = 2;
-    } else {
-      crossAxisCount = 1;
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tareas',
@@ -74,48 +63,43 @@ class _TareasPageState extends State<TareasPage> {
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
       ),
-      drawer: Navbar(
-        screenIndex: 0,
-        onLogout: () {
-          print("Cerrar sesión");
-        },
-      ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : GridView.builder(
-              padding: const EdgeInsets.all(10.0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-                childAspectRatio: 0.75,
+          : Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          spacing: 8.0, // Space between cards horizontally
+          runSpacing: 8.0, // Space between cards vertically
+          children: Tareas.map((tarea) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width > 800
+                  ? 200
+                  : 150, // Adjust width based on screen size
+              child: TareaCard(
+                titulo: tarea['Titulo'],
+                descripcion: tarea['Descripcion'],
+                imagenBase64: tarea['imagenBase64'] ?? '', // No hay imagen en las tareas de momento
+                tipo: tarea['tipo'],
+                onEdit: () {},
+                onAssign: () {},
+                onDelete: () {},
               ),
-              itemCount: tareas.length,
-              itemBuilder: (context, index) {
-                final tarea = tareas[index];
-                return TareaPorPasosCard(
-                  titulo: tarea['Titulo'] ?? 'Sin Titulo',
-                  descripcion: tarea['Descripcion'] ?? 'Sin Descripción',
-                  horaCierre: tarea['horaCierre'] ??
-                      'Sin hora', // Asegúrate de pasar la hora de cierre
-                  onEdit: () {
-                    // Logic to edit task
-                  },
-                  onAssign: () {
-                    // Logic to assign task
-                  },
-                  onDelete: () {
-                    // Logic to delete task
-                  },
-                );
-              },
-            ),
+            );
+          }).toList(),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showTaskTypeDialog(context);
         },
         child: const Icon(Icons.add),
         backgroundColor: const Color(0xFF2EC4B6),
+      ),
+      drawer: Navbar(
+        screenIndex: 0,
+        onLogout: () {
+          print("Cerrar sesión");
+        },
       ),
     );
   }
@@ -172,46 +156,4 @@ class _TareasPageState extends State<TareasPage> {
     );
   }
 
-  void _confirmDelete(String id) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirmar Eliminación'),
-          content:
-              const Text('¿Estás seguro de que deseas eliminar esta tarea?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-              },
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop(); // Cerrar el diálogo
-                await _deleteTask(
-                    id); // Llama a la función para eliminar la tarea
-              },
-              child: const Text('Eliminar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _deleteTask(String id) async {
-    try {
-      TareaPorPasosAPI _api = TareaPorPasosAPI();
-      await _api.eliminarTarea(id); // Llama al método de eliminación
-      setState(() {
-        tareas.removeWhere(
-            (tarea) => tarea['id'] == id); // Actualiza la lista de tareas
-      });
-    } catch (e) {
-      print("Error al eliminar tarea: $e");
-      // Manejar el error de eliminación
-    }
-  }
 }

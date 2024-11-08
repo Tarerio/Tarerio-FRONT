@@ -2,25 +2,25 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
-class AulaCard extends StatelessWidget {
-  final int idUsuario;
-  final String imagenAula; // URL o ruta de la imagen
-  final String claveAula;
-  final int cupoAula;
-  final VoidCallback onAssign;
+class TareaCard extends StatelessWidget {
+  final String titulo;
+  final String descripcion;
+  final String imagenBase64;
+  final String tipo;
   final VoidCallback onEdit;
+  final VoidCallback onAssign;
   final VoidCallback onDelete;
 
-  const AulaCard(
-      {Key? key,
-        required this.idUsuario,
-        required this.imagenAula,
-        required this.claveAula,
-        required this.cupoAula,
-        required this.onAssign,
-        required this.onEdit,
-        required this.onDelete
-      })
+  const TareaCard({
+    Key? key,
+    required this.titulo,
+    required this.descripcion,
+    required this.imagenBase64,
+    required this.tipo,
+    required this.onEdit,
+    required this.onAssign,
+    required this.onDelete,
+  })
       : super(key: key);
 
   @override
@@ -37,19 +37,39 @@ class AulaCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Text(
+                tipo,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.teal,
+                ),
+              ),
+            ),
             const SizedBox(height: 15),
-            // Imagen del profesor
-            imagenAula.isNotEmpty
-                ? CircleAvatar(
+            // Imagen de la tarea
+            imagenBase64.isNotEmpty ? CircleAvatar(
               radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenAula)),
+              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
             )
-                : const Avatar(image: null, size: 50),
-            // Nombre del aula
+                : const Avatar(
+              image: null,
+              size: 50,
+              placeholderIcon: Icon(
+                  Icons.edit_square,
+                  color: Colors.white
+              ),
+            ),
+            // Nombre de la tarea
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                claveAula,
+                titulo,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -64,7 +84,7 @@ class AulaCard extends StatelessWidget {
                 TextButton.icon(
                   onPressed: () => {},
                   icon: const Icon(Icons.key, color: Colors.teal),
-                  label: const Text('Editar Aula'),
+                  label: const Text('Editar Tarea'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
@@ -73,7 +93,7 @@ class AulaCard extends StatelessWidget {
                 TextButton.icon(
                   onPressed: onAssign,
                   icon: const Icon(Icons.person_add_alt, color: Colors.teal),
-                  label: const Text('Asignar Profesr'),
+                  label: const Text('Asignar a Alumno'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),

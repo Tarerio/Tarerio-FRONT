@@ -79,7 +79,7 @@ class Home extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.school, size: 30,),
+                    Icon(Icons.school, size: 50,),
                     SizedBox(height: 5, width: 200,), // Reduce the space between icon and text
                     Text(
                       'Alumno',

@@ -57,21 +57,33 @@ class InicioAdministrador extends StatelessWidget {
   }
 
   void _inicioSesionAdminProfesor(BuildContext context) async {
-    // Primero verificar si es un administrador
-    String admin = await _testAdmin(context);
-    String profesor = await _testProfesor(context);
-
-    //Si los campos vacíos
+    // Verificar si los campos están vacíos
     if (usuarioController.text.isEmpty || contrasenaController.text.isEmpty) {
       _showErrorModal(context, 'Error al iniciar sesión',
           'Por favor, llena todos los campos.');
-    } else if (admin != '') {
+      return;
+    }
+
+    // Primero verificar si es un administrador
+    String admin = await _testAdmin(context);
+
+    if (admin.isNotEmpty) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => PrincipalAdministrador()),
       );
-    } else if (profesor != '') {
+      return;
+    }
+
+    // Si no es administrador, intentar iniciar sesión como profesor
+    String profesor = await _testProfesor(context);
+
+    if (profesor.isNotEmpty) {
       print('Profesor');
+      // Navigator.push( // TO ADD
+      //   context,
+      //   MaterialPageRoute(builder: (context) => PrincipalProfesor()),
+      // );
     } else {
       _showErrorModal(context, 'Error al iniciar sesión',
           'Usuario o contraseña incorrectos.');

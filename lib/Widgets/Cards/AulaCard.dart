@@ -2,18 +2,26 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
-class AlumnoCard extends StatelessWidget {
-  final int id_usuario;
-  final String imagenBase64; // URL o ruta de la imagen
-  final String nickname;
+class AulaCard extends StatelessWidget {
+  final int idUsuario;
+  final String imagenAula; // URL o ruta de la imagen
+  final String claveAula;
+  final int cupoAula;
   final VoidCallback onAssign;
-  const AlumnoCard({
-    Key? key,
-    required this.id_usuario,
-    required this.imagenBase64,
-    required this.nickname,
-    required this.onAssign,
-  }) : super(key: key);
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+
+  const AulaCard(
+      {Key? key,
+        required this.idUsuario,
+        required this.imagenAula,
+        required this.claveAula,
+        required this.cupoAula,
+        required this.onAssign,
+        required this.onEdit,
+        required this.onDelete
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +37,25 @@ class AlumnoCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             // Imagen del profesor
-            imagenBase64 != null && imagenBase64.isNotEmpty
-                ? CircleAvatar(
-                    radius: 50, // Adjust the size as needed
-                    backgroundImage: MemoryImage(base64Decode(imagenBase64)),
-                  )
-                : Avatar(image: null, size: 50),
+            imagenAula.isNotEmpty ? CircleAvatar(
+              radius: 50, // Adjust the size as needed
+              backgroundImage: MemoryImage(base64Decode(imagenAula)),
+            )
+                : const Avatar(
+                  image: null, 
+                  size: 50,
+                  placeholderIcon: Icon(
+                    Icons.table_restaurant_rounded,
+                      color: Colors.white
+                    ),
+                ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                nickname,
+                claveAula,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -53,24 +67,28 @@ class AlumnoCard extends StatelessWidget {
             OverflowBar(
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                // Botón de Editar alumno del alumno
                 TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, '/administrador/alumnos/editarAlumno',
-                        arguments: id_usuario);
-                  },
+                  onPressed: () => {},
                   icon: const Icon(Icons.key, color: Colors.teal),
-                  label: const Text('Editar alumno'),
+                  label: const Text('Editar Aula'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.teal,
+                  ),
+                ),
+                // Boton Asignar Profesor
+                TextButton.icon(
+                  onPressed: onAssign,
+                  icon: const Icon(Icons.person_add_alt, color: Colors.teal),
+                  label: const Text('Asignar Profesr'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
                 ),
                 // Botón de Eliminar
                 TextButton.icon(
-                  onPressed: onAssign,
+                  onPressed: onDelete,
                   icon: const Icon(Icons.delete, color: Colors.teal),
-                  label: const Text('Eliminar'),
+                  label: const Text('Elimnar'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),

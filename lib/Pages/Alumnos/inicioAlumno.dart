@@ -171,7 +171,9 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                                 Text(
                                   nickname,
                                   style: const TextStyle(fontSize: 20),
-                                ),
+                                  maxLines: 1, // Limita a una sola línea
+                                  overflow: TextOverflow.ellipsis, // Aplica elipsis en caso de overflow
+                                  ),
                               ],
                             ),
                           ),
