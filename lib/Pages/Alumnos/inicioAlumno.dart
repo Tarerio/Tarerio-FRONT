@@ -17,7 +17,7 @@ class _InicioAlumnoState extends State<InicioAlumno> {
   List<dynamic> alumnos = [];
   bool isLoading = true;
   int currentPage = 0;
-  final int itemsPerPage = 8;
+  final int itemsPerPage = 6;
 
   @override
   void initState() {
@@ -99,14 +99,14 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                 Expanded(
                   child: Center(
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back,
+                      icon: Icon(Icons.arrow_back_ios_new,
                           color: Color(colorSecundario), size: 90),
                       onPressed: _previousPage,
                     ),
                   ),
                 ),
                 Expanded(
-                  flex: 8,
+                  flex: 6,
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Wrap(
@@ -123,8 +123,8 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                         String? imagenBase64 = alumno['imagenBase64'];
 
                         return SizedBox(
-                          width: 150,
-                          height: 150,
+                          width: 250,
+                          height: 250,
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
@@ -139,7 +139,7 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               padding: const EdgeInsets.all(20),
                               shadowColor: Colors.black,
@@ -149,15 +149,15 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CircleAvatar(
-                                  radius: 30,
+                                  radius: 70,
                                   backgroundColor: avatarColor,
-                                  child: imagenBase64 != null
+                                  child: (imagenBase64 != null && imagenBase64.isNotEmpty)
                                       ? ClipOval(
                                           child: Image.memory(
                                             base64Decode(imagenBase64),
                                             fit: BoxFit.cover,
-                                            width: 60,
-                                            height: 60,
+                                            width: 110,
+                                            height: 110,
                                           ),
                                         )
                                       : Text(
@@ -185,7 +185,7 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                 Expanded(
                   child: Center(
                     child: IconButton(
-                      icon: Icon(Icons.arrow_forward,
+                      icon: Icon(Icons.arrow_forward_ios,
                           color: Color(colorSecundario), size: 90),
                       onPressed: _nextPage,
                     ),
