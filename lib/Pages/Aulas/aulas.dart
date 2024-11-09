@@ -7,7 +7,7 @@ import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 
 class AulasPage extends StatefulWidget {
-  AulasPage({super.key});
+  const AulasPage({super.key});
 
   @override
   _AulasPageState createState() => _AulasPageState();
@@ -45,8 +45,8 @@ class _AulasPageState extends State<AulasPage> {
 
   Future<void> fetchAulas() async {
     try {
-      AulasAPI _api = AulasAPI();
-      final response = await _api.obtenerAulas();
+      AulasAPI api = AulasAPI();
+      final response = await api.obtenerAulas();
       setState(() {
         aulas = response;
         isloadingAulas = false;
@@ -89,8 +89,8 @@ class _AulasPageState extends State<AulasPage> {
 
   Future<void> _borrarAula(String id) async {
     try {
-      AulasAPI _api = AulasAPI();
-      await _api.eliminarAula(id);
+      AulasAPI api = AulasAPI();
+      await api.eliminarAula(id);
       setState(() {
         aulas.removeWhere((aula) => aula['id'] == id);
       });
@@ -103,8 +103,8 @@ class _AulasPageState extends State<AulasPage> {
 
   Future<Map<String, dynamic>> fetchProfesores(int idAula) async {
     try {
-      AulasAPI _api = AulasAPI();
-      final response = await _api.obtenerProfesoresAsignados(idAula);
+      AulasAPI api = AulasAPI();
+      final response = await api.obtenerProfesoresAsignados(idAula);
       setState(() {
         profesores = response;
         isLoadingProfesores = false;
@@ -119,10 +119,68 @@ class _AulasPageState extends State<AulasPage> {
     }
   }
 
-  void _mostrarDialogProfesores(BuildContext context, int idAula) {
-    
-}
+  void _mostrarDialogProfesores(BuildContext context, int idAula) async {
+    await fetchProfesores(idAula);
 
+    List<dynamic> asignados = profesores['asignados'];
+    //List<Map<String, dynamic>> noAsignados = profesores['noAsignados'];
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Seleccionar Profesor'),
+          content: isLoadingProfesores
+              ? const Center(child: CircularProgressIndicator())
+              : SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              itemCount: asignados.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 4.0),
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 192, 184, 184),
+                    borderRadius: BorderRadius.circular(8.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 113, 141, 119).withOpacity(0.3),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(
+                        asignados[index]['nickname'] ?? 'Sin nombre'),
+                    onTap: () async {
+                      int idUsuario = asignados[index]['id_usuario'];
+                      try {
+                        await AulasAPI()
+                            .asignarProfesorAula(idAula, idUsuario);
+                        Navigator.pop(context);
+                        _showSuccessModal(context, "Éxito",
+                            "Profesor asignado exitosamente");
+                      } catch (e) {
+                        _showErrorModal(context, "Error", e.toString());
+                      }
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
