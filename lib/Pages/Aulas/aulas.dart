@@ -123,7 +123,7 @@ class _AulasPageState extends State<AulasPage> {
     await fetchProfesores(idAula);
 
     List<dynamic> asignados = profesores['asignados'];
-    //List<Map<String, dynamic>> noAsignados = profesores['noAsignados'];
+    List<dynamic> noAsignados = profesores['noAsignados'];
 
     showDialog(
       context: context,
@@ -133,44 +133,67 @@ class _AulasPageState extends State<AulasPage> {
           content: isLoadingProfesores
               ? const Center(child: CircularProgressIndicator())
               : SizedBox(
-            width: double.maxFinite,
-            child: ListView.builder(
-              itemCount: asignados.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 192, 184, 184),
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromARGB(255, 113, 141, 119).withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
+                  width: double.maxFinite,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Lista de profesores asignados
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: asignados.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(vertical: 4.0),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2EC4B6),
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color.fromARGB(255, 0, 0, 0)
+                                      .withOpacity(0.3),
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                  asignados[index]['nickname'] ?? 'Sin nombre'),
+                              trailing: IconButton(
+                                color: Colors.grey[100],
+                                icon: const Icon(Icons.delete),
+                                onPressed: () async {},
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const Divider(),
+                      // ExpansionTile para mostrar los profesores no asignados
+                      ExpansionTile(
+                        title: const Text("Seleccionar profesor no asignado"),
+                        children: noAsignados.map((profesor) {
+                          return ListTile(
+                            title: Text(profesor['nickname'] ?? 'Sin nombre'),
+                            onTap: () async {
+                              int idUsuario = profesor['id_usuario'];
+                              try {
+                                await AulasAPI()
+                                    .asignarProfesorAula(idAula, idUsuario);
+                                Navigator.pop(context);
+                                _showSuccessModal(context, "Éxito",
+                                    "Profesor asignado exitosamente");
+                              } catch (e) {
+                                _showErrorModal(context, "Error", e.toString());
+                              }
+                            },
+                          );
+                        }).toList(),
                       ),
                     ],
                   ),
-                  child: ListTile(
-                    title: Text(
-                        asignados[index]['nickname'] ?? 'Sin nombre'),
-                    onTap: () async {
-                      int idUsuario = asignados[index]['id_usuario'];
-                      try {
-                        await AulasAPI()
-                            .asignarProfesorAula(idAula, idUsuario);
-                        Navigator.pop(context);
-                        _showSuccessModal(context, "Éxito",
-                            "Profesor asignado exitosamente");
-                      } catch (e) {
-                        _showErrorModal(context, "Error", e.toString());
-                      }
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
+                ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
