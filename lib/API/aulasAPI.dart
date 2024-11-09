@@ -96,4 +96,41 @@ class AulasAPI {
       throw Exception('Error al recuperar los profesores asignados al aula');
     }
   }
+
+  Future<Map<String, dynamic>> desasignarProfesor(
+      int idAula, int idProfesor) async {
+    String url = '$baseUrl/aulas/eliminar-profesor';
+
+    // Datos que se enviarán en la solicitud POST
+    final Map<String, dynamic> data = {
+      "id_aula": idAula,
+      "id_usuario": idProfesor,
+    };
+
+    final jsonBody = json.encode(data);
+    
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonBody,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        return {
+          "status": "error",
+          "message": "Error en la desasignación: ${response.statusCode}",
+        };
+      }
+    } catch (e) {
+      return {
+        "status": "error",
+        "message": "Error de conexión: $e",
+      };
+    }
+  }
 }

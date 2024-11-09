@@ -142,6 +142,7 @@ class _AulasPageState extends State<AulasPage> {
                         shrinkWrap: true,
                         itemCount: asignados.length,
                         itemBuilder: (context, index) {
+                          int idProfesor = asignados[index]['id_usuario'];
                           return Container(
                             margin: const EdgeInsets.symmetric(vertical: 4.0),
                             decoration: BoxDecoration(
@@ -163,7 +164,18 @@ class _AulasPageState extends State<AulasPage> {
                               trailing: IconButton(
                                 color: Colors.grey[100],
                                 icon: const Icon(Icons.delete),
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  try {
+                                    await AulasAPI()
+                                        .desasignarProfesor(idAula, idProfesor);
+                                    Navigator.pop(context);
+                                    _showSuccessModal(context, "Éxito",
+                                        "Profesor desasignado exitosamente");
+                                  } catch (e) {
+                                    _showErrorModal(
+                                        context, "Error", e.toString());
+                                  }
+                                },
                               ),
                             ),
                           );

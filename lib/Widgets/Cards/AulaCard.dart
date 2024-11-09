@@ -79,7 +79,7 @@ class AulaCard extends StatelessWidget {
                 TextButton.icon(
                   onPressed: onAssign,
                   icon: const Icon(Icons.person_add_alt, color: Colors.teal),
-                  label: const Text('Asignar Profesr'),
+                  label: const Text('Profesores'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
