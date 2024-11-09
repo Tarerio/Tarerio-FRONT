@@ -8,6 +8,8 @@ import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/API/profesoresAPI.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 
+import 'alumnosDeAula.dart';
+
 class AulasPage extends StatefulWidget {
   AulasPage({super.key});
 
@@ -139,7 +141,8 @@ class _AulasPageState extends State<AulasPage> {
           runSpacing: 8.0,
           children: aulas.map((aula) {
             return SizedBox(
-              width: MediaQuery.of(context).size.width > 800 ? 200 : 150,
+              width: MediaQuery.of(context).size.width / 5,
+              height: 370,
               child: AulaCard(
                 idUsuario: aula['id_aula'],
                 claveAula: aula['clave_aula'],
@@ -153,6 +156,12 @@ class _AulasPageState extends State<AulasPage> {
                 },
                 onDelete: () {
                   _confirmarEliminacion(aula['id_aula'].toString());
+                },
+                onSeeStudents: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AlumnosDeAula(claveAula: aula['clave_aula'], aulaId: aula['id_aula'], cupoAula: aula['cupo']),),
+                  );
                 },
               ),
             );
