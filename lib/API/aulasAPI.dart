@@ -101,14 +101,13 @@ class AulasAPI {
       int idAula, int idProfesor) async {
     String url = '$baseUrl/aulas/eliminar-profesor';
 
-    // Datos que se enviarán en la solicitud POST
     final Map<String, dynamic> data = {
       "id_aula": idAula,
-      "id_usuario": idProfesor,
+      "id_profesor": idProfesor,
     };
 
     final jsonBody = json.encode(data);
-    
+
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -117,6 +116,8 @@ class AulasAPI {
         },
         body: jsonBody,
       );
+
+      print(json.decode(response.body));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

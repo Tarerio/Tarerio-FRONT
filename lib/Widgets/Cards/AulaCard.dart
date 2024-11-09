@@ -69,7 +69,7 @@ class AulaCard extends StatelessWidget {
               children: <Widget>[
                 TextButton.icon(
                   onPressed: () => {},
-                  icon: const Icon(Icons.key, color: Colors.teal),
+                  icon: const Icon(Icons.edit, color: Colors.teal),
                   label: const Text('Editar Aula'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
@@ -88,7 +88,7 @@ class AulaCard extends StatelessWidget {
                 TextButton.icon(
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete, color: Colors.teal),
-                  label: const Text('Elimnar'),
+                  label: const Text('Eliminar'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),

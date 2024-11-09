@@ -163,7 +163,7 @@ class _AulasPageState extends State<AulasPage> {
                                   asignados[index]['nickname'] ?? 'Sin nombre'),
                               trailing: IconButton(
                                 color: Colors.grey[100],
-                                icon: const Icon(Icons.delete),
+                                icon: const Icon(Icons.close),
                                 onPressed: () async {
                                   try {
                                     await AulasAPI()
