@@ -6,6 +6,8 @@ import 'package:tarerio/Pages/Aulas/crearAula.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 
+import 'alumnosDeAula.dart';
+
 class AulasPage extends StatefulWidget {
   const AulasPage({super.key});
 
@@ -233,32 +235,39 @@ class _AulasPageState extends State<AulasPage> {
       body: isloadingAulas
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 8.0,
-                runSpacing: 8.0,
-                children: aulas.map((aula) {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width > 800 ? 200 : 150,
-                    child: AulaCard(
-                      idUsuario: aula['id_aula'],
-                      claveAula: aula['clave_aula'],
-                      cupoAula: aula['cupo'],
-                      imagenAula: aula['imagenBase64'] ?? '',
-                      onEdit: () {
-                        // Lógica para editar aula
-                      },
-                      onAssign: () {
-                        _mostrarDialogProfesores(context, aula['id_aula']);
-                      },
-                      onDelete: () {
-                        _confirmarEliminacion(aula['id_aula'].toString());
-                      },
-                    ),
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          spacing: 8.0,
+          runSpacing: 8.0,
+          children: aulas.map((aula) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width / 5,
+              height: 370,
+              child: AulaCard(
+                idUsuario: aula['id_aula'],
+                claveAula: aula['clave_aula'],
+                cupoAula: aula['cupo'],
+                imagenAula: aula['imagenBase64'] ?? '',
+                onEdit: () {
+                  // Lógica para editar aula
+                },
+                onAssign: () {
+                  _mostrarDialogProfesores(context, aula['id_aula']);
+                },
+                onDelete: () {
+                  _confirmarEliminacion(aula['id_aula'].toString());
+                },
+                onSeeStudents: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AlumnosDeAula(claveAula: aula['clave_aula'], aulaId: aula['id_aula'], cupoAula: aula['cupo']),),
                   );
-                }).toList(),
+                },
               ),
-            ),
+            );
+          }).toList(),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

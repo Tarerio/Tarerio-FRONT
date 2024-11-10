@@ -10,6 +10,7 @@ class AulaCard extends StatelessWidget {
   final VoidCallback onAssign;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final VoidCallback onSeeStudents;
 
   const AulaCard(
       {Key? key,
@@ -19,7 +20,8 @@ class AulaCard extends StatelessWidget {
         required this.cupoAula,
         required this.onAssign,
         required this.onEdit,
-        required this.onDelete
+        required this.onDelete,
+        required this.onSeeStudents,
       })
       : super(key: key);
 
@@ -89,6 +91,15 @@ class AulaCard extends StatelessWidget {
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete, color: Colors.teal),
                   label: const Text('Eliminar'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.teal,
+                  ),
+                ),
+                // Botón de Ver Alumnos
+                TextButton.icon(
+                  onPressed: onSeeStudents,
+                  icon: const Icon(Icons.people, color: Colors.teal),
+                  label: const Text('Ver Alumnos'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),

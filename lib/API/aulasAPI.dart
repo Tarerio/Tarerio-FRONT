@@ -117,8 +117,6 @@ class AulasAPI {
         body: jsonBody,
       );
 
-      print(json.decode(response.body));
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
@@ -132,6 +130,53 @@ class AulasAPI {
         "status": "error",
         "message": "Error de conexión: $e",
       };
+    }
+  }
+
+  asignarAlumnoAula(int idAula, int idUsuario) async {
+    String url = '$baseUrl/aulas/asignar-alumno';
+    final Map<String, dynamic> data = {
+      "id_aula": idAula,
+      "id_usuario": idUsuario,
+    };
+
+    final String jsonBody = json.encode(data);
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception(json.decode(response.body)['message']);
+    }
+  }
+
+  eliminarAlumnoAula(int idUsuario) async {
+    String url = '$baseUrl/aulas/desasignar-alumno';
+    final Map<String, dynamic> data = {
+      "id_usuario": idUsuario,
+    };
+
+    final String jsonBody = json.encode(data);
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    );
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception(json.decode(response.body)['message']);
     }
   }
 }
