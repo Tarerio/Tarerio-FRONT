@@ -104,6 +104,15 @@ class AulaCard extends StatelessWidget {
                     foregroundColor: Colors.teal,
                   ),
                 ),
+                // Botón de Ver Alumnos
+                TextButton.icon(
+                  onPressed: onSeeStudents,
+                  icon: const Icon(Icons.people, color: Colors.teal),
+                  label: const Text('Ver Alumnos'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.teal,
+                  ),
+                ),
               ],
             ),
           ],
