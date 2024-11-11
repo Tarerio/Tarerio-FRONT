@@ -83,7 +83,7 @@ class _AlumnoCardState extends State<AlumnoCard> {
                           arguments: widget.id_usuario,
                         );
                       },
-                      icon: const Icon(Icons.key, color: Colors.teal),
+                      icon: const Icon(Icons.edit, color: Colors.teal),
                       label: const Text('Editar alumno'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
