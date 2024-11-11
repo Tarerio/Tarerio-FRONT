@@ -34,11 +34,16 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
   File? _image;
   String _base64Image = '';
 
+  // Variables para almacenar la categoría seleccionada
+  String _selectedCategory = '';
+
   // Variables para almacenar los estados de los checkboxes
   bool _texto = false;
   bool _imagenes = false;
   bool _pictograma = false;
   bool _video = false;
+  bool _audio = false;
+  String _porDefecto = 'texto';
 
   // Función para agregar una imagen al patrón
   List<String> _selectedImages = [];
@@ -102,7 +107,9 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
       _imagenes = false;
       _pictograma = false;
       _video = false;
+      _audio = false;
       _restablecerPatron();
+      _selectedCategory = '';
     });
   }
 
@@ -116,6 +123,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
 
   void _selectCategory(String category) {
     setState(() {
+      _selectedCategory = category;
+
       //Actualizar las imágenes de la categoría seleccionada
       _selectedCategoryImages = [
         for (int i = 0; i < 4; i++)
@@ -150,6 +159,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
         _imagenes,
         _pictograma,
         _video,
+        _audio,
+        _porDefecto,
         _base64Image);
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(context, 'Error al registrar alumno',
@@ -165,7 +176,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
     } else if (_texto == false &&
         _imagenes == false &&
         _pictograma == false &&
-        _video == false) {
+        _video == false &&
+        _audio == false) {
       _showErrorModal(context, 'Falta perfil de alumno',
           'Por favor, selecciona minimo un tipo de perfil para el alumno.');
     } else {
@@ -271,16 +283,12 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       alignment: WrapAlignment.center,
                       spacing: 10,
                       runSpacing: 10,
-                      children: images.map((imageData) {
+                      children: _category.map((category) {
                         return SizedBox(
                           width: 80,
                           height: 80,
                           child: ElevatedButton(
-                            onPressed: () {
-                              if (imageData['category'] != null) {
-                                _selectCategory(imageData['category']!);
-                              }
-                            },
+                            onPressed: () => _selectCategory(category),
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -288,15 +296,22 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                               padding: const EdgeInsets.all(20),
                               shadowColor: Colors.black,
                               elevation: 10,
+                              backgroundColor: _selectedCategory == category
+                                  ? Colors.grey
+                                  : Colors.grey[
+                                      300], // Change background color if selected
                             ),
-                            child: Image.asset(imageData['imagePath'] ?? ''),
+                            child: Image.asset(
+                              'assets/images/${category.toLowerCase()}/${category.toLowerCase()}0.png',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         );
                       }).toList(),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 if (_selectedCategoryImages.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(left: 360.0, top: 20.0),
@@ -306,8 +321,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       runSpacing: 10,
                       children: _selectedCategoryImages.map((imageData) {
                         return SizedBox(
-                          width: 100,
-                          height: 100,
+                          width: 80,
+                          height: 80,
                           child: ElevatedButton(
                             onPressed: () => {
                               if (_selectedCodes.length < 4 &&
@@ -332,7 +347,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       }).toList(),
                     ),
                   ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     ElevatedButton(
@@ -355,37 +370,91 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       child: Container(
                         padding: const EdgeInsets.all(35.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey[400],
+                          color: Colors.grey[300],
                           border: Border.all(color: Colors.white, width: 2.0),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: SizedBox(
-                          height: 120,
+                          height: 110,
                           width: 480,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: _selectedImages.isNotEmpty
-                                  ? _selectedImages.map((imagePath) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: SizedBox(
-                                          width: 120,
-                                          height: 120,
-                                          child: Image.asset(imagePath),
-                                        ),
-                                      );
-                                    }).toList()
-                                  : [Container()],
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: List.generate(4, (index) {
+                              return Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black, width: 2.0),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: _selectedImages.length > index
+                                    ? Image.asset(_selectedImages[index])
+                                    : Container(),
+                              );
+                            }),
                           ),
                         ),
                       ),
                     ),
                   ],
-                )
+                ),
+                Row(
+                  children: [
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 110.0, top: 20.0),
+                      child: Text(
+                        'Seleccione un formato por defecto',
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          fontWeight: FontWeight.w600,
+                          color: Color(colorPrincipal),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.help,
+                          size: 30.0,
+                          color: Color(0xFF2EC4B6),
+                        ),
+                        onPressed: () {
+                          _showInformationModal(context, 'Formato por defecto',
+                              'El formato por defecto es el tipo de interfaz que se mostrará al alumno al ingresar en una tarea.');
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0, top: 10.0),
+                      child: DropdownButton<String>(
+                        value: _porDefecto,
+                        items: [
+                          {'display': 'Texto', 'value': 'texto'},
+                          {'display': 'Imágenes', 'value': 'imagenes'},
+                          {'display': 'Video', 'value': 'video'},
+                          {'display': 'Audio', 'value': 'audio'},
+                          {'display': 'Pictograma', 'value': 'pictograma'},
+                        ].map((Map<String, String> item) {
+                          return DropdownMenuItem<String>(
+                            value: item['value'],
+                            child: Text(item['display']!),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _porDefecto = newValue!;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
+
             // Segunda columna (derecha)
             Padding(
               padding: const EdgeInsets.only(right: 40.0),
@@ -396,7 +465,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                   children: [
                     Avatar(
                       image: _image,
-                      radius: 100.0,
+                      radius: 80.0,
                       backgroundColor: Colors.grey[300]!,
                       placeholderIcon: const Icon(Icons.person,
                           size: 150.0, color: Colors.white),
@@ -412,16 +481,38 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                       onPressed: _pickImage,
                       color: Color(colorPrincipal),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20.0, right: 10.0),
-                      child: Text(
-                        'Tipo de Interfaz',
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w600,
-                          color: Color(colorPrincipal),
+                    Row(
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 20.0, right: 10.0),
+                          child: Text(
+                            'Tipo de Interfaz',
+                            style: TextStyle(
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.w600,
+                              color: Color(colorPrincipal),
+                            ),
+                          ),
                         ),
-                      ),
+
+                        //Información sobre el tipo de interfaz
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0, top: 20.0),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.help,
+                              size: 30.0,
+                              color: Color(0xFF2EC4B6),
+                            ),
+                            onPressed: () {
+                              _showInformationModal(context, 'Tipo de Interfaz',
+                                  'Los formatos disponibles para el alumno.');
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
@@ -440,7 +531,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                                 });
                               },
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 5),
                             DefaultSwitch(
                               label: 'Pictogramas:',
                               value: _pictograma,
@@ -452,7 +543,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                                 });
                               },
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 5),
                             DefaultSwitch(
                               label: 'Vídeo:',
                               value: _video,
@@ -464,7 +555,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                                 });
                               },
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 5),
                             DefaultSwitch(
                               label: 'Imágenes:',
                               value: _imagenes,
@@ -473,6 +564,18 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                               onChanged: (bool value) {
                                 setState(() {
                                   _imagenes = value;
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 5),
+                            DefaultSwitch(
+                              label: 'Audio:',
+                              value: _audio,
+                              activeColor: Colors.white,
+                              activeTrackColor: Color(colorPrincipal),
+                              onChanged: (bool value) {
+                                setState(() {
+                                  _audio = value;
                                 });
                               },
                             ),
