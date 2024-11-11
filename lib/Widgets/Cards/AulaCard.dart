@@ -7,9 +7,10 @@ class AulaCard extends StatelessWidget {
   final String imagenAula; // URL o ruta de la imagen
   final String claveAula;
   final int cupoAula;
-  final VoidCallback? onAssign;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
+  final VoidCallback onAssign;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final VoidCallback onSeeStudents;
 
   const AulaCard(
       {Key? key,
@@ -17,26 +18,15 @@ class AulaCard extends StatelessWidget {
         required this.imagenAula,
         required this.claveAula,
         required this.cupoAula,
-        this.onAssign,
-        this.onEdit,
-        this.onDelete
+        required this.onAssign,
+        required this.onEdit,
+        required this.onDelete,
+        required this.onSeeStudents,
       })
       : super(key: key);
 
   @override
-  @override
   Widget build(BuildContext context) {
-    ImageProvider? imageProvider;
-
-    // Intentar decodificar la imagen base64
-    try {
-      imageProvider = MemoryImage(base64Decode(imagenAula));
-    } catch (e) {
-      // Si falla la decodificación, usa una imagen de marcador de posición
-      print('Error al decodificar imagen: $e');
-      imageProvider = null;
-    }
-
     return SizedBox(
       width: 200, // Set the desired width
       height: 300, // Set the desired height
@@ -50,20 +40,19 @@ class AulaCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 15),
-            // Imagen del profesor o marcador de posición
-            imageProvider != null
-                ? CircleAvatar(
-              radius: 50,
-              backgroundImage: imageProvider,
+            // Imagen del profesor
+            imagenAula.isNotEmpty ? CircleAvatar(
+              radius: 50, // Adjust the size as needed
+              backgroundImage: MemoryImage(base64Decode(imagenAula)),
             )
                 : const Avatar(
-              image: null,
-              size: 50,
-              placeholderIcon: Icon(
-                Icons.table_restaurant_rounded,
-                color: Colors.white,
-              ),
-            ),
+                  image: null, 
+                  size: 50,
+                  placeholderIcon: Icon(
+                    Icons.table_restaurant_rounded,
+                      color: Colors.white
+                    ),
+                ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -81,8 +70,8 @@ class AulaCard extends StatelessWidget {
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 TextButton.icon(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.key, color: Colors.teal),
+                  onPressed: () => {},
+                  icon: const Icon(Icons.edit, color: Colors.teal),
                   label: const Text('Editar Aula'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
@@ -91,7 +80,7 @@ class AulaCard extends StatelessWidget {
                 TextButton.icon(
                   onPressed: onAssign,
                   icon: const Icon(Icons.person_add_alt, color: Colors.teal),
-                  label: const Text('Asignar Profesor'),
+                  label: const Text('Profesores'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
@@ -104,6 +93,15 @@ class AulaCard extends StatelessWidget {
                     foregroundColor: Colors.teal,
                   ),
                 ),
+                // Botón de Ver Alumnos
+                TextButton.icon(
+                  onPressed: onSeeStudents,
+                  icon: const Icon(Icons.people, color: Colors.teal),
+                  label: const Text('Ver Alumnos'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.teal,
+                  ),
+                ),
               ],
             ),
           ],
@@ -111,5 +109,4 @@ class AulaCard extends StatelessWidget {
       ),
     );
   }
-
 }
