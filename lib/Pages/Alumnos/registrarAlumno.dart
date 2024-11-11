@@ -465,7 +465,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                   children: [
                     Avatar(
                       image: _image,
-                      radius: 100.0,
+                      radius: 80.0,
                       backgroundColor: Colors.grey[300]!,
                       placeholderIcon: const Icon(Icons.person,
                           size: 150.0, color: Colors.white),

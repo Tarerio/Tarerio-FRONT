@@ -34,4 +34,12 @@ class ColorPalette {
     fondo: Colors.white,
     componentes: Colors.teal,
   );
+
+  static const ColorPalette TARERIO_INV = ColorPalette(
+    colorPrincipal: Color(0xFFFF9800),
+    colorSecundario: Color(0xFF2EC4B6),
+    fuente: Colors.black,
+    fondo: Colors.white,
+    componentes: Colors.deepOrangeAccent,
+  );
 }
