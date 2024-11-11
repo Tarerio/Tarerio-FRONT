@@ -4,7 +4,6 @@ import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/Cards/AlumnoCard.dart';
 import '../../API/alumnosAPI.dart';
-import '../../consts.dart';
 
 class AlumnosPage extends StatefulWidget {
   AlumnosPage({super.key});
@@ -56,16 +55,22 @@ class _AlumnosState extends State<AlumnosPage> {
               child: Wrap(
                 spacing: 8.0, // Space between cards horizontally
                 runSpacing: 8.0, // Space between cards vertically
-                children: Alumnos.map((profesor) {
+                children: Alumnos.map((alumno) {
                   return SizedBox(
                     width: MediaQuery.of(context).size.width > 800
                         ? 200
                         : 150, // Adjust width based on screen size
                     child: AlumnoCard(
-                      id_usuario: profesor['id_usuario'],
-                      imagenBase64: profesor['imagenBase64'] ?? '',
-                      nickname: profesor["nickname"],
-                      onAssign: () {},
+                      id_usuario: alumno['id_usuario'],
+                      imagenBase64: alumno['imagenBase64'] ?? '',
+                      nickname: alumno["nickname"],
+                      onEdit: (){},
+                      onDelete: (){},
+                      onAccesibilidad: (){
+                        Navigator.pushNamed(
+                            context, '/administrador/alumnos/accesibilidad',
+                            arguments: alumno["nickname"]);
+                      },
                     ),
                   );
                 }).toList(),

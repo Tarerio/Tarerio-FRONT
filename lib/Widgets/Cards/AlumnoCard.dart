@@ -2,20 +2,32 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
-class AlumnoCard extends StatelessWidget {
+class AlumnoCard extends StatefulWidget {
   final int id_usuario;
   final String imagenBase64; // URL o ruta de la imagen
   final String nickname;
-  final VoidCallback onAssign;
+  final VoidCallback? onEdit;
+  final VoidCallback? onAssign;
+  final VoidCallback? onDelete;
+  final VoidCallback? onSelect;
+  final VoidCallback? onAccesibilidad;
 
   const AlumnoCard({
     Key? key,
     required this.id_usuario,
     required this.imagenBase64,
     required this.nickname,
-    required this.onAssign,
+    this.onEdit,
+    this.onAssign,
+    this.onDelete,
+    this.onSelect,
+    this.onAccesibilidad,
   }) : super(key: key);
 
+  _AlumnoCardState createState() => _AlumnoCardState();
+}
+
+class _AlumnoCardState extends State<AlumnoCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -32,23 +44,22 @@ class AlumnoCard extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 15),
             // Imagen del profesor
-            imagenBase64.isNotEmpty ? CircleAvatar(
-              radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
-            )
+            widget.imagenBase64.isNotEmpty
+                ? CircleAvatar(
+                    radius: 50, // Adjust the size as needed
+                    backgroundImage:
+                        MemoryImage(base64Decode(widget.imagenBase64)),
+                  )
                 : const Avatar(
-              image: null,
-              size: 50,
-              placeholderIcon: Icon(
-                  Icons.school,
-                  color: Colors.white
-              ),
-            ),
+                    image: null,
+                    size: 50,
+                    placeholderIcon: Icon(Icons.school, color: Colors.white),
+                  ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                nickname,
+                widget.nickname,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -56,49 +67,73 @@ class AlumnoCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Botones de Editar y Asignar
-            OverflowBar(
-              alignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                // Botón de Editar alumno del alumno
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, '/administrador/alumnos/editarAlumno',
-                        arguments: id_usuario);
-                  },
-                  icon: const Icon(Icons.edit, color: Colors.teal),
-                  label: const Text('Editar alumno'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
+            // Botones de Editar, Asignar y Eliminar si se especifican
+            if (widget.onEdit != null ||
+                widget.onAssign != null ||
+                widget.onDelete != null ||
+                widget.onSelect != null)
+              OverflowBar(
+                alignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  // Botón de Editar alumno
+                  if (widget.onEdit != null)
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/administrador/alumnos/editarAlumno',
+                          arguments: widget.id_usuario,
+                        );
+                      },
+                      icon: const Icon(Icons.edit, color: Colors.teal),
+                      label: const Text('Editar alumno'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                  // Accesibilidad
+                  if (widget.onAccesibilidad != null)
+                    TextButton.icon(
+                    onPressed: widget.onAccesibilidad,
+                    icon: const Icon(Icons.accessibility, color: Colors.teal),
+                    label: const Text('Accesibilidad'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.teal,
+                    ),
                   ),
-                ),
-
-                // Accesibilidad
-
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, '/administrador/alumnos/accesibilidad',
-                        arguments: nickname);
-                  },
-                  icon: const Icon(Icons.accessibility, color: Colors.teal),
-                  label: const Text('Accesibilidad'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
-                ),
-                // Botón de Eliminar
-                TextButton.icon(
-                  onPressed: onAssign,
-                  icon: const Icon(Icons.delete, color: Colors.teal),
-                  label: const Text('Eliminar'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
-                ),
-              ],
-            ),
+                  // Botón de Asignar tarea solo si onAssign no es null
+                  if (widget.onAssign != null)
+                    TextButton.icon(
+                      onPressed: widget.onAssign,
+                      icon:
+                          const Icon(Icons.person_add_alt, color: Colors.teal),
+                      label: const Text('Asignar tarea'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                  // Botón de Eliminar solo si onDelete no es null
+                  if (widget.onDelete != null)
+                    TextButton.icon(
+                      onPressed: widget.onDelete,
+                      icon: const Icon(Icons.delete, color: Colors.teal),
+                      label: const Text('Eliminar'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                  if (widget.onSelect != null)
+                    TextButton.icon(
+                      onPressed: widget.onSelect,
+                      icon:
+                          const Icon(Icons.assignment_add, color: Colors.teal),
+                      label: const Text('Seleccionar'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                ],
+              ),
           ],
         ),
       ),

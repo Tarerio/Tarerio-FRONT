@@ -103,6 +103,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
     setState(() {
       _nicknameController.clear();
       _image = null;
+      _base64Image = '';
       _texto = false;
       _imagenes = false;
       _pictograma = false;

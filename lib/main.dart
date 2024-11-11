@@ -5,7 +5,7 @@ import 'package:tarerio/Pages/Profesores/profesores.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
 import 'package:tarerio/Pages/Menus/menus.dart';
 import 'package:tarerio/Pages/home.dart';
-import 'package:tarerio/Pages/Alumnos/inicioAlumno.dart'; // Importa la página InicioAlumno
+import 'package:tarerio/Pages/Alumnos/inicioAlumno.dart';
 import 'package:tarerio/Pages/inicioAdministradorProfesor.dart';
 import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
