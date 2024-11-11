@@ -46,7 +46,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
 
       try {
         var jsonResponse =
-            await _api.inicioSesionAlumno(widget.nickname, concatenatedCodes);
+        await _api.inicioSesionAlumno(widget.nickname, concatenatedCodes);
         String nickname = jsonResponse['alumno']['nickname'];
         Navigator.push(
           context,
@@ -56,7 +56,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       } catch (e) {
         print('Request failed with error: $e');
         _showErrorModal('Error al iniciar sesión',
-            'No se encontró un usuario con el patrón ingresado.');
+            'Este patrón no pertenece a ${widget.nickname}.');
         // Vaciar los códigos seleccionados
         _refresh();
       }
@@ -136,7 +136,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                   child: Text(
                     'Ingrese su patrón:',
                     style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF2EC4B6)),
                   ),
@@ -169,42 +169,42 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                 ),
               ],
             ),
-            Container(
-              height: 150, // Adjust the height as needed
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: selectedImages
-                            .map((imagePath) => Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: Image.asset(imagePath),
-                                  ),
-                                ))
-                            .toList(),
-                      ),
+            Row(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(4, (index) {
+                        return Container(
+                          width: 100,
+                          height: 100,
+                          margin: const EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: selectedImages.length > index
+                              ? Image.asset(selectedImages[index])
+                              : null,
+                        );
+                      }),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: _confirmSelection,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.all(20),
-                      shadowColor: Colors.black,
-                      elevation: 10,
+                ),
+                ElevatedButton(
+                  onPressed: _confirmSelection,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.thumb_up, size: 30),
+                    padding: const EdgeInsets.all(20),
+                    shadowColor: Colors.black,
+                    elevation: 10,
                   ),
-                ],
-              ),
+                  child: const Icon(Icons.thumb_up, size: 30),
+                ),
+              ],
             ),
           ],
         ),

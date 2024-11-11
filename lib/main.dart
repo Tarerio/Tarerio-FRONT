@@ -9,7 +9,8 @@ import 'package:tarerio/Pages/Alumnos/inicioAlumno.dart'; // Importa la página 
 import 'package:tarerio/Pages/inicioAdministradorProfesor.dart';
 import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
-import 'Pages/Profesores/editarContraseniaProfesor.dart';
+import 'package:tarerio/Pages/Profesores/editarContraseniaProfesor.dart';
+import 'package:tarerio/Pages/Alumnos/accesibilidad.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,6 +58,9 @@ class MyApp extends StatelessWidget {
         '/administrador/registrarAlumno': (context) => const RegistrarAlumno(),
         '/administrador/profesores/registrarProfesor': (context) => const RegistrarProfesor(),
         '/administrador/profesores/editarContrasenia': (context) => const EditarContraseniaProfesor(),
+        '/administrador/alumnos/accesibilidad': (context) => AccesibilidadPage(
+          nickname: ModalRoute.of(context)!.settings.arguments as String,
+        ),
       },
     );
   }

@@ -23,8 +23,8 @@ class AlumnosAPI {
   }
 
 // Una petición POST para ver si un usuario se encuentra en la tabla alumno.
-  Future<Map<String, dynamic>> inicioSesionAlumno(
-      String nickname, String patron) async {
+  Future<Map<String, dynamic>> inicioSesionAlumno(String nickname,
+      String patron) async {
     String url = '$baseUrl/alumnos/inicioSesionAlumno';
     final response = await http.post(
       Uri.parse(url),
@@ -40,21 +40,24 @@ class AlumnosAPI {
     }
   }
 
-  Future<Map<String, dynamic>> registrarAlumno(
-      String nickname,
+  Future<Map<String, dynamic>> registrarAlumno(String nickname,
       String patron,
       bool texto,
       bool imagenes,
       bool pictograma,
       bool video,
+      bool audio,
+      String porDefecto,
       String image) async {
-    String url = '$baseUrl/alumnos/crear';
+    final String url = '$baseUrl/alumnos/create';
 
     var perfil = {
       'texto': texto,
       'imagenes': imagenes,
       'pictograma': pictograma,
-      'video': video
+      'video': video,
+      'audio': audio,
+      'porDefecto': porDefecto
     };
 
     final Map<String, dynamic> data = {
@@ -66,6 +69,8 @@ class AlumnosAPI {
 
     final String jsonBody = json.encode(data);
 
+    print('Request Body: $jsonBody');
+
     final response = await http.post(
       Uri.parse(url),
       headers: {
@@ -73,6 +78,14 @@ class AlumnosAPI {
       },
       body: jsonBody,
     );
-    return json.decode(response.body);
+
+    print('Response Status: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to register student');
+    }
   }
 }

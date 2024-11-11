@@ -67,8 +67,23 @@ class AlumnoCard extends StatelessWidget {
                         context, '/administrador/alumnos/editarAlumno',
                         arguments: id_usuario);
                   },
-                  icon: const Icon(Icons.key, color: Colors.teal),
+                  icon: const Icon(Icons.edit, color: Colors.teal),
                   label: const Text('Editar alumno'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.teal,
+                  ),
+                ),
+
+                // Accesibilidad
+
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                        context, '/administrador/alumnos/accesibilidad',
+                        arguments: nickname);
+                  },
+                  icon: const Icon(Icons.accessibility, color: Colors.teal),
+                  label: const Text('Accesibilidad'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
