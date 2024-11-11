@@ -10,20 +10,9 @@ class TareaPorPasosAPI {
       String titulo,
       String descripcion,
       DateTime fechaCreacion,
-      DateTime dueDate,
-      TimeOfDay dueTime,
       int idAdministrador,
       List<Subtarea> subtareas) async {
     String url = '$baseUrl/tareaPorPasos';
-
-    final DateTime fullDueDateTime = DateTime(
-      dueDate.year,
-      dueDate.month,
-      dueDate.day,
-      dueTime.hour,
-      dueTime.minute,
-    );
-    final String formattedDueDate = fullDueDateTime.toIso8601String();
 
     // Captura la hora de creación actual
     fechaCreacion = DateTime.now();
@@ -32,7 +21,6 @@ class TareaPorPasosAPI {
     final Map<String, dynamic> body = {
       "Titulo": titulo,
       "Descripcion": descripcion,
-      "Fecha_estimada_cierre": formattedDueDate,
       "Fecha_creacion": formattedCreacionDate,
       "creatorId": idAdministrador,
       "subtareas": subtareas
