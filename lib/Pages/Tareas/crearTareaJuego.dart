@@ -17,49 +17,11 @@ class CrearTareaJuego extends StatefulWidget {
 }
 
 class _CrearTareaJuegoState extends State<CrearTareaJuego> {
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
   String? _titulo;
   String? _descripcion;
   String? _url;
 
   final TareaJuegoAPI _api = TareaJuegoAPI();
-
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 30)),
-    );
-
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
-  }
-
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: const TimeOfDay(hour:0, minute: 0),
-    );
-
-    if (pickedTime != null && pickedTime != _selectedTime) {
-      setState(() {
-        _selectedTime = pickedTime;
-      });
-    }
-  }
-
-  String _formatTime(TimeOfDay time) {
-    final now = DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    return DateFormat('HH:mm').format(dt);
-  }
 
   void _setTitulo(String titulo) {
     setState(() {
@@ -82,9 +44,7 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
   void _crearTarea(BuildContext context) async {
     if(_titulo == null || _titulo!.isEmpty ||
         _descripcion == null || _descripcion!.isEmpty ||
-        _url == null || _url!.isEmpty ||
-        _selectedDate == null ||
-        _selectedTime == null) {
+        _url == null || _url!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, completa todos los campos'),
@@ -95,7 +55,9 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
     }
 
     try {
-      var jsonResponse = await _api.crearTareaJuego(_titulo!, _descripcion!, _url!, _selectedDate!, _selectedTime!, widget.IdAdministrador);
+      DateTime fechaCreacion = DateTime.now();
+
+      var jsonResponse = await _api.crearTareaJuego(_titulo!, _descripcion!,fechaCreacion, _url!, widget.IdAdministrador);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Tarea creada exitosamente'),
@@ -104,10 +66,6 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
         ),
       );
 
-      // Espera a que el SnackBar desaparezca antes de regresar
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context); // Vuelve a la página anterior
-      });
     } catch (e) {
       print('Request failed with error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -174,77 +132,6 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Fecha y Hora estimada de cierre',
-                style: TextStyle(color: Color(0xFF2EC4B6),fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2EC4B6),
-                          ),
-                          child: const SizedBox(
-                            width: 120,
-                            child: Text(
-                              'Seleccionar fecha',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Icon(Icons.calendar_today),
-                        SizedBox(width: 10),
-                        Text(
-                          _selectedDate != null
-                              ? DateFormat('dd-MM').format(_selectedDate!)
-                              : 'Selecciona una fecha',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _selectTime(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2EC4B6),
-                          ),
-                          child: const SizedBox(
-                            width: 120,
-                            child:Text(
-                              'Seleccionar hora',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ),
-                        SizedBox(width: 20),
-                        Icon(Icons.access_time),
-                        SizedBox(width: 10),
-                        Text(
-                          _selectedTime != null
-                              ? _formatTime(_selectedTime!)
-                              : 'Selecciona una hora',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
               const SizedBox(height: 20),
               const Text(
