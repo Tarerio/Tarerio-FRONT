@@ -7,9 +7,9 @@ class AulaCard extends StatelessWidget {
   final String imagenAula; // URL o ruta de la imagen
   final String claveAula;
   final int cupoAula;
-  final VoidCallback onAssign;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onAssign;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const AulaCard(
       {Key? key,
@@ -17,14 +17,26 @@ class AulaCard extends StatelessWidget {
         required this.imagenAula,
         required this.claveAula,
         required this.cupoAula,
-        required this.onAssign,
-        required this.onEdit,
-        required this.onDelete
+        this.onAssign,
+        this.onEdit,
+        this.onDelete
       })
       : super(key: key);
 
   @override
+  @override
   Widget build(BuildContext context) {
+    ImageProvider? imageProvider;
+
+    // Intentar decodificar la imagen base64
+    try {
+      imageProvider = MemoryImage(base64Decode(imagenAula));
+    } catch (e) {
+      // Si falla la decodificación, usa una imagen de marcador de posición
+      print('Error al decodificar imagen: $e');
+      imageProvider = null;
+    }
+
     return SizedBox(
       width: 200, // Set the desired width
       height: 300, // Set the desired height
@@ -38,19 +50,20 @@ class AulaCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 15),
-            // Imagen del profesor
-            imagenAula.isNotEmpty ? CircleAvatar(
-              radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenAula)),
+            // Imagen del profesor o marcador de posición
+            imageProvider != null
+                ? CircleAvatar(
+              radius: 50,
+              backgroundImage: imageProvider,
             )
                 : const Avatar(
-                  image: null, 
-                  size: 50,
-                  placeholderIcon: Icon(
-                    Icons.table_restaurant_rounded,
-                      color: Colors.white
-                    ),
-                ),
+              image: null,
+              size: 50,
+              placeholderIcon: Icon(
+                Icons.table_restaurant_rounded,
+                color: Colors.white,
+              ),
+            ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -63,32 +76,30 @@ class AulaCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Botones de Editar y Asignar
+            // Botones de Editar, Asignar, Eliminar
             OverflowBar(
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 TextButton.icon(
-                  onPressed: () => {},
+                  onPressed: onEdit,
                   icon: const Icon(Icons.key, color: Colors.teal),
                   label: const Text('Editar Aula'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Boton Asignar Profesor
                 TextButton.icon(
                   onPressed: onAssign,
                   icon: const Icon(Icons.person_add_alt, color: Colors.teal),
-                  label: const Text('Asignar Profesr'),
+                  label: const Text('Asignar Profesor'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Botón de Eliminar
                 TextButton.icon(
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete, color: Colors.teal),
-                  label: const Text('Elimnar'),
+                  label: const Text('Eliminar'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
@@ -100,4 +111,5 @@ class AulaCard extends StatelessWidget {
       ),
     );
   }
+
 }
