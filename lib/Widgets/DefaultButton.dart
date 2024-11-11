@@ -6,6 +6,7 @@ class DefaultButton extends StatelessWidget {
   final Color color;
   final double width;
   final double height;
+  final bool upperCase;
 
   const DefaultButton({
     Key? key,
@@ -14,6 +15,7 @@ class DefaultButton extends StatelessWidget {
     required this.color,
     this.width = 200,
     this.height = 40,
+    this.upperCase = true,
   }) : super(key: key);
 
   @override
@@ -32,10 +34,9 @@ class DefaultButton extends StatelessWidget {
         onPressed: onPressed,
         child: Center(
           child: Text(
-            text.toUpperCase(),
+            upperCase ? text.toUpperCase() : text,
             style: const TextStyle(
-              fontSize: 20.0,
-              color: Colors.white,
+            fontSize: 20.0,
             ),
           ),
         ),

@@ -65,7 +65,7 @@ class AulaCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Botones de Editar y Asignar
+            // Botones de Editar, Asignar, Eliminar
             OverflowBar(
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -77,7 +77,6 @@ class AulaCard extends StatelessWidget {
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Boton Asignar Profesor
                 TextButton.icon(
                   onPressed: onAssign,
                   icon: const Icon(Icons.person_add_alt, color: Colors.teal),
@@ -86,7 +85,6 @@ class AulaCard extends StatelessWidget {
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Botón de Eliminar
                 TextButton.icon(
                   onPressed: onDelete,
                   icon: const Icon(Icons.delete, color: Colors.teal),

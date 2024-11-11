@@ -75,4 +75,27 @@ class TareaPorPasosAPI {
   eliminarTarea(String id) {
     // impletementar logica de eliminar tarea
   }
+
+
+  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno) async {
+    String url = '$baseUrl/tareaPorPasos/$idTarea/asignar';
+
+    final Map<String, dynamic> body = {
+      "id_usuario": idAlumno
+    };
+
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
+
+    if (response.statusCode == 201) {
+      print(jsonDecode);
+
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to create task');
+    }
+  }
+
 }

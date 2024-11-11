@@ -4,26 +4,15 @@ import 'package:http/http.dart' as http;
 import '../Pages/Tareas/crearTareaPeticion.dart';
 import 'package:tarerio/consts.dart';
 
-// API de TareaPorPasos
+// API de TareaPeticion
 class TareaPeticionAPI {
   Future<Map<String, dynamic>?> crearTareaPeticion(
       String titulo,
       String descripcion,
       DateTime fechaCreacion,
-      DateTime dueDate,
-      TimeOfDay dueTime,
       int idAdministrador,
       List<Enunciado> enunciados) async {
     String url = '$baseUrl/tareaPeticion';
-
-    final DateTime fullDueDateTime = DateTime(
-      dueDate.year,
-      dueDate.month,
-      dueDate.day,
-      dueTime.hour,
-      dueTime.minute,
-    );
-    final String formattedDueDate = fullDueDateTime.toIso8601String();
 
     // Captura la hora de creación actual
     fechaCreacion = DateTime.now();
@@ -32,16 +21,15 @@ class TareaPeticionAPI {
     final Map<String, dynamic> body = {
       "Titulo": titulo,
       "Descripcion": descripcion,
-      "Fecha_estimada_cierre": formattedDueDate,
-      "Fecha_creacion": formattedCreacionDate,
+      "Fecha_creacion": formattedCreacionDate, // Solo la fecha de creación
       "creatorId": idAdministrador,
       "enunciados": enunciados
           .map((enunciado) => {
-                "Texto": enunciado.texto,
-                "Imagen": enunciado.imagen,
-                "Video": enunciado.video
-              })
-          .toList(), // Convertir cada enunciado en un mapa*/
+        "Texto": enunciado.texto,
+        "Imagen": enunciado.imagen,
+        "Video": enunciado.video
+      })
+          .toList(), // Convertir cada enunciado en un mapa
     };
 
     final response = await http.post(Uri.parse(url),
@@ -72,6 +60,28 @@ class TareaPeticionAPI {
   }
 
   eliminarTarea(String id) {
-    // impletementar logica de eliminar tarea
+    // implementar lógica de eliminar tarea
+  }
+
+
+  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno) async {
+    String url = '$baseUrl/tareaPeticion/$idTarea/asignar';
+
+    final Map<String, dynamic> body = {
+      "id_usuario": idAlumno
+    };
+
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
+
+    if (response.statusCode == 201) {
+      print(jsonDecode);
+
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to create task');
+    }
   }
 }

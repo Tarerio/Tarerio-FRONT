@@ -4,10 +4,12 @@ import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
 import 'package:tarerio/Widgets/Cards/TareaCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
+import 'package:tarerio/Pages/Tareas/AsignacionTareaAlumno.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaJuego.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPorPasos.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPeticion.dart';
 import 'dart:async';
+import 'package:tarerio/consts.dart';
 
 class TareasPage extends StatefulWidget {
   TareasPage({super.key});
@@ -32,7 +34,6 @@ class _TareasPageState extends State<TareasPage> {
       TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
       TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
 
-      // Obtén ambas listas de tareas de manera concurrente
       final tareasPorPasos = await _porPasosAPI.obtenerTareas();
       final tareasPeticion = await _peticionAPI.obtenerTareas();
       final tareasJuego = await _juegoAPI.obtenerTareas();
@@ -76,12 +77,20 @@ class _TareasPageState extends State<TareasPage> {
                   ? 200
                   : 150, // Adjust width based on screen size
               child: TareaCard(
+                ID_tarea: tarea['ID_tarea'],
                 titulo: tarea['Titulo'],
                 descripcion: tarea['Descripcion'],
                 imagenBase64: tarea['imagenBase64'] ?? '', // No hay imagen en las tareas de momento
                 tipo: tarea['tipo'],
                 onEdit: () {},
-                onAssign: () {},
+                onAssign: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AsignarWidget(origen: tarea['ID_tarea'], tipoTarea: tarea['tipo']),
+                    ),
+                  );
+                },
                 onDelete: () {},
               ),
             );
