@@ -66,6 +66,11 @@ class _AlumnosState extends State<AlumnosPage> {
                       nickname: alumno["nickname"],
                       onEdit: (){},
                       onDelete: (){},
+                      onAccesibilidad: (){
+                        Navigator.pushNamed(
+                            context, '/administrador/alumnos/accesibilidad',
+                            arguments: alumno["nickname"]);
+                      },
                     ),
                   );
                 }).toList(),

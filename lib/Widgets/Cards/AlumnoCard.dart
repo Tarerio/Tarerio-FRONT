@@ -10,6 +10,7 @@ class AlumnoCard extends StatefulWidget {
   final VoidCallback? onAssign;
   final VoidCallback? onDelete;
   final VoidCallback? onSelect;
+  final VoidCallback? onAccesibilidad;
 
   const AlumnoCard({
     Key? key,
@@ -20,6 +21,7 @@ class AlumnoCard extends StatefulWidget {
     this.onAssign,
     this.onDelete,
     this.onSelect,
+    this.onAccesibilidad,
   }) : super(key: key);
 
   _AlumnoCardState createState() => _AlumnoCardState();
@@ -90,20 +92,15 @@ class _AlumnoCardState extends State<AlumnoCard> {
                       ),
                     ),
                   // Accesibilidad
-
-                  TextButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                          context, '/administrador/alumnos/accesibilidad',
-                          arguments: widget.nickname);
-                    },
+                  if (widget.onAccesibilidad != null)
+                    TextButton.icon(
+                    onPressed: widget.onAccesibilidad,
                     icon: const Icon(Icons.accessibility, color: Colors.teal),
                     label: const Text('Accesibilidad'),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.teal,
                     ),
                   ),
-
                   // Botón de Asignar tarea solo si onAssign no es null
                   if (widget.onAssign != null)
                     TextButton.icon(
