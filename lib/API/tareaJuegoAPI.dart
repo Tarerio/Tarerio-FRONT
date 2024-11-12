@@ -8,19 +8,26 @@ class TareaJuegoAPI {
   Future<Map<String, dynamic>?> crearTareaJuego(
       String titulo,
       String descripcion,
-      DateTime fechaCreacion,
       String urlJuego,
+      DateTime dueDate,
+      TimeOfDay dueTime,
       int IdAdministrador) async {
     String url = '$baseUrl/tareaJuego';
 
-    // Captura la hora de creación actual
-    fechaCreacion = DateTime.now();
-    final String formattedCreacionDate = fechaCreacion.toIso8601String();
+    final DateTime fullDueDateTime = DateTime(
+      dueDate.year,
+      dueDate.month,
+      dueDate.day,
+      dueTime.hour,
+      dueTime.minute,
+    );
+
+    final String formattedDueDate = fullDueDateTime.toIso8601String();
 
     final Map<String, dynamic> body = {
       "Titulo": titulo,
       "Descripcion": descripcion,
-      "Fecha_creacion": formattedCreacionDate,
+      "Fecha_estimada_cierre": formattedDueDate,
       "Enlace": urlJuego,
       "creatorId": IdAdministrador
     };

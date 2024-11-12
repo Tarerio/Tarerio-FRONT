@@ -116,10 +116,10 @@ class _AlumnoCardState extends State<AlumnoCard> {
                   if (widget.onDelete != null)
                     TextButton.icon(
                       onPressed: widget.onDelete,
-                      icon: const Icon(Icons.delete, color: Colors.teal),
+                      icon: const Icon(Icons.delete, color: Colors.deepOrange),
                       label: const Text('Eliminar'),
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.teal,
+                        foregroundColor: Colors.deepOrange,
                       ),
                     ),
                   if (widget.onSelect != null)

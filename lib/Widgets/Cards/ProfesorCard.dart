@@ -66,15 +66,7 @@ class ProfesorCard extends StatelessWidget {
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Botón de Asignar
-                TextButton.icon(
-                  onPressed: onAssign,
-                  icon: const Icon(Icons.person_add, color: Colors.teal),
-                  label: const Text('Asignar'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
-                ),
+               
               ],
             ),
           ],

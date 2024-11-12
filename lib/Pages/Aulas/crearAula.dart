@@ -76,6 +76,11 @@ void _showErrorModal(BuildContext context, String title, String content) {
       _showErrorModal(
           context, 'Error al crear aula', jsonResponse['message']);
     }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => AulasPage()),
+    );
+
     return jsonResponse['aula']['clave_aula'];
   }
 
@@ -123,32 +128,35 @@ void _showErrorModal(BuildContext context, String title, String content) {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFieldDefault(
-                  label: 'Clave del Aula',
-                  padding: const EdgeInsets.only(top: 10.0, left: 100.0),
-                  controller: _claveController,
-                  labelColor: Color(colorPrincipal),
-                  labelFontSize: 30.0,
-                  width: 200.0,
-                ),
-                const SizedBox(height: 20),
-                TextFieldDefault(
-                  label: 'Cupo del Aula',
-                  padding: const EdgeInsets.only(top: 10.0, left: 100.0),
-                  controller: _cupoController,
-                  labelColor: Color(colorPrincipal),
-                  labelFontSize: 30.0,
-                  width: 200.0,
-                ),
-                const SizedBox(height: 20),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFieldDefault(
+                    label: 'Clave del Aula',
+                    padding: const EdgeInsets.only(top: 10.0, left: 100.0),
+                    controller: _claveController,
+                    labelColor: Color(colorPrincipal),
+                    labelFontSize: 30.0,
+                    width: 500.0,
+                  ),
+                  const SizedBox(height: 20),
+                  TextFieldDefault(
+                    label: 'Cupo del Aula',
+                    padding: const EdgeInsets.only(top: 10.0, left: 100.0),
+                    controller: _cupoController,
+                    labelColor: Color(colorPrincipal),
+                    labelFontSize: 30.0,
+                    width: 500.0,
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
             // Segunda columna (derecha)
             Padding(
-              padding: const EdgeInsets.only(right: 40.0),
+              padding: const EdgeInsets.only(right: 200.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
