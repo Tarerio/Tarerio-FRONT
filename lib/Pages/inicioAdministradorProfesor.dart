@@ -70,7 +70,7 @@ class InicioAdministrador extends StatelessWidget {
     if (admin.isNotEmpty) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => PrincipalAdministrador()),
+        MaterialPageRoute(builder: (context) => AdminDashboard()),
       );
       return;
     }

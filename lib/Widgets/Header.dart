@@ -1,14 +1,47 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import '../API/alumnosAPI.dart';
 
-class Header extends StatelessWidget implements PreferredSizeWidget {
+class Header extends StatefulWidget implements PreferredSizeWidget {
   final String nickname;
-  final String? imageUrl;
 
   const Header({
     super.key,
     required this.nickname,
-    this.imageUrl,
   });
+
+  @override
+  _HeaderState createState() => _HeaderState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(100); // Define the size of the AppBar
+}
+
+class _HeaderState extends State<Header> {
+  String? imageUrl;
+  final AlumnosAPI _api = AlumnosAPI();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAlumnoData();
+  }
+
+  void _loadAlumnoData() async {
+    try {
+      final response = await _api.obtenerAlumno(widget.nickname);
+      if (response['status'] == 'success') {
+        final alumno = response['alumno'];
+        if (alumno['imagenBase64'].isNotEmpty) {
+          setState(() {
+            imageUrl = alumno['imagenBase64'];
+          });
+        }
+      }
+    } catch (e) {
+      // Handle error if needed
+    }
+  }
 
   Color _getColorFromInitial(String initial) {
     final int hash = initial.codeUnitAt(0);
@@ -16,10 +49,9 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     return Colors.primaries[colorIndex];
   }
 
-
   @override
   Widget build(BuildContext context) {
-    String initial = nickname.isNotEmpty ? nickname[0].toUpperCase() : 'U';
+    String initial = widget.nickname.isNotEmpty ? widget.nickname[0].toUpperCase() : 'U';
     Color avatarColor = _getColorFromInitial(initial);
 
     return AppBar(
@@ -35,8 +67,8 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
             backgroundColor: Colors.white,
             child: imageUrl != null
                 ? ClipOval(
-              child: Image.network(
-                imageUrl!,
+              child: Image.memory(
+                base64Decode(imageUrl!),
                 fit: BoxFit.cover,
                 width: 60,
                 height: 60,
@@ -57,7 +89,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
           const SizedBox(width: 10),
           // Title of the AppBar
           Text(
-            nickname,
+            widget.nickname,
             style: const TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w600,
@@ -76,7 +108,4 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(100); // Define the size of the AppBar
 }
