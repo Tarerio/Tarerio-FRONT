@@ -175,4 +175,14 @@ class AlumnosAPI {
     }
   }
 
+  Future<Map<String,dynamic>> obtenerAlumno(String nickname) async {
+    final String url = '$baseUrl/alumnos/nickname/$nickname';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
 }
