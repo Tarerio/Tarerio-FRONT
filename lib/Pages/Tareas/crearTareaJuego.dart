@@ -5,8 +5,6 @@ import 'package:tarerio/API/tareaJuegoAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
 
 import '../../Widgets/AppBarDefault.dart';
-import '../../Widgets/ErrorModal.dart';
-import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
 
 class CrearTareaJuego extends StatefulWidget {
@@ -19,66 +17,11 @@ class CrearTareaJuego extends StatefulWidget {
 }
 
 class _CrearTareaJuegoState extends State<CrearTareaJuego> {
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
   String? _titulo;
   String? _descripcion;
   String? _url;
 
   final TareaJuegoAPI _api = TareaJuegoAPI();
-
-  void _showErrorModal(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ErrorModal(title: title, content: content);
-      },
-    );
-  }
-
-  void _showSuccessModal(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SuccessModal(title: title, content: content);
-      },
-    );
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 30)),
-    );
-
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
-  }
-
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: const TimeOfDay(hour:0, minute: 0),
-    );
-
-    if (pickedTime != null && pickedTime != _selectedTime) {
-      setState(() {
-        _selectedTime = pickedTime;
-      });
-    }
-  }
-
-  String _formatTime(TimeOfDay time) {
-    final now = DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    return DateFormat('HH:mm').format(dt);
-  }
 
   void _setTitulo(String titulo) {
     setState(() {
@@ -101,22 +44,36 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
   void _crearTarea(BuildContext context) async {
     if(_titulo == null || _titulo!.isEmpty ||
         _descripcion == null || _descripcion!.isEmpty ||
-        _url == null || _url!.isEmpty ||
-        _selectedDate == null ||
-        _selectedTime == null) {
-      _showErrorModal(context, 'Error', 'Por favor, llena todos los campos');
+        _url == null || _url!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, completa todos los campos'),
+          backgroundColor: Colors.red,
+        ),
+      );
       return ;
     }
 
     try {
-      var jsonResponse = await _api.crearTareaJuego(_titulo!, _descripcion!, _url!, _selectedDate!, _selectedTime!, widget.IdAdministrador);
+      DateTime fechaCreacion = DateTime.now();
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TareasPage()));
-      _showSuccessModal(context, 'Éxito', 'Tarea creada con éxito');
+      var jsonResponse = await _api.crearTareaJuego(_titulo!, _descripcion!,fechaCreacion, _url!, widget.IdAdministrador);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Tarea creada exitosamente'),
+          backgroundColor: Colors.green, // Cambia el color de fondo del mensaje
+          duration: Duration(seconds: 2), // Duración del SnackBar
+        ),
+      );
 
     } catch (e) {
       print('Request failed with error: $e');
-      _showErrorModal(context, 'Error', 'Error al crear la tarea');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error al crear la tarea'),
+          backgroundColor: Colors.red, // Color rojo para el error
+        ),
+      );
     }
   }
 
@@ -175,77 +132,6 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Fecha y Hora estimada de cierre',
-                style: TextStyle(color: Color(0xFF2EC4B6),fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            _selectDate(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2EC4B6),
-                          ),
-                          child: const SizedBox(
-                            width: 120,
-                            child: Text(
-                              'Seleccionar fecha',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Icon(Icons.calendar_today),
-                        SizedBox(width: 10),
-                        Text(
-                          _selectedDate != null
-                              ? DateFormat('dd-MM').format(_selectedDate!)
-                              : 'Selecciona una fecha',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              _selectTime(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF2EC4B6),
-                            ),
-                            child: const SizedBox(
-                              width: 120,
-                              child:Text(
-                                'Seleccionar hora',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )
-                        ),
-                        SizedBox(width: 20),
-                        Icon(Icons.access_time),
-                        SizedBox(width: 10),
-                        Text(
-                          _selectedTime != null
-                              ? _formatTime(_selectedTime!)
-                              : 'Selecciona una hora',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
               const SizedBox(height: 20),
               const Text(
