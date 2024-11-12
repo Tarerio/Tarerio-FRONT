@@ -37,7 +37,7 @@ class InicioAdministrador extends StatelessWidget {
   Future<String> _testAdmin(BuildContext context) async {
     try {
       var jsonResponse = await _api.inicioSesionAdministrador(
-          usuarioController.text, contrasenaController.text);
+          usuarioController.text.replaceAll(" ", ""), contrasenaController.text.replaceAll(" ", ""));
       return jsonResponse['administrador']['nickname'];
     } catch (e) {
       print('Request failed with error: $e');

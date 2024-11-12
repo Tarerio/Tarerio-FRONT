@@ -5,8 +5,6 @@ import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
 
 import '../../Widgets/AppBarDefault.dart';
-import '../../Widgets/ErrorModal.dart';
-import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
 
 // Modelo para la Subtarea
@@ -29,65 +27,11 @@ class CrearTareaPorPasos extends StatefulWidget {
 }
 
 class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
   String? _titulo;
   String? _descripcion;
   List<Subtarea> _subtareas = []; // Lista de subtareas
 
   final TareaPorPasosAPI _api = TareaPorPasosAPI();
-
-  void _showErrorModal(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ErrorModal(title: title, content: content);
-      },
-    );
-  }
-
-  void _showSuccessModal(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SuccessModal(title: title, content: content);
-      },
-    );
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 30)),
-    );
-
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: const TimeOfDay(hour: 0, minute: 0),
-    );
-
-    if (pickedTime != null && pickedTime != _selectedTime) {
-      setState(() {
-        _selectedTime = pickedTime;
-      });
-    }
-  }
-
-  String _formatTime(TimeOfDay time) {
-    final now = DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    return DateFormat('HH:mm').format(dt);
-  }
 
   void _setTitulo(String titulo) {
     setState(() {
@@ -114,7 +58,10 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
           title: const Text('Añadir Subtarea'),
           content: SingleChildScrollView(
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.8, // Ajusta el ancho
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.8, // Ajusta el ancho
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -182,10 +129,12 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
         _titulo!.isEmpty ||
         _descripcion == null ||
         _descripcion!.isEmpty ||
-        _selectedDate == null ||
-        _selectedTime == null ||
         _subtareas.isEmpty) {
-      _showErrorModal(context, 'Error', 'Por favor, rellene todos los campos');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Por favor, completa todos los campos'),
+            backgroundColor: Colors.red),
+      );
       return;
     }
     try {
@@ -196,19 +145,24 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
           _titulo!,
           _descripcion!,
           fechaCreacion,
-          _selectedDate!,
-          _selectedTime!,
           widget.idAdministrador,
           _subtareas // Enviar la lista de subtareas
       );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TareasPage()));
 
-      _showSuccessModal(context, 'Tarea creada', 'La tarea se ha creado con éxito');
-
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Tarea creada exitosamente'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2), // Duración del SnackBar
+        ),
+      );
 
     } catch (e) {
-      print("Error al crear la tarea por pasos: $e");
-      _showErrorModal(context, 'Error', 'Error al crear la tarea');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Error al crear la tarea'),
+            backgroundColor: Colors.red),
+      );
     }
   }
 
@@ -277,31 +231,6 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                     border: OutlineInputBorder(),
                     hintText: 'Descripción',
                   ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Fecha y Hora estimada de cierre',
-                  style: TextStyle(
-                      color: Color(0xFF2EC4B6),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                // Layout de Fecha y Hora
-                isSmallScreen
-                    ? Column(
-                  children: [
-                    _buildDateSelection(),
-                    const SizedBox(height: 10),
-                    _buildTimeSelection(),
-                  ],
-                )
-                    : Row(
-                  children: [
-                    _buildDateSelection(),
-                    const SizedBox(width: 40),
-                    _buildTimeSelection(),
-                  ],
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -422,69 +351,6 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
           },
         ),
       ),
-    );
-  }
-
-// Widgets para selección de fecha y hora
-  Widget _buildDateSelection() {
-    return Row(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            _selectDate(context);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF2EC4B6),
-          ),
-          child: const SizedBox(
-            width: 120,
-            child: Text(
-              'Seleccionar fecha',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        const SizedBox(width: 20),
-        const Icon(Icons.calendar_today),
-        const SizedBox(width: 10),
-        Text(
-          _selectedDate != null
-              ? DateFormat('dd-MM').format(_selectedDate!)
-              : 'Selecciona una fecha',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTimeSelection() {
-    return Row(
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            _selectTime(context);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF2EC4B6),
-          ),
-          child: const SizedBox(
-            width: 120,
-            child: Text(
-              'Seleccionar hora',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-        const SizedBox(width: 20),
-        const Icon(Icons.access_time),
-        const SizedBox(width: 10),
-        Text(
-          _selectedTime != null
-              ? _formatTime(_selectedTime!)
-              : 'Selecciona una hora',
-          style: TextStyle(fontSize: 16),
-        ),
-      ],
     );
   }
 }

@@ -6,25 +6,13 @@ import 'package:tarerio/consts.dart';
 
 // API de TareaPorPasos
 class TareaPorPasosAPI {
-
   Future<Map<String, dynamic>?> crearTareaPorPasos(
       String titulo,
       String descripcion,
       DateTime fechaCreacion,
-      DateTime dueDate,
-      TimeOfDay dueTime,
       int idAdministrador,
       List<Subtarea> subtareas) async {
     String url = '$baseUrl/tareaPorPasos';
-
-    final DateTime fullDueDateTime = DateTime(
-      dueDate.year,
-      dueDate.month,
-      dueDate.day,
-      dueTime.hour,
-      dueTime.minute,
-    );
-    final String formattedDueDate = fullDueDateTime.toIso8601String();
 
     // Captura la hora de creación actual
     fechaCreacion = DateTime.now();
@@ -33,7 +21,6 @@ class TareaPorPasosAPI {
     final Map<String, dynamic> body = {
       "Titulo": titulo,
       "Descripcion": descripcion,
-      "Fecha_estimada_cierre": formattedDueDate,
       "Fecha_creacion": formattedCreacionDate,
       "creatorId": idAdministrador,
       "subtareas": subtareas
@@ -58,10 +45,6 @@ class TareaPorPasosAPI {
     }
   }
 
-  eliminarTarea(String id) {
-    // impletementar logica de eliminar tarea
-  }
-
   Future<List<Map<String, dynamic>>> obtenerTareas() async {
     String url = '$baseUrl/tareaPorPasos';
 
@@ -76,6 +59,11 @@ class TareaPorPasosAPI {
       throw Exception('Failed to load tasks');
     }
   }
+
+  eliminarTarea(String id) {
+    // impletementar logica de eliminar tarea
+  }
+
 
   Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno) async {
     String url = '$baseUrl/tareaPorPasos/$idTarea/asignar';
