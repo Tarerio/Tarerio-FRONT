@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/Pages/Administrador/principalAdministrador.dart';
 import 'package:tarerio/Pages/Alumnos/alumnos.dart';
 import 'package:tarerio/Pages/Aulas/aulas.dart';
 import 'package:tarerio/Pages/Profesores/profesores.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         '/administrador/alumnos/accesibilidad': (context) => AccesibilidadPage(
           nickname: ModalRoute.of(context)!.settings.arguments as String,
         ),
+        '/administrador/estadisticas' : (context) => const AdminDashboard(),
       },
     );
   }
