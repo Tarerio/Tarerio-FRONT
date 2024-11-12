@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/Cards/ProfesorCard.dart';
+import 'package:tarerio/Widgets/SuccessModal.dart';
+import 'package:tarerio/Widgets/ErrorModal.dart';
+
 
 import '../../API/profesoresAPI.dart';
 import '../../consts.dart';
@@ -39,7 +42,16 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
     }
   }
 
-  void _confirmarEliminacion(int idProfesor) {
+  Future<void> _eliminarProfesor(String idProfesor) async {
+    try {
+      ProfesoresAPI api = ProfesoresAPI();
+      await api.eliminarProfesor(idProfesor);
+    } catch (e) {
+      print("Error al eliminar aula: $e");
+    }
+  }
+
+  void _confirmarEliminacion(String idProfesor) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -56,11 +68,9 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
             ),
             TextButton(
               onPressed: () async {
-                await ProfesoresAPI().eliminarProfesor(idProfesor);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProfesoresPage()));
+                await _eliminarProfesor(idProfesor);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => ProfesoresPage()));
               },
               child: const Text('Eliminar'),
             ),
@@ -100,7 +110,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
                           // Lógica para asignar profesor
                         },
                         onDelete: () {
-                          _confirmarEliminacion(profesor['id_usuario']);
+                          _confirmarEliminacion(profesor['id_usuario'].toString());
                         }),
                   );
                 }).toList(),

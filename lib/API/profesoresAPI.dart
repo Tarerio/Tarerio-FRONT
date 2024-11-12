@@ -69,7 +69,7 @@ class ProfesoresAPI {
     }
   }
 
-   eliminarProfesor(int idProfesor) async {
+   eliminarProfesor(String idProfesor) async {
     String url = '$baseUrl/profesores/$idProfesor';
 
     final response = await http.delete(Uri.parse(url));
