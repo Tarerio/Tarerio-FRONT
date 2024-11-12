@@ -99,7 +99,7 @@ class AulasAPI {
 
   Future<Map<String, dynamic>> desasignarProfesor(
       int idAula, int idProfesor) async {
-    String url = '$baseUrl/aulas/eliminar-profesor';
+    String url = '$baseUrl/aulas/desasignar-profesor';
 
     final Map<String, dynamic> data = {
       "id_aula": idAula,
