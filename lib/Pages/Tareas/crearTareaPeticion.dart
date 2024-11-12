@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
 import '../../Widgets/AppBarDefault.dart';
+import '../../Widgets/ErrorModal.dart';
+import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
 
 class Respuesta {
@@ -47,6 +49,24 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
     setState(() {
       _descripcion = descripcion;
     });
+  }
+
+  void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
   }
 
   void _addEnunciado() async {
@@ -122,11 +142,8 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
         _descripcion == null ||
         _descripcion!.isEmpty ||
         _enunciados.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Por favor, completa todos los campos'),
-            backgroundColor: Colors.red),
-      );
+      _showErrorModal(context, 'Error al crear tarea',
+          'Por favor, llena todos los campos y añade al menos un enunciado');
       return;
     }
 
@@ -141,22 +158,13 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
           widget.idAdministrador,
           _enunciados // Enviar la lista de enunciados
       );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Tarea creada exitosamente'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2), // Duración del SnackBar
-        ),
-      );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TareasPage()));
+      _showSuccessModal(context, 'Tarea creada',
+          'La tarea de petición se ha creado exitosamente');
 
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error al crear la tarea de petición'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      _showErrorModal(context, 'Error al crear tarea',
+          'Ha ocurrido un error al crear la tarea de petición');
     }
   }
 

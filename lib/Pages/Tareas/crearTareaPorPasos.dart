@@ -5,6 +5,8 @@ import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
 
 import '../../Widgets/AppBarDefault.dart';
+import '../../Widgets/ErrorModal.dart';
+import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
 
 // Modelo para la Subtarea
@@ -124,17 +126,32 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
     });
   }
 
+  void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
+  }
+
   void _crearTareaPorPasos(BuildContext context) async {
     if (_titulo == null ||
         _titulo!.isEmpty ||
         _descripcion == null ||
         _descripcion!.isEmpty ||
         _subtareas.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Por favor, completa todos los campos'),
-            backgroundColor: Colors.red),
-      );
+      _showErrorModal(context, 'Error al crear la tarea',
+          'Por favor, llena todos los campos.');
       return;
     }
     try {
@@ -149,20 +166,18 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
           _subtareas // Enviar la lista de subtareas
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Tarea creada exitosamente'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2), // Duración del SnackBar
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TareasPage(),
         ),
       );
-
+      _showSuccessModal(context, 'Tarea creada',
+          'La tarea por pasos ha sido creada exitosamente');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Error al crear la tarea'),
-            backgroundColor: Colors.red),
-      );
+      print('Error al crear la tarea por pasos: $e');
+      _showErrorModal(context, 'Error al crear la tarea',
+          'Ocurrió un error al crear la tarea por pasos');
     }
   }
 

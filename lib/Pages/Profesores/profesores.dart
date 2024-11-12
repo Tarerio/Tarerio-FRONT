@@ -51,6 +51,15 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
     }
   }
 
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
+  }
+
   void _confirmarEliminacion(String idProfesor) {
     showDialog(
       context: context,
@@ -71,6 +80,8 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
                 await _eliminarProfesor(idProfesor);
                 Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context) => ProfesoresPage()));
+                _showSuccessModal(context, 'Profesor eliminado',
+                    'El profesor ha sido eliminado exitosamente');
               },
               child: const Text('Eliminar'),
             ),
