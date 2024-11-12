@@ -36,7 +36,7 @@ class _TareaCardState extends State<TareaCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 200, // Set the desired width
-      height: 300, // Set the desired height
+      height: 330, // Set the desired height
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -53,8 +53,9 @@ class _TareaCardState extends State<TareaCard> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 18,
                   color: Colors.teal,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -95,7 +96,7 @@ class _TareaCardState extends State<TareaCard> {
                   if (widget.onEdit != null)
                     TextButton.icon(
                       onPressed: widget.onEdit,
-                      icon: const Icon(Icons.key, color: Colors.teal),
+                      icon: const Icon(Icons.edit, color: Colors.teal),
                       label: const Text('Editar Tarea'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
@@ -113,10 +114,10 @@ class _TareaCardState extends State<TareaCard> {
                   if (widget.onDelete != null)
                     TextButton.icon(
                       onPressed: widget.onDelete,
-                      icon: const Icon(Icons.delete, color: Colors.teal),
+                      icon: const Icon(Icons.delete, color: Colors.deepOrange),
                       label: const Text('Eliminar'),
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.teal,
+                        foregroundColor: Colors.deepOrange,
                       ),
                     ),
                   if (widget.onSelect != null)

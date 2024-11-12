@@ -50,7 +50,7 @@ class _AlumnosState extends State<AlumnosPage> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : Padding(
+          : SingleChildScrollView(
               padding: const EdgeInsets.all(8.0),
               child: Wrap(
                 spacing: 8.0, // Space between cards horizontally

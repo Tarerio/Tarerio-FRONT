@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
 
-import '../../consts.dart'; // Adjust the import path as needed
+import '../../Widgets/ErrorModal.dart';
+import '../../Widgets/SuccessModal.dart';
+import '../../API/alumnosAPI.dart';
 
 class AccesibilidadPage extends StatefulWidget {
   final String nickname;
@@ -17,6 +19,60 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
   String _selectedTitleFontSize = "MEDIANO";
   String _selectedTextFontSize = "MEDIANO";
   String _selectedPalette = 'TARERIO';
+
+  final AlumnosAPI _api = AlumnosAPI();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMenuAccesible();
+  }
+
+  void _loadMenuAccesible() async {
+    try {
+      final response = await _api.obtenerMenuAccesible(widget.nickname);
+      if (response != null) {
+        setState(() {
+          _selectedTitleFontSize = response['texto_titulo'] ?? _selectedTitleFontSize;
+          _selectedTextFontSize = response['texto_descripcion'] ?? _selectedTextFontSize;
+          _selectedPalette = response['paleta_colores'] ?? _selectedPalette;
+        });
+      }
+    } catch (e) {
+      // Handle error if needed
+    }
+  }
+
+  void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
+  }
+
+  void crearModificarMenuAccesible(BuildContext context) async {
+    try {
+      final response = await _api.crearModificarMenuAccesible(widget.nickname, _selectedTitleFontSize, _selectedTextFontSize, _selectedPalette);
+      if (response['status'] != 'error') {
+        _showSuccessModal(context, 'Éxito', 'Configuración de accesibilidad actualizada correctamente.');
+      } else {
+        _showErrorModal(context, 'Error', 'Ocurrió un error al intentar actualizar la configuración de accesibilidad.');
+      }
+    } catch (e) {
+      _showErrorModal(context, 'Error', 'Ocurrió un error al intentar actualizar la configuración de accesibilidad.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,46 +246,52 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                         },
                       ),
                       SizedBox(height: 20),
-                      DefaultButton(text: "Actualizar", onPressed: () {}, color: Color(0xFF2EC4B6)),
+                      DefaultButton(text: "Actualizar", onPressed: () {
+                        crearModificarMenuAccesible(context);
+                      }, color: Color(0xFF2EC4B6)),
                     ],
                   ),
                 ),
                 VerticalDivider(),
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Ejemplo de Título',
-                        style: TextStyle(
-                          fontSize: _getFontSize(_selectedTitleFontSize),
-                          fontWeight: FontWeight.bold,
-                          color: _getColorPalette(_selectedPalette).fuente,
+                  child: Container(
+                    color: _getColorPalette(_selectedPalette).fondo,
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Ejemplo de Título',
+                          style: TextStyle(
+                            fontSize: _getFontSize(_selectedTitleFontSize),
+                            fontWeight: FontWeight.bold,
+                            color: _getColorPalette(_selectedPalette).fuente,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Ejemplo de Texto',
-                        style: TextStyle(
-                          fontSize: _getFontSize(_selectedTextFontSize),
-                          color: _getColorPalette(_selectedPalette).fuente,
+                        SizedBox(height: 20),
+                        Text(
+                          'Ejemplo de Texto',
+                          style: TextStyle(
+                            fontSize: _getFontSize(_selectedTextFontSize),
+                            color: _getColorPalette(_selectedPalette).fuente,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Wrap(
-                        spacing: 20,
-                        runSpacing: 20,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          _buildColorCircle(_getColorPalette(_selectedPalette).colorPrincipal, 'Principal'),
-                          _buildColorCircle(_getColorPalette(_selectedPalette).colorSecundario, 'Secundario'),
-                          _buildColorCircle(_getColorPalette(_selectedPalette).fondo, 'Fondo'),
-                          _buildColorCircle(_getColorPalette(_selectedPalette).componentes, 'Componentes'),
-                          _buildColorCircle(_getColorPalette(_selectedPalette).fuente, 'Fuente'),
-                        ],
-                      ),
-                    ],
+                        SizedBox(height: 20),
+                        Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            _buildColorCircle(_getColorPalette(_selectedPalette).colorPrincipal, 'Principal'),
+                            _buildColorCircle(_getColorPalette(_selectedPalette).colorSecundario, 'Secundario'),
+                            _buildColorCircle(_getColorPalette(_selectedPalette).fondo, 'Fondo'),
+                            _buildColorCircle(_getColorPalette(_selectedPalette).componentes, 'Componentes'),
+                            _buildColorCircle(_getColorPalette(_selectedPalette).fuente, 'Fuente'),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -261,7 +323,7 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
         return ColorPalette.TARERIO;
       case 'TARERIO_INV':
         return ColorPalette.TARERIO_INV;
-        case 'HIGH_CONTRAST':
+      case 'HIGH_CONTRAST':
         return ColorPalette.HIGH_CONTRAST;
       case 'SOFT_PASTEL':
         return ColorPalette.SOFT_PASTEL;
@@ -281,12 +343,12 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color,
-            border: Border.all(color: Colors.black, width: 2),
+            border: Border.all(color: _getColorPalette(_selectedPalette).fuente, width: 2),
           ),
           margin: EdgeInsets.symmetric(horizontal: 5),
         ),
         SizedBox(height: 5),
-        Text(label),
+        Text(label, style: TextStyle( fontSize: 16, color: _getColorPalette(_selectedPalette).fuente),),
       ],
     );
   }

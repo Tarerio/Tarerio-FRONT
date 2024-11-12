@@ -5,6 +5,8 @@ import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
 
 import '../../Widgets/AppBarDefault.dart';
+import '../../Widgets/ErrorModal.dart';
+import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
 
 // Modelo para la Subtarea
@@ -34,6 +36,24 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
   List<Subtarea> _subtareas = []; // Lista de subtareas
 
   final TareaPorPasosAPI _api = TareaPorPasosAPI();
+
+  void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -165,12 +185,8 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
         _selectedDate == null ||
         _selectedTime == null ||
         _subtareas.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Por favor, completa todos los campos'),
-            backgroundColor: Colors.red),
-      );
-      return;
+      _showErrorModal(context, 'Error', 'Por favor, rellene todos los campos');
+          return;
     }
     try {
       // Capturamos la hora de creación actual
@@ -185,25 +201,13 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
           widget.idAdministrador,
           _subtareas // Enviar la lista de subtareas
           );
+      Navigator.pop(context); // Vuelve a la página anterior
+      _showSuccessModal(context, 'Tarea creada', 'La tarea se ha creado con éxito');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Tarea creada exitosamente'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2), // Duración del SnackBar
-        ),
-      );
 
-      // Espera a que el SnackBar desaparezca antes de regresar
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context); // Vuelve a la página anterior
-      });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Error al crear la tarea'),
-            backgroundColor: Colors.red),
-      );
+      print("Error al crear la tarea por pasos: $e");
+      _showErrorModal(context, 'Error', 'Error al crear la tarea');
     }
   }
 
