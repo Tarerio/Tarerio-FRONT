@@ -12,21 +12,21 @@ import 'package:tarerio/Widgets/Cards/AlumnoCard.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
 import 'package:tarerio/consts.dart';
 
-class AsignarWidget extends StatefulWidget {
+class AsignarTareaAlumno extends StatefulWidget {
   final int origen;
   final String tipoTarea;
 
-  const AsignarWidget({
+  const AsignarTareaAlumno({
     Key? key,
     required this.origen,
     required this.tipoTarea,
   }) : super(key: key);
 
   @override
-  _AsignarWidgetState createState() => _AsignarWidgetState();
+  _AsignarTareaAlumnoState createState() => _AsignarTareaAlumnoState();
 }
 
-class _AsignarWidgetState extends State<AsignarWidget> {
+class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
 
   List<dynamic> Alumnos = []; // Lista para tareas
 
@@ -86,6 +86,7 @@ class _AsignarWidgetState extends State<AsignarWidget> {
     final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
     return DateFormat('HH:mm').format(dt);
   }
+
   // Función para mostrar el diálogo para seleccionar fecha y hora de una tarea
   void _showDialogAsignar(int alumnoSeleccionado) {
     _resetTimes();
@@ -204,14 +205,11 @@ class _AsignarWidgetState extends State<AsignarWidget> {
                     // Lógica para aceptar la fecha y hora
                     if (_selectedDate != null && _selectedTime != null) {
 
-                      print("Me pasan los datos $_selectedDate y este $_selectedTime");
-                      print(widget.origen);
-                      print(alumnoSeleccionado);
                       switch(widget.tipoTarea){
                         case 'Tarea Peticion':
                           try {
                             TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
-                            await _peticionAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado);
+                            await _peticionAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado, _selectedDate!, _selectedTime!);
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Tarea asignada con éxito'),
@@ -230,7 +228,7 @@ class _AsignarWidgetState extends State<AsignarWidget> {
                         case 'Tarea Por Pasos':
                           try {
                             TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
-                            await _porPasosAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado);
+                            await _porPasosAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado, _selectedDate!, _selectedTime!);
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Tarea asignada con éxito'),
@@ -249,7 +247,7 @@ class _AsignarWidgetState extends State<AsignarWidget> {
                         case 'Tarea Juego':
                           try {
                             TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
-                            await _juegoAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado);
+                            await _juegoAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado, _selectedDate!, _selectedTime!);
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Tarea asignada con éxito'),

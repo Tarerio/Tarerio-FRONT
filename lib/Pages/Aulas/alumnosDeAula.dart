@@ -26,7 +26,7 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
   List<dynamic> alumnos = [];
   List<dynamic> alumnosDisponibles = [];
 
-  dynamic? alumnoSeleccionado;
+  dynamic alumnoSeleccionado = null;
 
   @override
   void initState() {
@@ -104,24 +104,33 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'Selecciona un alumno',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
-              DropdownButton<dynamic>(
+              const SizedBox(height: 16),
+              DropdownButtonFormField(
                 isExpanded: true,
+                isDense: true,
                 value: alumnoSeleccionado,
-                hint: Text('Elige un alumno'),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide( color: Color(colorPrincipal) ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: -100),
+                  labelText: 'Elige un alumno',
+                ),
                 items: alumnosDisponibles.map((alumno) {
                   return DropdownMenuItem(
                     value: alumno,
                     child: Text(alumno['nickname']),
                   );
                 }).toList(),
-                onChanged: (dynamic? newValue) {
+                onChanged: (dynamic newValue) {
                   setState(() {
                     alumnoSeleccionado = newValue;
+                    print(alumnoSeleccionado);
                   });
                 },
               ),
@@ -143,7 +152,11 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
           ),
         );
       },
-    );
+    ).whenComplete(() {
+      setState(() {
+        alumnoSeleccionado = null;
+      });
+    });
   }
 
   @override
