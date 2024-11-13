@@ -10,20 +10,9 @@ class TareaPorPasosAPI {
       String titulo,
       String descripcion,
       DateTime fechaCreacion,
-      DateTime dueDate,
-      TimeOfDay dueTime,
       int idAdministrador,
       List<Subtarea> subtareas) async {
     String url = '$baseUrl/tareaPorPasos';
-
-    final DateTime fullDueDateTime = DateTime(
-      dueDate.year,
-      dueDate.month,
-      dueDate.day,
-      dueTime.hour,
-      dueTime.minute,
-    );
-    final String formattedDueDate = fullDueDateTime.toIso8601String();
 
     // Captura la hora de creación actual
     fechaCreacion = DateTime.now();
@@ -32,16 +21,15 @@ class TareaPorPasosAPI {
     final Map<String, dynamic> body = {
       "Titulo": titulo,
       "Descripcion": descripcion,
-      "Fecha_estimada_cierre": formattedDueDate,
       "Fecha_creacion": formattedCreacionDate,
       "creatorId": idAdministrador,
       "subtareas": subtareas
           .map((subtarea) => {
-                "Texto": subtarea.texto,
-                "Imagen": subtarea.imagen,
-                "Pictograma": subtarea.pictograma,
-                "Video": subtarea.video
-              })
+        "Texto": subtarea.texto,
+        "Imagen": subtarea.imagen,
+        "Pictograma": subtarea.pictograma,
+        "Video": subtarea.video
+      })
           .toList(), // Convertir cada subtarea en un mapa
     };
 
@@ -75,4 +63,27 @@ class TareaPorPasosAPI {
   eliminarTarea(String id) {
     // impletementar logica de eliminar tarea
   }
+
+
+  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno) async {
+    String url = '$baseUrl/tareaPorPasos/$idTarea/asignar';
+
+    final Map<String, dynamic> body = {
+      "id_usuario": idAlumno
+    };
+
+    final response = await http.post(Uri.parse(url),
+        headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
+
+    if (response.statusCode == 201) {
+      print(jsonDecode);
+
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to create task');
+    }
+  }
+
 }

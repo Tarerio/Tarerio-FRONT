@@ -2,32 +2,41 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
-class TareaCard extends StatelessWidget {
+class TareaCard extends StatefulWidget {
+  final int ID_tarea;
   final String titulo;
   final String descripcion;
   final String imagenBase64;
   final String tipo;
-  final VoidCallback onEdit;
-  final VoidCallback onAssign;
-  final VoidCallback onDelete;
+  final VoidCallback? onEdit;
+  final VoidCallback? onAssign;
+  final VoidCallback? onDelete;
+  final VoidCallback? onSelect;
 
   const TareaCard({
     Key? key,
+    required this.ID_tarea,
     required this.titulo,
     required this.descripcion,
     required this.imagenBase64,
     required this.tipo,
-    required this.onEdit,
-    required this.onAssign,
-    required this.onDelete,
-  })
-      : super(key: key);
+    this.onEdit,
+    this.onAssign,
+    this.onDelete,
+    this.onSelect,
+  }) : super(key: key);
+
+  @override
+  _TareaCardState createState() => _TareaCardState();
+}
+
+class _TareaCardState extends State<TareaCard> {
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 200, // Set the desired width
-      height: 300, // Set the desired height
+      height: 330, // Set the desired height
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -40,34 +49,36 @@ class TareaCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                tipo,
+                widget.tipo,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 18,
                   color: Colors.teal,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             const SizedBox(height: 15),
             // Imagen de la tarea
-            imagenBase64.isNotEmpty ? CircleAvatar(
+            widget.imagenBase64.isNotEmpty
+                ? CircleAvatar(
               radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
+              backgroundImage: MemoryImage(base64Decode(widget.imagenBase64)),
             )
                 : const Avatar(
               image: null,
               size: 50,
               placeholderIcon: Icon(
-                  Icons.edit_square,
-                  color: Colors.white
+                Icons.edit_square,
+                color: Colors.white,
               ),
             ),
             // Nombre de la tarea
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                titulo,
+                widget.titulo,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -77,38 +88,49 @@ class TareaCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Botones de Editar y Asignar
-            OverflowBar(
-              alignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                TextButton.icon(
-                  onPressed: () => {},
-                  icon: const Icon(Icons.key, color: Colors.teal),
-                  label: const Text('Editar Tarea'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
-                ),
-                // Boton Asignar Profesor
-                TextButton.icon(
-                  onPressed: onAssign,
-                  icon: const Icon(Icons.person_add_alt, color: Colors.teal),
-                  label: const Text('Asignar a Alumno'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
-                ),
-                // Botón de Eliminar
-                TextButton.icon(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete, color: Colors.teal),
-                  label: const Text('Elimnar'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
-                ),
-              ],
-            ),
+            // Botones de Editar, Asignar, Eliminar y Seleccionar
+            if (widget.onEdit != null || widget.onAssign != null || widget.onDelete != null || widget.onSelect != null)
+              OverflowBar(
+                alignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  if (widget.onEdit != null)
+                    TextButton.icon(
+                      onPressed: widget.onEdit,
+                      icon: const Icon(Icons.edit, color: Colors.teal),
+                      label: const Text('Editar Tarea'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                  if (widget.onAssign != null)
+                    TextButton.icon(
+                      onPressed: widget.onAssign,
+                      icon: const Icon(Icons.person_add_alt, color: Colors.teal),
+                      label: const Text('Asignar a Alumno'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                  if (widget.onDelete != null)
+                    TextButton.icon(
+                      onPressed: widget.onDelete,
+                      icon: const Icon(Icons.delete, color: Colors.deepOrange),
+                      label: const Text('Eliminar'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.deepOrange,
+                      ),
+                    ),
+                  if (widget.onSelect != null)
+                    TextButton.icon(
+                      onPressed: widget.onSelect,
+                      icon: const Icon(Icons.assignment_add, color: Colors.teal),
+                      label: const Text('Seleccionar'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                ],
+              ),
           ],
         ),
       ),

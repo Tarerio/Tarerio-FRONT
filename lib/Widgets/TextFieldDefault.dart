@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/InformationModal.dart';
 
 class TextFieldDefault extends StatelessWidget {
-  final String label, titleInformation, textInformation;
+  final String label, titleInformation, textInformation, hintText;
   final TextEditingController controller;
   final Color labelColor;
   final double labelFontSize;
+  final FontWeight labelFontWeight;
   final double width;
   final EdgeInsets padding;
   final bool obscureText;
@@ -17,8 +18,10 @@ class TextFieldDefault extends StatelessWidget {
     required this.controller,
     this.labelColor = Colors.black,
     this.labelFontSize = 30.0,
+    this.labelFontWeight = FontWeight.w600,
     this.width = 350.0,
     this.padding = EdgeInsets.zero,
+    this.hintText = '',
     this.obscureText = false,
     this.information = false,
     this.titleInformation = '',
@@ -49,7 +52,7 @@ class TextFieldDefault extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: labelFontSize,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: labelFontWeight,
                   color: labelColor,
                 ),
               ),
@@ -79,6 +82,7 @@ class TextFieldDefault extends StatelessWidget {
               controller: controller,
               obscureText: obscureText,
               decoration: InputDecoration(
+                hintText: hintText,
                 fillColor: Colors.grey[200],
                 filled: true,
                 contentPadding:

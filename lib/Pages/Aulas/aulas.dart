@@ -78,8 +78,9 @@ class _AulasPageState extends State<AulasPage> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
+
                 await _borrarAula(id);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AulasPage()));
               },
               child: const Text('Eliminar'),
             ),
@@ -234,7 +235,7 @@ class _AulasPageState extends State<AulasPage> {
       ),
       body: isloadingAulas
           ? const Center(child: CircularProgressIndicator())
-          : Padding(
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(8.0),
         child: Wrap(
           spacing: 8.0,

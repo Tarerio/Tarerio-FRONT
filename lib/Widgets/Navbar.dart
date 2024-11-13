@@ -42,6 +42,10 @@ const List<ExampleDestination> destinations = <ExampleDestination>[
       Icon(Icons.settings),
       Icon(Icons.settings_outlined),
       '/administrador/perfil'), // ruta
+  ExampleDestination('Estadísticas',
+      Icon(Icons.bar_chart),
+      Icon(Icons.bar_chart_outlined),
+      '/administrador/estadisticas'), // ruta
 ];
 
 class Navbar extends StatefulWidget {

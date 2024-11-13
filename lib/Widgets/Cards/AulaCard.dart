@@ -57,7 +57,7 @@ class AulaCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                claveAula,
+                "Aula : "+claveAula,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class AulaCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Botones de Editar y Asignar
+            // Botones de Editar, Asignar, Eliminar
             OverflowBar(
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
@@ -77,31 +77,31 @@ class AulaCard extends StatelessWidget {
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Boton Asignar Profesor
                 TextButton.icon(
                   onPressed: onAssign,
                   icon: const Icon(Icons.person_add_alt, color: Colors.teal),
-                  label: const Text('Profesores'),
+                  label: const Text('Gestión profesorado'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
                   ),
                 ),
-                // Botón de Eliminar
-                TextButton.icon(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete, color: Colors.teal),
-                  label: const Text('Eliminar'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
-                ),
+
                 // Botón de Ver Alumnos
                 TextButton.icon(
                   onPressed: onSeeStudents,
                   icon: const Icon(Icons.people, color: Colors.teal),
-                  label: const Text('Ver Alumnos'),
+                  label: const Text('Gestión alumnos'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.teal,
+                  ),
+                ),
+
+                TextButton.icon(
+                  onPressed: onDelete,
+                  icon: const Icon(Icons.delete, color: Colors.deepOrange),
+                  label: const Text('Eliminar'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.deepOrange,
                   ),
                 ),
               ],

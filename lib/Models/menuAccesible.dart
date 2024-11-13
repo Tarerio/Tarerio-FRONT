@@ -42,4 +42,29 @@ class ColorPalette {
     fondo: Colors.white,
     componentes: Colors.deepOrangeAccent,
   );
+
+
+  static const ColorPalette HIGH_CONTRAST = ColorPalette(
+    colorPrincipal: Color(0xFF000000),
+    colorSecundario: Color(0xFFFFFFFF),
+    fuente: Colors.yellow,
+    fondo: Colors.black,
+    componentes: Colors.white,
+  );
+
+  static const ColorPalette SOFT_PASTEL = ColorPalette(
+    colorPrincipal: Color(0xFFB3E5FC),
+    colorSecundario: Color(0xFFFFF9C4),
+    fuente: Colors.black,
+    fondo: Colors.white,
+    componentes: Color(0xFFFFCCBC),
+  );
+
+  static const ColorPalette DARK_MODE = ColorPalette(
+    colorPrincipal: Color(0xFF212121),
+    colorSecundario: Color(0xFF757575),
+    fuente: Colors.white,
+    fondo: Color(0xFF303030),
+    componentes: Color(0xFF424242),
+  );
 }

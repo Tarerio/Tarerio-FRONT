@@ -63,10 +63,10 @@ class AlumnoDeAulaCard extends StatelessWidget {
                 // Botón de Eliminar
                 TextButton.icon(
                   onPressed: onDelete,
-                  icon: const Icon(Icons.delete, color: Colors.red),
+                  icon: const Icon(Icons.delete, color: Colors.deepOrange),
                   label: const Text('Eliminar'),
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.red,
+                    foregroundColor: Colors.deepOrange,
                   ),
                 ),
               ],

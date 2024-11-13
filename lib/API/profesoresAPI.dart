@@ -68,4 +68,16 @@ class ProfesoresAPI {
           json.decode(response.body)['message']);
     }
   }
+
+   eliminarProfesor(String idProfesor) async {
+    String url = '$baseUrl/profesores/$idProfesor';
+
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to delete data');
+    }
+  }
 }
