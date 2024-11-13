@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 import 'package:tarerio/consts.dart';
 
@@ -22,9 +23,20 @@ class AlumnosAPI {
     }
   }
 
+  // A GET request to fetch a student by its ID.
+  Future<Map<String, dynamic>> getAlumnoById(String id) async {
+    final response = await http.get(Uri.parse('$baseUrl/alumnos/$id'));
+    if (response.statusCode == 200) {
+      print(response.body);
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
 // Una petición POST para ver si un usuario se encuentra en la tabla alumno.
-  Future<Map<String, dynamic>> inicioSesionAlumno(String nickname,
-      String patron) async {
+  Future<Map<String, dynamic>> inicioSesionAlumno(
+      String nickname, String patron) async {
     String url = '$baseUrl/alumnos/inicioSesionAlumno';
     final response = await http.post(
       Uri.parse(url),
@@ -40,7 +52,8 @@ class AlumnosAPI {
     }
   }
 
-  Future<Map<String, dynamic>> registrarAlumno(String nickname,
+  Future<Map<String, dynamic>> registrarAlumno(
+      String nickname,
       String patron,
       bool texto,
       bool imagenes,
@@ -86,6 +99,57 @@ class AlumnosAPI {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to register student');
+    }
+  }
+
+  Future<Map<String, dynamic>> editarAlumno(
+      String nickname,
+      String patron,
+      bool texto,
+      bool imagenes,
+      bool pictograma,
+      bool video,
+      bool audio,
+      String porDefecto,
+      String image,
+      String idAlumno) async {
+    final String url = '$baseUrl/alumnos/$idAlumno';
+
+    var perfil = {
+      'texto': texto,
+      'imagenes': imagenes,
+      'pictograma': pictograma,
+      'video': video,
+      'audio': audio,
+      'porDefecto': porDefecto
+    };
+
+    final Map<String, dynamic> data = {
+      'nickname': nickname,
+      'patron': patron,
+      'perfil': perfil,
+      'image': image,
+    };
+
+    final String jsonBody = json.encode(data);
+
+    print('Request Body: $jsonBody');
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    );
+
+    print('Response Status: ${response.statusCode}');
+    print('Response Body: ${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update student');
     }
   }
 }

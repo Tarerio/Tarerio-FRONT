@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Pages/Alumnos/alumnos.dart';
+import 'package:tarerio/Pages/Alumnos/editarAlumno.dart';
 import 'package:tarerio/Pages/Aulas/aulas.dart';
 import 'package:tarerio/Pages/Profesores/profesores.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
@@ -56,11 +57,15 @@ class MyApp extends StatelessWidget {
         '/administrador/alumnos': (context) => AlumnosPage(),
         //'/administrador/perfil': (context) => PerfilPage(), // TO ADD pagina de configuración del administrador
         '/administrador/registrarAlumno': (context) => const RegistrarAlumno(),
-        '/administrador/profesores/registrarProfesor': (context) => const RegistrarProfesor(),
-        '/administrador/profesores/editarContrasenia': (context) => const EditarContraseniaProfesor(),
+        '/administrador/alumnos/editarAlumno': (context) =>
+            const EditarAlumno(),
+        '/administrador/profesores/registrarProfesor': (context) =>
+            const RegistrarProfesor(),
+        '/administrador/profesores/editarContrasenia': (context) =>
+            const EditarContraseniaProfesor(),
         '/administrador/alumnos/accesibilidad': (context) => AccesibilidadPage(
-          nickname: ModalRoute.of(context)!.settings.arguments as String,
-        ),
+              nickname: ModalRoute.of(context)!.settings.arguments as String,
+            ),
       },
     );
   }

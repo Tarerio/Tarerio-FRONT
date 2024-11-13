@@ -32,18 +32,16 @@ class AlumnoCard extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 15),
             // Imagen del profesor
-            imagenBase64.isNotEmpty ? CircleAvatar(
-              radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenBase64)),
-            )
+            imagenBase64.isNotEmpty
+                ? CircleAvatar(
+                    radius: 50, // Adjust the size as needed
+                    backgroundImage: MemoryImage(base64Decode(imagenBase64)),
+                  )
                 : const Avatar(
-              image: null,
-              size: 50,
-              placeholderIcon: Icon(
-                  Icons.school,
-                  color: Colors.white
-              ),
-            ),
+                    image: null,
+                    size: 50,
+                    placeholderIcon: Icon(Icons.school, color: Colors.white),
+                  ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -65,7 +63,7 @@ class AlumnoCard extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamed(
                         context, '/administrador/alumnos/editarAlumno',
-                        arguments: id_usuario);
+                        arguments: id_usuario.toString());
                   },
                   icon: const Icon(Icons.edit, color: Colors.teal),
                   label: const Text('Editar alumno'),
