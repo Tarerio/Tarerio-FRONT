@@ -65,14 +65,9 @@ class MyApp extends StatelessWidget {
         '/administrador/profesores/editarContrasenia': (context) =>
             const EditarContraseniaProfesor(),
         '/administrador/alumnos/accesibilidad': (context) => AccesibilidadPage(
-<<<<<<< HEAD
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
-=======
-          nickname: ModalRoute.of(context)!.settings.arguments as String,
-        ),
-        '/administrador/estadisticas' : (context) => const AdminDashboard(),
->>>>>>> develop
+        '/administrador/estadisticas': (context) => const AdminDashboard(),
       },
     );
   }

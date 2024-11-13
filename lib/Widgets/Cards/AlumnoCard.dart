@@ -44,18 +44,11 @@ class _AlumnoCardState extends State<AlumnoCard> {
           children: <Widget>[
             SizedBox(height: 15),
             // Imagen del profesor
-<<<<<<< HEAD
-            imagenBase64.isNotEmpty
-                ? CircleAvatar(
-                    radius: 50, // Adjust the size as needed
-                    backgroundImage: MemoryImage(base64Decode(imagenBase64)),
-=======
             widget.imagenBase64.isNotEmpty
                 ? CircleAvatar(
                     radius: 50, // Adjust the size as needed
                     backgroundImage:
                         MemoryImage(base64Decode(widget.imagenBase64)),
->>>>>>> develop
                   )
                 : const Avatar(
                     image: null,
@@ -74,23 +67,6 @@ class _AlumnoCardState extends State<AlumnoCard> {
                 ),
               ),
             ),
-<<<<<<< HEAD
-            // Botones de Editar y Asignar
-            OverflowBar(
-              alignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                // Botón de Editar alumno del alumno
-                TextButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                        context, '/administrador/alumnos/editarAlumno',
-                        arguments: id_usuario.toString());
-                  },
-                  icon: const Icon(Icons.edit, color: Colors.teal),
-                  label: const Text('Editar alumno'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-=======
             // Botones de Editar, Asignar y Eliminar si se especifican
             if (widget.onEdit != null ||
                 widget.onAssign != null ||
@@ -118,14 +94,13 @@ class _AlumnoCardState extends State<AlumnoCard> {
                   // Accesibilidad
                   if (widget.onAccesibilidad != null)
                     TextButton.icon(
-                    onPressed: widget.onAccesibilidad,
-                    icon: const Icon(Icons.accessibility, color: Colors.teal),
-                    label: const Text('Accesibilidad'),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.teal,
+                      onPressed: widget.onAccesibilidad,
+                      icon: const Icon(Icons.accessibility, color: Colors.teal),
+                      label: const Text('Accesibilidad'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
                     ),
->>>>>>> develop
-                  ),
                   // Botón de Asignar tarea solo si onAssign no es null
                   if (widget.onAssign != null)
                     TextButton.icon(
