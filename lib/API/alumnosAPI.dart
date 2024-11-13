@@ -70,8 +70,6 @@ class AlumnosAPI {
 
     final String jsonBody = json.encode(data);
 
-    print('Request Body: $jsonBody');
-
     final response = await http.post(
       Uri.parse(url),
       headers: {

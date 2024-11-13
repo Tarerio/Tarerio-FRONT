@@ -4,7 +4,8 @@ import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
 import 'package:tarerio/Widgets/Cards/TareaCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
-import 'package:tarerio/Pages/Tareas/AsignacionTareaAlumno.dart';
+import 'package:tarerio/Pages/Tareas/asignacionTareaAlumno.dart';
+import 'package:tarerio/Pages/Tareas/editarTareas.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaJuego.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPorPasos.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPeticion.dart';
@@ -82,12 +83,19 @@ class _TareasPageState extends State<TareasPage> {
                 descripcion: tarea['Descripcion'],
                 imagenBase64: tarea['imagenBase64'] ?? '', // No hay imagen en las tareas de momento
                 tipo: tarea['tipo'],
-                onEdit: () {},
+                onEdit: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditarTareas(idTarea: tarea['ID_tarea'], tipoTarea: tarea['tipo']),
+                    ),
+                  );
+                },
                 onAssign: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AsignarWidget(origen: tarea['ID_tarea'], tipoTarea: tarea['tipo']),
+                      builder: (context) => AsignarTareaAlumno(origen: tarea['ID_tarea'], tipoTarea: tarea['tipo']),
                     ),
                   );
                 },

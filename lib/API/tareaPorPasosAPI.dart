@@ -6,8 +6,7 @@ import 'package:tarerio/consts.dart';
 
 // API de TareaPorPasos
 class TareaPorPasosAPI {
-  Future<Map<String, dynamic>?> crearTareaPorPasos(
-      String titulo,
+  Future<Map<String, dynamic>?> crearTareaPorPasos(String titulo,
       String descripcion,
       DateTime fechaCreacion,
       int idAdministrador,
@@ -24,7 +23,8 @@ class TareaPorPasosAPI {
       "Fecha_creacion": formattedCreacionDate,
       "creatorId": idAdministrador,
       "subtareas": subtareas
-          .map((subtarea) => {
+          .map((subtarea) =>
+      {
         "Texto": subtarea.texto,
         "Imagen": subtarea.imagen,
         "Pictograma": subtarea.pictograma,
@@ -65,19 +65,28 @@ class TareaPorPasosAPI {
   }
 
 
-  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno) async {
+  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno, DateTime dueDate,TimeOfDay dueTime) async {
     String url = '$baseUrl/tareaPorPasos/$idTarea/asignar';
 
+    final DateTime fullDueDateTime = DateTime(
+      dueDate.year,
+      dueDate.month,
+      dueDate.day,
+      dueTime.hour,
+      dueTime.minute,
+    );
+    final String formattedDueDate = fullDueDateTime.toIso8601String();
+
     final Map<String, dynamic> body = {
-      "id_usuario": idAlumno
+      "id_usuario": idAlumno,
+      "Fecha_fin_asignacion": formattedDueDate
     };
+
 
     final response = await http.post(Uri.parse(url),
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(body));
 
     if (response.statusCode == 201) {
-      print(jsonDecode);
-
       return jsonDecode(response.body);
     } else {
       print('Error: ${response.statusCode}');
@@ -86,4 +95,50 @@ class TareaPorPasosAPI {
     }
   }
 
+  Future<Map<String, dynamic>> obetenerTareaByID(int idTarea) async {
+    String url = '$baseUrl/tareaPorPasos/$idTarea';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse;
+    } else {
+      throw Exception('Failed to load tasks');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateTarea(int idTarea, Map<String, dynamic> tarea) async
+  {
+    String url = '$baseUrl/tareaPorPasos/$idTarea';
+
+    final Map<String, dynamic> body = {
+      "Titulo": tarea['Titulo'],
+      "Descripcion": tarea['Descripcion'],
+      "Fecha_estimada_cierre": tarea['Fecha_estimada_cierre'] ?? null,
+      "subtareas": tarea['Subtareas']
+          .map((subtarea) =>
+      {
+        "Texto": subtarea['Texto'],
+        "Imagen": subtarea['Imagen'],
+        "Pictograma": subtarea['Pictograma'],
+        "Video": subtarea['Video'],
+      })
+          .toList(), // Convertir cada subtarea en un mapa
+    };
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) { // Aseguramos que la API responde con un 200 OK para una actualización exitosa
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to update task');
+    }
+  }
 }
