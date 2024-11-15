@@ -64,9 +64,13 @@ class _AlumnosState extends State<AlumnosPage> {
                       id_usuario: alumno['id_usuario'],
                       imagenBase64: alumno['imagenBase64'] ?? '',
                       nickname: alumno["nickname"],
-                      onEdit: (){},
-                      onDelete: (){},
-                      onAccesibilidad: (){
+                      onEdit: () {
+                        Navigator.pushNamed(
+                            context, '/administrador/alumnos/editarAlumno',
+                            arguments: alumno["id_usuario"]);
+                      },
+                      onDelete: () {},
+                      onAccesibilidad: () {
                         Navigator.pushNamed(
                             context, '/administrador/alumnos/accesibilidad',
                             arguments: alumno["nickname"]);

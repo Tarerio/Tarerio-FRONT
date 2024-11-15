@@ -58,8 +58,9 @@ class MyApp extends StatelessWidget {
         '/administrador/alumnos': (context) => AlumnosPage(),
         //'/administrador/perfil': (context) => PerfilPage(), // TO ADD pagina de configuración del administrador
         '/administrador/registrarAlumno': (context) => const RegistrarAlumno(),
-        '/administrador/alumnos/editarAlumno': (context) =>
-            const EditarAlumno(),
+        '/administrador/alumnos/editarAlumno': (context) => EditarAlumno(
+              idUsuario: ModalRoute.of(context)!.settings.arguments as int,
+            ),
         '/administrador/profesores/registrarProfesor': (context) =>
             const RegistrarProfesor(),
         '/administrador/profesores/editarContrasenia': (context) =>

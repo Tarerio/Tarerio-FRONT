@@ -11,7 +11,7 @@ class ProfesorCard extends StatelessWidget {
   final String nickname;
   final VoidCallback onAssign;
   final VoidCallback onDelete;
-  
+
   const ProfesorCard({
     Key? key,
     required this.id_usuario,
@@ -61,7 +61,6 @@ class ProfesorCard extends StatelessWidget {
                     backgroundImage: MemoryImage(base64Decode(imagenBase64)),
                   )
                 : const Avatar(
-                    image: null,
                     size: 50,
                   ),
             // Nombre del aula

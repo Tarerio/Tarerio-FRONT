@@ -51,7 +51,6 @@ class _AlumnoCardState extends State<AlumnoCard> {
                         MemoryImage(base64Decode(widget.imagenBase64)),
                   )
                 : const Avatar(
-                    image: null,
                     size: 50,
                     placeholderIcon: Icon(Icons.school, color: Colors.white),
                   ),

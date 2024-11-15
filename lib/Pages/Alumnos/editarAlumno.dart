@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
@@ -15,7 +14,8 @@ import 'package:tarerio/Widgets/DefaultSwitch.dart';
 import 'package:tarerio/Widgets/TextFieldDefault.dart';
 
 class EditarAlumno extends StatefulWidget {
-  const EditarAlumno({super.key});
+  final int idUsuario;
+  const EditarAlumno({Key? key, required this.idUsuario}) : super(key: key);
 
   @override
   _EditarAlumnoState createState() => _EditarAlumnoState();
@@ -37,13 +37,13 @@ class _EditarAlumnoState extends State<EditarAlumno> {
   // Variables para almacenar la categoría seleccionada
   String _selectedCategory = '';
 
-  late String _idUsuario;
+  late int _idUsuario;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Obtener el argumento pasado a la ruta
-    _idUsuario = ModalRoute.of(context)!.settings.arguments as String;
+    _idUsuario = widget.idUsuario;
+    print(_idUsuario);
     _getAlumno(context);
   }
 
@@ -168,7 +168,11 @@ class _EditarAlumnoState extends State<EditarAlumno> {
     }
     setState(() {
       _nicknameController.text = jsonResponse['alumno']['nickname'];
-      _selectedCodes = jsonResponse['alumno']['patron'];
+      String _patron = jsonResponse['alumno']['contrasenia'];
+      RegExp exp = RegExp(r'..');
+      _selectedCodes =
+          exp.allMatches(_patron).map((match) => match.group(0)!).toList();
+
       _porDefecto = jsonResponse['alumno']['porDefecto'];
       _texto = jsonResponse['alumno']['texto'];
       _imagenes = jsonResponse['alumno']['imagenes'];
@@ -180,45 +184,44 @@ class _EditarAlumnoState extends State<EditarAlumno> {
     return jsonResponse['alumno']['nickname'];
   }
 
-  // Future<String> _testAlumno(BuildContext context) async {
-  //   String concatenatedCodes = _selectedCodes.join();
-  //   var jsonResponse = await _api.editarAlumno(
-  //       _nicknameController.text,
-  //       concatenatedCodes,
-  //       _texto,
-  //       _imagenes,
-  //       _pictograma,
-  //       _video,
-  //       _audio,
-  //       _porDefecto,
-  //       _base64Image,
-  //       _id_usuario);
-  //   if (jsonResponse['status'] == 'error') {
-  //     _showErrorModal(context, 'Error al registrar alumno',
-  //         'El nickname y patrón deben ser únicos.');
-  //   }
-  //   return jsonResponse['alumno']['nickname'];
-  // }
+  Future<String> _testAlumno(BuildContext context) async {
+    String concatenatedCodes = _selectedCodes.join();
+    var jsonResponse = await _api.editarAlumno(
+        _nicknameController.text,
+        concatenatedCodes,
+        _texto,
+        _imagenes,
+        _pictograma,
+        _video,
+        _audio,
+        _porDefecto,
+        _base64Image,
+        _idUsuario);
+    if (jsonResponse['status'] == 'error') {
+      _showErrorModal(context, 'Error al registrar alumno',
+          'El nickname y patrón deben ser únicos.');
+    }
+    return jsonResponse['alumno']['nickname'];
+  }
 
-  void _registrarAlumno(BuildContext context) async {
-    // if (_nicknameController.text.isEmpty || _selectedCodes.isEmpty) {
-    //   _showErrorModal(context, 'Falta el nickname o el patrón',
-    //       'Por favor, llena todos los campos.');
-    // } else if (_texto == false &&
-    //     _imagenes == false &&
-    //     _pictograma == false &&
-    //     _video == false &&
-    //     _audio == false) {
-    //   _showErrorModal(context, 'Falta perfil de alumno',
-    //       'Por favor, selecciona minimo un tipo de perfil para el alumno.');
-    // } else {
-    //   // String alumno = await _testAlumno(context);
-    //   if (alumno != '') {
-    //     _showSuccessModal(context, 'Alumno creado correctamente',
-    //         'El alumno $alumno ha sido creado correctamente.');
-    //     _restablecerCampos();
-    //   }
-    // }
+  void _editarAlumno(BuildContext context) async {
+    if (_nicknameController.text.isEmpty || _selectedCodes.isEmpty) {
+      _showErrorModal(context, 'Falta el nickname o el patrón',
+          'Por favor, llena todos los campos.');
+    } else if (_texto == false &&
+        _imagenes == false &&
+        _pictograma == false &&
+        _video == false &&
+        _audio == false) {
+      _showErrorModal(context, 'Falta perfil de alumno',
+          'Por favor, selecciona minimo un tipo de perfil para el alumno.');
+    } else {
+      String alumno = await _testAlumno(context);
+      if (alumno != '') {
+        _showSuccessModal(context, 'Alumno editado correctamente',
+            'El alumno $alumno ha sido editado correctamente.');
+      }
+    }
   }
 
   @override
@@ -235,7 +238,7 @@ class _EditarAlumnoState extends State<EditarAlumno> {
 
     return Scaffold(
       appBar: AppBarDefault(
-        title: 'Registrar Alumno',
+        title: 'Editar Alumno',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
         actions: [
@@ -495,20 +498,20 @@ class _EditarAlumnoState extends State<EditarAlumno> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Avatar(
-                      image: _image,
+                      base64Image: _base64Image,
                       radius: 80.0,
                       backgroundColor: Colors.grey[300]!,
                       placeholderIcon: const Icon(Icons.person,
                           size: 150.0, color: Colors.white),
                       onClear: () {
                         setState(() {
-                          _image = null;
+                          _base64Image = '';
                         });
                       },
                     ),
                     const SizedBox(height: 20),
                     DefaultButton(
-                      text: 'Subir Foto',
+                      text: 'Editar Foto',
                       onPressed: _pickImage,
                       color: Color(colorPrincipal),
                     ),
@@ -548,7 +551,7 @@ class _EditarAlumnoState extends State<EditarAlumno> {
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 200),
+                        constraints: const BoxConstraints(maxWidth: 200),
                         child: Column(
                           children: [
                             DefaultSwitch(
@@ -618,7 +621,7 @@ class _EditarAlumnoState extends State<EditarAlumno> {
                     DefaultButton(
                       text: 'Guardar',
                       onPressed: () {
-                        _registrarAlumno(context);
+                        _editarAlumno(context);
                       },
                       color: Color(colorPrincipal),
                     ),
