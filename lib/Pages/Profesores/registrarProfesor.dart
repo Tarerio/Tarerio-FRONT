@@ -142,14 +142,14 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Avatar(
-              image: _image,
+              base64Image: _base64Image,
               radius: 100.0,
               backgroundColor: Colors.grey[300]!,
               placeholderIcon:
                   const Icon(Icons.person, size: 150.0, color: Colors.white),
               onClear: () {
                 setState(() {
-                  _image = null;
+                  _base64Image = '';
                 });
               },
             ),

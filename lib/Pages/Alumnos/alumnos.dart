@@ -31,7 +31,6 @@ class _AlumnosState extends State<AlumnosPage> {
         isLoading = false; // Cambia el estado de carga
       });
     } catch (e) {
-      print("Error al obtener los Alumnos: $e");
       setState(() {
         isLoading = false; // Cambia el estado de carga incluso si hay un error
       });
@@ -64,9 +63,13 @@ class _AlumnosState extends State<AlumnosPage> {
                       id_usuario: alumno['id_usuario'],
                       imagenBase64: alumno['imagenBase64'] ?? '',
                       nickname: alumno["nickname"],
-                      onEdit: (){},
-                      onDelete: (){},
-                      onAccesibilidad: (){
+                      onEdit: () {
+                        Navigator.pushNamed(
+                            context, '/administrador/alumnos/editarAlumno',
+                            arguments: alumno["id_usuario"]);
+                      },
+                      onDelete: () {},
+                      onAccesibilidad: () {
                         Navigator.pushNamed(
                             context, '/administrador/alumnos/accesibilidad',
                             arguments: alumno["nickname"]);

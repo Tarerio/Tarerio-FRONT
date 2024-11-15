@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
@@ -14,14 +13,15 @@ import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/DefaultSwitch.dart';
 import 'package:tarerio/Widgets/TextFieldDefault.dart';
 
-class RegistrarAlumno extends StatefulWidget {
-  const RegistrarAlumno({super.key});
+class EditarAlumno extends StatefulWidget {
+  final int idUsuario;
+  const EditarAlumno({Key? key, required this.idUsuario}) : super(key: key);
 
   @override
-  _RegistrarAlumnoState createState() => _RegistrarAlumnoState();
+  _EditarAlumnoState createState() => _EditarAlumnoState();
 }
 
-class _RegistrarAlumnoState extends State<RegistrarAlumno> {
+class _EditarAlumnoState extends State<EditarAlumno> {
   final int colorPrincipal = 0xFF2EC4B6;
 
   //Clase para hacer peticiones a la API
@@ -36,6 +36,16 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
 
   // Variables para almacenar la categoría seleccionada
   String _selectedCategory = '';
+
+  late int _idUsuario;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _idUsuario = widget.idUsuario;
+    print(_idUsuario);
+    _getAlumno(context);
+  }
 
   // Variables para almacenar los estados de los checkboxes
   bool _texto = false;
@@ -103,7 +113,6 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
     setState(() {
       _nicknameController.clear();
       _image = null;
-      _base64Image = '';
       _texto = false;
       _imagenes = false;
       _pictograma = false;
@@ -151,9 +160,58 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
     });
   }
 
+  Future<String> _getAlumno(BuildContext context) async {
+    var jsonResponse = await _api.getAlumnoById(_idUsuario);
+    if (jsonResponse['status'] == 'error') {
+      _showErrorModal(context, 'Error al obtener alumno',
+          'No se pudo obtener la información del alumno.');
+    }
+    setState(() {
+      _nicknameController.text = jsonResponse['alumno']['nickname'];
+      String _patron = jsonResponse['alumno']['contrasenia'];
+      RegExp exp = RegExp(r'..');
+      _selectedCodes =
+          exp.allMatches(_patron).map((match) => match.group(0)!).toList();
+      if(_selectedCodes[0][0] == 'S'){
+        _selectedCategory = 'Superheroes';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/superheroes/superheroes${_selectedCodes[i][1]}.png');
+        }
+      }else if(_selectedCodes[0][0] == 'I'){
+        _selectedCategory = 'Insectos';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/insectos/insectos${_selectedCodes[i][1]}.png');
+        }
+      }else if(_selectedCodes[0][0] == 'F'){
+        _selectedCategory = 'Formas';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/formas/formas${_selectedCodes[i][1]}.png');
+        }
+      }else if(_selectedCodes[0][0] == 'D'){
+        _selectedCategory = 'Dinosaurios';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/dinosaurios/dinosaurios${_selectedCodes[i][1]}.png');
+        }
+      }
+
+      _porDefecto = jsonResponse['alumno']['porDefecto'];
+      _texto = jsonResponse['alumno']['texto'];
+      _imagenes = jsonResponse['alumno']['imagenes'];
+      _pictograma = jsonResponse['alumno']['pictograma'];
+      _video = jsonResponse['alumno']['video'];
+      _audio = jsonResponse['alumno']['audio'];
+      _base64Image = jsonResponse['alumno']['imagenBase64'] ?? '';
+    });
+    return jsonResponse['alumno']['nickname'];
+  }
+
   Future<String> _testAlumno(BuildContext context) async {
     String concatenatedCodes = _selectedCodes.join();
-    var jsonResponse = await _api.registrarAlumno(
+    var jsonResponse = await _api.editarAlumno(
         _nicknameController.text,
         concatenatedCodes,
         _texto,
@@ -162,7 +220,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
         _video,
         _audio,
         _porDefecto,
-        _base64Image);
+        _base64Image,
+        _idUsuario);
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(context, 'Error al registrar alumno',
           'El nickname y patrón deben ser únicos.');
@@ -170,7 +229,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
     return jsonResponse['alumno']['nickname'];
   }
 
-  void _registrarAlumno(BuildContext context) async {
+  void _editarAlumno(BuildContext context) async {
     if (_nicknameController.text.isEmpty || _selectedCodes.isEmpty) {
       _showErrorModal(context, 'Falta el nickname o el patrón',
           'Por favor, llena todos los campos.');
@@ -184,9 +243,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
     } else {
       String alumno = await _testAlumno(context);
       if (alumno != '') {
-        _showSuccessModal(context, 'Alumno creado correctamente',
-            'El alumno $alumno ha sido creado correctamente.');
-        _restablecerCampos();
+        _showSuccessModal(context, 'Alumno editado correctamente',
+            'El alumno $alumno ha sido editado correctamente.');
       }
     }
   }
@@ -205,7 +263,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
 
     return Scaffold(
       appBar: AppBarDefault(
-        title: 'Registrar Alumno',
+        title: 'Editar Alumno',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
         actions: [
@@ -478,7 +536,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                     ),
                     const SizedBox(height: 20),
                     DefaultButton(
-                      text: 'Subir Foto',
+                      text: 'Editar Foto',
                       onPressed: _pickImage,
                       color: Color(colorPrincipal),
                     ),
@@ -518,7 +576,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 200),
+                        constraints: const BoxConstraints(maxWidth: 200),
                         child: Column(
                           children: [
                             DefaultSwitch(
@@ -588,7 +646,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                     DefaultButton(
                       text: 'Guardar',
                       onPressed: () {
-                        _registrarAlumno(context);
+                        _editarAlumno(context);
                       },
                       color: Color(colorPrincipal),
                     ),
