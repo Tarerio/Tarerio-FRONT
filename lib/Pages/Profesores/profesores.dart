@@ -91,95 +91,103 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profesores',
-            style: TextStyle(
-                color: Color(0xFF2EC4B6),
-                fontSize: 24,
-                fontWeight: FontWeight.bold)),
-      ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Buscar profesor...',
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      setState(() async {
-                        final response = await _api.filtrarProfesor(value);
-                        if (response != null) {
-                          setState(() {
-                            profesores = response;
-                          });
-                        }else{
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const ErrorModal(
-                                title: 'Error',
-                                content: 'No se encontraron profesores',
-                              );
-                            },
-                          );
-                        }
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Wrap(
-                      spacing: 8.0, 
-                      runSpacing: 8.0, 
-                      children: profesores.map((profesor) {
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width > 800
-                              ? 200
-                              : 150, // Adjust width based on screen size
-                          child: ProfesorCard(
-                              id_usuario: profesor['id_usuario'],
-                              imagenBase64: profesor['imagenBase64'] ?? '',
-                              nickname: profesor["nickname"],
-                              onAssign: () {
-                                // Lógica para asignar profesor
-                              },
-                              onDelete: () {
-                                _confirmarEliminacion(profesor['id_usuario'].toString());
-                              }),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Profesores',
+          style: TextStyle(
+              color: Color(0xFF2EC4B6),
+              fontSize: 24,
+              fontWeight: FontWeight.bold)),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.refresh),
+          onPressed: () {
+            // Lógica para refrescar la lista de profesores
+          },
+        ),
+        Container(
+          width: 200,
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Buscar...',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RegistrarProfesor()),
-          );
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: const Color(0xFF2EC4B6),
-      ),
-      drawer: Navbar(
-        screenIndex: 3,
-        onLogout: () {
-          print("Cerrar sesión");
-        },
-      ),
-    );
-  }
+            onChanged: (value) async {
+              final response = await _api.filtrarProfesor(value);
+              if (response != null) {
+                setState(() {
+                  profesores = response;
+                });
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const ErrorModal(
+                      title: 'Error',
+                      content: 'No se encontraron profesores',
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    ),
+    body: isLoading
+        ? Center(child: CircularProgressIndicator())
+        : Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    spacing: 8.0, // Space between cards horizontally
+                    runSpacing: 8.0, // Space between cards vertically
+                    children: profesores.map((profesor) {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width > 800
+                            ? 200
+                            : 150, // Adjust width based on screen size
+                        child: ProfesorCard(
+                            id_usuario: profesor['id_usuario'],
+                            imagenBase64: profesor['imagenBase64'] ?? '',
+                            nickname: profesor["nickname"],
+                            onAssign: () {
+                              // Lógica para asignar profesor
+                            },
+                            onDelete: () {
+                              _confirmarEliminacion(profesor['id_usuario'].toString());
+                            }),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => RegistrarProfesor()),
+        );
+      },
+      child: const Icon(Icons.add),
+      backgroundColor: const Color(0xFF2EC4B6),
+    ),
+    drawer: Navbar(
+      screenIndex: 3,
+      onLogout: () {
+        print("Cerrar sesión");
+      },
+    ),
+  );
+}
 }
