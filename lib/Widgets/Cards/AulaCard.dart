@@ -12,18 +12,17 @@ class AulaCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onSeeStudents;
 
-  const AulaCard(
-      {Key? key,
-        required this.idUsuario,
-        required this.imagenAula,
-        required this.claveAula,
-        required this.cupoAula,
-        required this.onAssign,
-        required this.onEdit,
-        required this.onDelete,
-        required this.onSeeStudents,
-      })
-      : super(key: key);
+  const AulaCard({
+    Key? key,
+    required this.idUsuario,
+    required this.imagenAula,
+    required this.claveAula,
+    required this.cupoAula,
+    required this.onAssign,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onSeeStudents,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,23 +40,21 @@ class AulaCard extends StatelessWidget {
           children: <Widget>[
             const SizedBox(height: 15),
             // Imagen del profesor
-            imagenAula.isNotEmpty ? CircleAvatar(
-              radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(imagenAula)),
-            )
+            imagenAula.isNotEmpty
+                ? CircleAvatar(
+                    radius: 50, // Adjust the size as needed
+                    backgroundImage: MemoryImage(base64Decode(imagenAula)),
+                  )
                 : const Avatar(
-                  image: null, 
-                  size: 50,
-                  placeholderIcon: Icon(
-                    Icons.table_restaurant_rounded,
-                      color: Colors.white
-                    ),
-                ),
+                    size: 50,
+                    placeholderIcon: Icon(Icons.table_restaurant_rounded,
+                        color: Colors.white),
+                  ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Aula : "+claveAula,
+                "Aula : " + claveAula,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
