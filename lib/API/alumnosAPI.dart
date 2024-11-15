@@ -26,7 +26,6 @@ class AlumnosAPI {
   Future<Map<String, dynamic>> getAlumnoById(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/alumnos/$id'));
     if (response.statusCode == 200) {
-      print(jsonDecode(response.body)['alumno']['texto']);
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load data');

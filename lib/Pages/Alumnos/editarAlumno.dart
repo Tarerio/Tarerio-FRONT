@@ -172,6 +172,31 @@ class _EditarAlumnoState extends State<EditarAlumno> {
       RegExp exp = RegExp(r'..');
       _selectedCodes =
           exp.allMatches(_patron).map((match) => match.group(0)!).toList();
+      if(_selectedCodes[0][0] == 'S'){
+        _selectedCategory = 'Superheroes';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/superheroes/superheroes${_selectedCodes[i][1]}.png');
+        }
+      }else if(_selectedCodes[0][0] == 'I'){
+        _selectedCategory = 'Insectos';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/insectos/insectos${_selectedCodes[i][1]}.png');
+        }
+      }else if(_selectedCodes[0][0] == 'F'){
+        _selectedCategory = 'Formas';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/formas/formas${_selectedCodes[i][1]}.png');
+        }
+      }else if(_selectedCodes[0][0] == 'D'){
+        _selectedCategory = 'Dinosaurios';
+        _selectCategory(_selectedCategory);
+        for(int i = 0; i < _selectedCodes.length; i++){
+          _selectedImages.add('assets/images/dinosaurios/dinosaurios${_selectedCodes[i][1]}.png');
+        }
+      }
 
       _porDefecto = jsonResponse['alumno']['porDefecto'];
       _texto = jsonResponse['alumno']['texto'];
