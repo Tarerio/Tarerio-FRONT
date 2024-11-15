@@ -20,6 +20,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
   List<dynamic> profesores = [];
   bool isLoading = true; // Indicador de carga
   ProfesoresAPI _api = ProfesoresAPI();
+  TextEditingController _nicknameController = TextEditingController();
 
   @override
   void initState() {
@@ -90,71 +91,85 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
     );
   }
 
+  void _cleanFiltros() {
+    setState(() {
+      _nicknameController.clear();
+      fetchProfesores();
+    });
+  }
+
   @override
 @override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
-      title: const Text('Profesores',
-          style: TextStyle(
-              color: Color(0xFF2EC4B6),
-              fontSize: 24,
-              fontWeight: FontWeight.bold)),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.refresh),
-          onPressed: () {
-            // Lógica para refrescar la lista de profesores
-          },
-        ),
-        Container(
-          width: 200,
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Buscar...',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-            ),
-            onChanged: (value) async {
-              final response = await _api.filtrarProfesor(value);
-              if (response != null) {
-                setState(() {
-                  profesores = response;
-                });
-              } else {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const ErrorModal(
-                      title: 'Error',
-                      content: 'No se encontraron profesores',
-                    );
+        title: const Text('Alumnos',
+            style: TextStyle(
+                color: const Color(0xFF2EC4B6),
+                fontSize: 24,
+                fontWeight: FontWeight.bold)),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(
+                      Icons.refresh_sharp,
+                      color: Color(colorPrincipal),
+                  ),
+                  onPressed: () {
+                    _cleanFiltros();
                   },
-                );
-              }
-            },
+                ),
+                const SizedBox(width: 10),
+                const SizedBox(width: 10),
+                Container(
+                  width: 200,
+                  child: TextField(
+                    controller: _nicknameController,
+                    decoration: InputDecoration(
+                      labelText: 'Buscar por nickname',
+                      labelStyle: TextStyle(color: Color(colorPrincipal)),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                      ),
+                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                    ),
+                    onChanged: (value) async {
+                      final response = await _api.filtrarProfesor(value);
+                      setState(() {
+                        profesores = response;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      ),
     body: isLoading
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : Column(
             children: [
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(8.0),
                   child: Wrap(
-                    spacing: 8.0, // Space between cards horizontally
-                    runSpacing: 8.0, // Space between cards vertically
+                    spacing: 8.0,
+                    runSpacing: 8.0,
                     children: profesores.map((profesor) {
                       return SizedBox(
                         width: MediaQuery.of(context).size.width > 800
                             ? 200
-                            : 150, // Adjust width based on screen size
+                            : 150,
                         child: ProfesorCard(
                             id_usuario: profesor['id_usuario'],
                             imagenBase64: profesor['imagenBase64'] ?? '',

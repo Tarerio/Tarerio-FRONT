@@ -39,7 +39,6 @@ class ProfesoresAPI {
     );
     if(response.statusCode == 200){
       final List<dynamic> data = jsonDecode(response.body);
-      print(data);
       return data;
     }else{
       throw Exception('Failed to filter profesor');
