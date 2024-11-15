@@ -81,8 +81,6 @@ class AlumnosAPI {
 
     final String jsonBody = json.encode(data);
 
-    print('Request Body: $jsonBody');
-
     final response = await http.post(
       Uri.parse(url),
       headers: {
@@ -90,8 +88,6 @@ class AlumnosAPI {
       },
       body: jsonBody,
     );
-
-    print('Response Status: ${response.statusCode}');
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> data2 = {
@@ -148,8 +144,6 @@ class AlumnosAPI {
 
     final String jsonBody = json.encode(data);
 
-    print('Request Body: $jsonBody');
-
     final response = await http.put(
       Uri.parse(url),
       headers: {
@@ -157,9 +151,6 @@ class AlumnosAPI {
       },
       body: jsonBody,
     );
-
-    print('Response Status: ${response.statusCode}');
-    print('Response Body: ${response.body}');
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
@@ -197,8 +188,6 @@ class AlumnosAPI {
         body: jsonBody,
       );
 
-      print('Response Status: ${response2.statusCode}');
-
       return json.decode(response2.body);
     } else {
       final Map<String, dynamic> data = {
@@ -217,8 +206,6 @@ class AlumnosAPI {
         },
         body: jsonBody,
       );
-
-      print('Response Status: ${response2.statusCode}');
 
       return json.decode(response2.body);
     }

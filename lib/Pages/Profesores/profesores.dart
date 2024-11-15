@@ -19,6 +19,7 @@ class ProfesoresPage extends StatefulWidget {
 class _ProfesoresPageState extends State<ProfesoresPage> {
   List<dynamic> profesores = [];
   bool isLoading = true; // Indicador de carga
+  ProfesoresAPI _api = ProfesoresAPI();
 
   @override
   void initState() {
@@ -28,7 +29,6 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
 
   Future<void> fetchProfesores() async {
     try {
-      ProfesoresAPI _api = ProfesoresAPI();
       final response = await _api.obtenerProfesores();
       setState(() {
         profesores = response; // Actualiza la lista de tareas
@@ -44,8 +44,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
 
   Future<void> _eliminarProfesor(String idProfesor) async {
     try {
-      ProfesoresAPI api = ProfesoresAPI();
-      await api.eliminarProfesor(idProfesor);
+      await _api.eliminarProfesor(idProfesor);
     } catch (e) {
       print("Error al eliminar aula: $e");
     }
@@ -103,29 +102,67 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 8.0, // Space between cards horizontally
-                runSpacing: 8.0, // Space between cards vertically
-                children: profesores.map((profesor) {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width > 800
-                        ? 200
-                        : 150, // Adjust width based on screen size
-                    child: ProfesorCard(
-                        id_usuario: profesor['id_usuario'],
-                        imagenBase64: profesor['imagenBase64'] ?? '',
-                        nickname: profesor["nickname"],
-                        onAssign: () {
-                          // Lógica para asignar profesor
-                        },
-                        onDelete: () {
-                          _confirmarEliminacion(profesor['id_usuario'].toString());
-                        }),
-                  );
-                }).toList(),
-              ),
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Buscar profesor...',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() async {
+                        final response = await _api.filtrarProfesor(value);
+                        if (response != null) {
+                          setState(() {
+                            profesores = response;
+                          });
+                        }else{
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return const ErrorModal(
+                                title: 'Error',
+                                content: 'No se encontraron profesores',
+                              );
+                            },
+                          );
+                        }
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      spacing: 8.0, 
+                      runSpacing: 8.0, 
+                      children: profesores.map((profesor) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width > 800
+                              ? 200
+                              : 150, // Adjust width based on screen size
+                          child: ProfesorCard(
+                              id_usuario: profesor['id_usuario'],
+                              imagenBase64: profesor['imagenBase64'] ?? '',
+                              nickname: profesor["nickname"],
+                              onAssign: () {
+                                // Lógica para asignar profesor
+                              },
+                              onDelete: () {
+                                _confirmarEliminacion(profesor['id_usuario'].toString());
+                              }),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -28,6 +28,24 @@ class ProfesoresAPI {
     return json.decode(response.body);
   }
 
+  Future<List<dynamic>> filtrarProfesor(String nickname) async {
+    String url = '$baseUrl/profesores/filtered?nickname=$nickname';
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if(response.statusCode == 200){
+      final List<dynamic> data = jsonDecode(response.body);
+      print(data);
+      return data;
+    }else{
+      throw Exception('Failed to filter profesor');
+    }
+  }
+
   /// Método para obtener todos los profesores
   Future<List<dynamic>> obtenerProfesores() async {
     String url = '$baseUrl/profesores';

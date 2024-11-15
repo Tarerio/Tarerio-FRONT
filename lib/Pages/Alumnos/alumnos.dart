@@ -31,7 +31,6 @@ class _AlumnosState extends State<AlumnosPage> {
         isLoading = false; // Cambia el estado de carga
       });
     } catch (e) {
-      print("Error al obtener los Alumnos: $e");
       setState(() {
         isLoading = false; // Cambia el estado de carga incluso si hay un error
       });
