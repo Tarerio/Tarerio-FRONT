@@ -183,4 +183,24 @@ class AlumnosAPI {
     }
   }
 
+  Future<List<dynamic>> getFilteredAlumnos(String? nickname, String? categoria) async {
+  String url = '$baseUrl/alumnos/filtered';
+
+  if (nickname != null && categoria != null) {
+      url += '?categoria=$categoria&nickname=$nickname';
+    } else if (nickname != null){
+      url += '?nickname=$nickname';
+    } else if (categoria != null){
+      url += '?categoria=$categoria';
+    }
+    
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
 }

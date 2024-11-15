@@ -3,6 +3,7 @@ import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/Cards/AlumnoCard.dart';
+import 'package:tarerio/consts.dart';
 import '../../API/alumnosAPI.dart';
 
 class AlumnosPage extends StatefulWidget {
@@ -16,10 +17,29 @@ class _AlumnosState extends State<AlumnosPage> {
   List<dynamic> Alumnos = [];
   bool isLoading = true; // Indicador de carga
 
+  // Filter alumnos
+  final TextEditingController nicknameController = TextEditingController();
+  String? categoriaSeleccionada;
+  final Map<String, String> categorias = {
+    'Texto': 'texto',
+    'Imágenes': 'imagenes',
+    'Pictograma': 'pictograma',
+    'Vídeo': 'video',
+    'Audio': 'audio',
+  };
+
   @override
   void initState() {
     super.initState();
     fetchAlumnos(); // Llamar a la función para obtener los Alumnos
+  }
+
+  void _cleanFiltros(){
+    setState(() {
+      categoriaSeleccionada = null;
+      nicknameController.text = '';
+      fetchAlumnos();
+    });
   }
 
   Future<void> fetchAlumnos() async {
@@ -38,6 +58,23 @@ class _AlumnosState extends State<AlumnosPage> {
     }
   }
 
+  Future<void> _filterAlumnos({String? nickname, String? categoria }) async {
+    try {
+      AlumnosAPI _api = AlumnosAPI();
+      final response = await _api.getFilteredAlumnos(nickname, categoria);
+      setState(() {
+        Alumnos = response; // Actualiza la lista de alumnos
+        isLoading = false; // Cambia el estado de carga
+      });
+    } catch (e) {
+      print("Error al obtener los Alumnos: $e");
+      setState(() {
+        isLoading = false; // Cambia el estado de carga incluso si hay un error
+      });
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +84,78 @@ class _AlumnosState extends State<AlumnosPage> {
                 color: const Color(0xFF2EC4B6),
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(
+                      Icons.refresh_sharp,
+                      color: Color(colorPrincipal),
+                  ),
+                  onPressed: () {
+                    _cleanFiltros();
+                  },
+                ),
+                SizedBox(width: 10),
+                Container(
+                  child: DropdownButton<String>(
+                    alignment: Alignment.center,
+                    hint: Text('Filtrar por categoria'),
+                    value: categoriaSeleccionada,
+                    items: categorias.entries.map((categoria) {
+                      return DropdownMenuItem<String>(
+                        value: categoria.value,
+                        child: Text(categoria.key),
+                        alignment: Alignment.center,
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        categoriaSeleccionada = newValue;
+                        _filterAlumnos(categoria: categoriaSeleccionada, nickname: nicknameController.text);
+
+                      });
+                    },
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    underline: SizedBox.shrink(),
+                    iconEnabledColor: Color(colorPrincipal),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Container(
+                  width: 200,
+                  child: TextField(
+                    controller: nicknameController,
+                    decoration: InputDecoration(
+                      labelText: 'Buscar por nickname',
+                      labelStyle: TextStyle(color: Color(colorPrincipal)),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                      Icons.search,
+                      color: Color(colorPrincipal),
+                  ),
+                  onPressed: () async {
+                    await _filterAlumnos(categoria: categoriaSeleccionada,nickname: nicknameController.text);
+                  },
+                ),
+                SizedBox(width: 10),
+              ],
+            ),
+          ),
+        ],
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
