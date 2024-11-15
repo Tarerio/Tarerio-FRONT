@@ -103,7 +103,7 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
-        title: const Text('Alumnos',
+        title: const Text('Profesores',
             style: TextStyle(
                 color: const Color(0xFF2EC4B6),
                 fontSize: 24,
@@ -127,11 +127,11 @@ Widget build(BuildContext context) {
                 const SizedBox(width: 10),
                 const SizedBox(width: 10),
                 Container(
-                  width: 200,
+                  width: 213,
                   child: TextField(
                     controller: _nicknameController,
                     decoration: InputDecoration(
-                      labelText: 'Buscar por nickname',
+                      labelText: 'Buscar por nombre',
                       labelStyle: TextStyle(color: Color(colorPrincipal)),
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(colorPrincipal)),

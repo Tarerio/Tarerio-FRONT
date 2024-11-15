@@ -16,6 +16,7 @@ class AlumnosPage extends StatefulWidget {
 class _AlumnosState extends State<AlumnosPage> {
   List<dynamic> Alumnos = [];
   bool isLoading = true; // Indicador de carga
+  AlumnosAPI _api = AlumnosAPI();
 
   // Filter alumnos
   final TextEditingController nicknameController = TextEditingController();
@@ -44,7 +45,6 @@ class _AlumnosState extends State<AlumnosPage> {
 
   Future<void> fetchAlumnos() async {
     try {
-      AlumnosAPI _api = AlumnosAPI();
       final response = await _api.getAlumnos();
       setState(() {
         Alumnos = response; // Actualiza la lista de tareas
@@ -59,7 +59,6 @@ class _AlumnosState extends State<AlumnosPage> {
 
   Future<void> _filterAlumnos({String? nickname, String? categoria }) async {
     try {
-      AlumnosAPI _api = AlumnosAPI();
       final response = await _api.getFilteredAlumnos(nickname, categoria);
       setState(() {
         Alumnos = response; // Actualiza la lista de alumnos
@@ -126,11 +125,11 @@ class _AlumnosState extends State<AlumnosPage> {
                 ),
                 SizedBox(width: 10),
                 Container(
-                  width: 200,
+                  width: 213,
                   child: TextField(
                     controller: nicknameController,
                     decoration: InputDecoration(
-                      labelText: 'Buscar por nickname',
+                      labelText: 'Buscar por nombre',
                       labelStyle: TextStyle(color: Color(colorPrincipal)),
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(colorPrincipal)),
@@ -138,17 +137,15 @@ class _AlumnosState extends State<AlumnosPage> {
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
                       ),
+                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
                     ),
+                    onChanged: (value) async {
+                      final response = await _api.getFilteredAlumnos(value, categoriaSeleccionada);
+                      setState(() {
+                        Alumnos = response;
+                      });
+                    },
                   ),
-                ),
-                IconButton(
-                  icon: Icon(
-                      Icons.search,
-                      color: Color(colorPrincipal),
-                  ),
-                  onPressed: () async {
-                    await _filterAlumnos(categoria: categoriaSeleccionada,nickname: nicknameController.text);
-                  },
                 ),
                 SizedBox(width: 10),
               ],
