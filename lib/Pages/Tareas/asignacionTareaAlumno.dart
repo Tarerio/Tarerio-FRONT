@@ -3,14 +3,74 @@ import 'package:intl/intl.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
-import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
-import 'package:tarerio/Pages/Alumnos/alumnos.dart';
 import 'package:tarerio/Widgets/AppBarDefault.dart';
-import 'package:tarerio/Widgets/Cards/TareaCard.dart';
 import 'package:tarerio/Widgets/Cards/AlumnoCard.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
 import 'package:tarerio/consts.dart';
+
+import '../../API/alumnosAPI.dart';
+import '../../Widgets/ErrorModal.dart';
+import '../../Widgets/SuccessModal.dart';
+
+class NumericInputField extends StatefulWidget {
+  final TextEditingController controller;
+  final String labelText;
+
+  const NumericInputField({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+  }) : super(key: key);
+
+  @override
+  _NumericInputFieldState createState() => _NumericInputFieldState();
+}
+
+class _NumericInputFieldState extends State<NumericInputField> {
+  void _increment() {
+    int currentValue = int.tryParse(widget.controller.text) ?? 0;
+    setState(() {
+      currentValue++;
+      widget.controller.text = currentValue.toString();
+    });
+  }
+
+  void _decrement() {
+    int currentValue = int.tryParse(widget.controller.text) ?? 0;
+    setState(() {
+      if (currentValue > 0) {
+        currentValue--;
+        widget.controller.text = currentValue.toString();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: widget.controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: widget.labelText,
+        border: OutlineInputBorder(),
+        suffix: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_drop_up),
+              onPressed: _increment,
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_drop_down),
+              onPressed: _decrement,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class AsignarTareaAlumno extends StatefulWidget {
   final int origen;
@@ -27,13 +87,33 @@ class AsignarTareaAlumno extends StatefulWidget {
 }
 
 class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
-
-  List<dynamic> Alumnos = []; // Lista para tareas
+  List<dynamic> Alumnos = [];
+  DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
+  final TextEditingController _stepsController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _cargarItems();
+  }
+
+  void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
   }
 
   Future<void> _cargarItems() async {
@@ -44,21 +124,17 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
       setState(() {
         Alumnos = alumnos;
       });
-
     } catch (e) {
       print("Error al cargar alumnos: $e");
     }
   }
 
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
-
-  void _resetTimes(){
+  void _resetTimes() {
     _selectedTime = null;
     _selectedDate = null;
+    _stepsController.clear();
   }
 
-  // Función para seleccionar la fecha
   Future<DateTime?> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -68,10 +144,8 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
     );
 
     return pickedDate;
-
   }
 
-  // Función para seleccionar la hora
   Future<TimeOfDay?> _selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -87,7 +161,6 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
     return DateFormat('HH:mm').format(dt);
   }
 
-  // Función para mostrar el diálogo para seleccionar fecha y hora de una tarea
   void _showDialogAsignar(int alumnoSeleccionado) {
     _resetTimes();
     showDialog(
@@ -100,7 +173,6 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Widget para seleccionar la fecha
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Row(
@@ -108,10 +180,8 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                       children: [
                         ElevatedButton(
                           onPressed: () async {
-                            // Llama al método de selección de fecha
                             DateTime? pickedDate = await _selectDate(context);
                             if (pickedDate != null) {
-                              // Usar setStateDialog para actualizar la vista del diálogo
                               setStateDialog(() {
                                 _selectedDate = pickedDate;
                               });
@@ -140,7 +210,6 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                       ],
                     ),
                   ),
-                  // Widget para seleccionar la hora
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Row(
@@ -150,7 +219,6 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                           onPressed: () async {
                             TimeOfDay? pickedTime = await _selectTime(context);
                             if (pickedTime != null) {
-                              // Actualiza la hora seleccionada
                               setStateDialog(() {
                                 _selectedTime = pickedTime;
                               });
@@ -179,99 +247,99 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                       ],
                     ),
                   ),
+                  if (widget.tipoTarea == 'Tarea Por Pasos' || widget.tipoTarea == 'Tarea Peticion')
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: SizedBox(
+                        width: 300, // Set the desired width
+                        child: NumericInputField(
+                          controller: _stepsController,
+                          labelText: widget.tipoTarea == 'Tarea Por Pasos'
+                              ? 'Pasos por página'
+                              : 'Enunciados por página',
+                        ),
+                      ),
+                    ),
                 ],
               );
             },
           ),
           actions: [
-            // Row con los botones de "Cerrar" y "Aceptar" con espacio alrededor
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround, // Añadimos el espacio entre los botones
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                // Botón "Cerrar" (a la izquierda) usando DefaultButton
                 DefaultButton(
                   text: 'Cerrar',
                   onPressed: () {
                     _resetTimes();
-                    Navigator.of(context).pop(); // Cierra el diálogo
+                    Navigator.of(context).pop();
                   },
-                  color: Color(colorPrincipal), // Color para el botón "Cerrar"
-
+                  color: Color(colorPrincipal),
                 ),
-                // Botón "Aceptar" (a la derecha) usando DefaultButton
                 DefaultButton(
                   text: 'Aceptar',
                   onPressed: () async {
-                    // Lógica para aceptar la fecha y hora
                     if (_selectedDate != null && _selectedTime != null) {
+                      int? stepsPerPage = int.tryParse(_stepsController.text);
+                      if (stepsPerPage == null) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
 
-                      switch(widget.tipoTarea){
-                        case 'Tarea Peticion':
-                          try {
+                          _showErrorModal(context, 'Error', 'Por favor ingrese un número válido.');
+
+                        return;
+                      }
+
+                      try {
+                        switch (widget.tipoTarea) {
+                          case 'Tarea Peticion':
                             TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
-                            await _peticionAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado, _selectedDate!, _selectedTime!);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Tarea asignada con éxito'),
-                                backgroundColor: Colors.green,
-                              ),
+                            await _peticionAPI.asignarAlumnoTarea(
+                              widget.origen,
+                              alumnoSeleccionado,
+                              _selectedDate!,
+                              _selectedTime!,
+                              stepsPerPage,
                             );
-                          }catch(e){
-                            print("Error al asginar la tarea: $e");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error al asignar la tarea'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                          break;
-                        case 'Tarea Por Pasos':
-                          try {
+                            break;
+                          case 'Tarea Por Pasos':
                             TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
-                            await _porPasosAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado, _selectedDate!, _selectedTime!);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Tarea asignada con éxito'),
-                                backgroundColor: Colors.green,
-                              ),
+                            await _porPasosAPI.asignarAlumnoTarea(
+                              widget.origen,
+                              alumnoSeleccionado,
+                              _selectedDate!,
+                              _selectedTime!,
+                              stepsPerPage,
                             );
-                          }catch(e){
-                            print("Error al asginar la tarea: $e");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error al asignar la tarea'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                          break;
-                        case 'Tarea Juego':
-                          try {
+                            break;
+                          case 'Tarea Juego':
                             TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
-                            await _juegoAPI.asignarAlumnoTarea(widget.origen, alumnoSeleccionado, _selectedDate!, _selectedTime!);
+                            await _juegoAPI.asignarAlumnoTarea(
+                              widget.origen,
+                              alumnoSeleccionado,
+                              _selectedDate!,
+                              _selectedTime!,
+                            );
+                            break;
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
+                          _showSuccessModal(context, 'Éxito', 'Tarea asignada con éxito');
+                      } catch (e) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
+                          _showErrorModal(context, 'Error', 'Error al asignar la tarea');
+                      }
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Tarea asignada con éxito'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          }catch(e){
-                            print("Error al asginar la tarea: $e");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error al asignar la tarea'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                          break;
-                      };
                       _resetTimes();
-                      Navigator.of(context).pop(); // Cierra el diálogo
-                      // Asiganr la tarea al alumno
                     } else {
-                      // Si no hay fecha o hora seleccionada, mostrar un mensaje
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Por favor selecciona una fecha y hora')),
-                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
+                        _showErrorModal(context, 'Error', 'Por favor selecciona una fecha y hora');
                     }
                   },
                   color: Color(colorPrincipal),
@@ -286,17 +354,14 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
 
   @override
   Widget build(BuildContext context) {
-    // Inicializa la lista de widgets que se van a mostrar
-    List<Widget> widgetList = [];
-
-    widgetList = Alumnos.map<Widget>((alumno) {
+    List<Widget> widgetList = Alumnos.map<Widget>((alumno) {
       return SizedBox(
-        width: MediaQuery.of(context).size.width > 800 ? 200 : 150, // Ajuste del ancho
+        width: MediaQuery.of(context).size.width > 800 ? 200 : 150,
         child: AlumnoCard(
           id_usuario: alumno['id_usuario'],
           imagenBase64: alumno['imagenBase64'] ?? '',
           nickname: alumno["nickname"],
-          onSelect: (){
+          onSelect: () {
             _showDialogAsignar(alumno['id_usuario']);
           },
         ),
@@ -309,10 +374,10 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
         onBackPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => TareasPage()),
-            );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TareasPage()),
+          );
         },
       ),
       body: Padding(
@@ -320,9 +385,9 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
         child: Column(
           children: [
             Wrap(
-              spacing: 8.0, // Espacio entre las tarjetas horizontalmente
-              runSpacing: 8.0, // Espacio entre las tarjetas verticalmente
-              children: widgetList, // Usar la lista de widgets creada
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: widgetList,
             ),
           ],
         ),

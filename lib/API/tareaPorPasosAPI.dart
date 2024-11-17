@@ -65,7 +65,7 @@ class TareaPorPasosAPI {
   }
 
 
-  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno, DateTime dueDate,TimeOfDay dueTime) async {
+  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno, DateTime dueDate,TimeOfDay dueTime, int stepPages) async {
     String url = '$baseUrl/tareaPorPasos/$idTarea/asignar';
 
     final DateTime fullDueDateTime = DateTime(
@@ -79,7 +79,8 @@ class TareaPorPasosAPI {
 
     final Map<String, dynamic> body = {
       "id_usuario": idAlumno,
-      "Fecha_fin_asignacion": formattedDueDate
+      "Fecha_fin_asignacion": formattedDueDate,
+      "pasosPagina": stepPages
     };
 
 
