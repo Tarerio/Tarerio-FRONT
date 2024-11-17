@@ -60,8 +60,18 @@ class TareaPorPasosAPI {
     }
   }
 
-  eliminarTarea(String id) {
-    // impletementar logica de eliminar tarea
+  eliminarTarea(int id) async {
+    String url = '$baseUrl/tareaPorPasos/$id';
+
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception(response.body);
+    }
   }
 
 

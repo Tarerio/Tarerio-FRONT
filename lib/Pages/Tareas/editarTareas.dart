@@ -70,18 +70,18 @@ class _EditarTareasState extends State<EditarTareas> {
   Future<void> loadTarea(int idTarea, String tipoTarea) async {
     try {
       switch (tipoTarea) {
-        case 'Tarea Peticion':
+        case TAREA_PETICION:
           TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
           tarea = await _peticionAPI.obetenerTareaByID(idTarea);
           _enunciados = tarea['Enunciados'] ?? [];
 
           break;
-        case 'Tarea Por Pasos':
+        case TAREA_POR_PASOS:
           TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
           tarea = await _porPasosAPI.obetenerTareaByID(idTarea);
           _subtareas = tarea['Subtareas'] ?? [];
           break;
-        case 'Tarea Juego':
+        case TAREA_JUEGO:
           TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
           tarea = await _juegoAPI.obetenerTareaByID(idTarea);
           break;
@@ -696,13 +696,13 @@ class _EditarTareasState extends State<EditarTareas> {
 
   void _acceptChanges() async {
     try {
-      if (widget.tipoTarea == 'Tarea Peticion') {
+      if (widget.tipoTarea == TAREA_PETICION) {
         TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
         await _peticionAPI.updateTarea(widget.idTarea, tarea);
-      } else if (widget.tipoTarea == 'Tarea Por Pasos') {
+      } else if (widget.tipoTarea == TAREA_POR_PASOS) {
         TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
         await _porPasosAPI.updateTarea(widget.idTarea, tarea);
-      } else if (widget.tipoTarea == 'Tarea Juego') {
+      } else if (widget.tipoTarea == TAREA_JUEGO) {
         TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
         await _juegoAPI.updateTarea(widget.idTarea, tarea);
       }
@@ -770,18 +770,18 @@ class _EditarTareasState extends State<EditarTareas> {
                 ),
               ),
               const SizedBox(height: 20),
-              if (widget.tipoTarea == 'Tarea Peticion')
+              if (widget.tipoTarea == TAREA_PETICION)
                 _buildTareaPeticion(),
-              if (widget.tipoTarea == 'Tarea Por Pasos')
+              if (widget.tipoTarea == TAREA_POR_PASOS)
                 _buildTareaPorPasos(),
-              if (widget.tipoTarea == 'Tarea Juego')
+              if (widget.tipoTarea == TAREA_JUEGO)
                 _buildTareaJuego(tarea['Enlace'] ?? 'No disponible'),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween, // Alinea todos los botones a la derecha
                 children: [
                   // Añadir Subtarea si es "Tarea Por Pasos"
-                  if (widget.tipoTarea == 'Tarea Por Pasos')
+                  if (widget.tipoTarea == TAREA_POR_PASOS)
                     ElevatedButton(
                       onPressed: _addSubtarea,
                       style: ElevatedButton.styleFrom(
@@ -795,7 +795,7 @@ class _EditarTareasState extends State<EditarTareas> {
                     ),
 
                   // Añadir Enunciado si es "Tarea Peticion"
-                  if (widget.tipoTarea == 'Tarea Peticion')
+                  if (widget.tipoTarea == TAREA_PETICION)
                     ElevatedButton(
                       onPressed: _addEnunciado,
                       style: ButtonStyle(
