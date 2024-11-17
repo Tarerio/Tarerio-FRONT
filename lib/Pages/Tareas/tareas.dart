@@ -12,6 +12,10 @@ import 'package:tarerio/Pages/Tareas/crearTareaPeticion.dart';
 import 'dart:async';
 import 'package:tarerio/consts.dart';
 
+import '../../Widgets/ConfirmationModal.dart';
+import '../../Widgets/ErrorModal.dart';
+import '../../Widgets/SuccessModal.dart';
+
 class TareasPage extends StatefulWidget {
   TareasPage({super.key});
 
@@ -41,9 +45,9 @@ class _TareasPageState extends State<TareasPage> {
 
       setState(() {
         Tareas = [
-          ...tareasPorPasos.map((tarea) => {'tipo': 'Tarea Por Pasos', ...tarea}),
-          ...tareasPeticion.map((tarea) => {'tipo': 'Tarea Peticion', ...tarea}),
-          ...tareasJuego.map((tarea) => {'tipo': 'Tarea Juego', ...tarea}),
+          ...tareasPorPasos.map((tarea) => {'tipo': TAREA_POR_PASOS, ...tarea}),
+          ...tareasPeticion.map((tarea) => {'tipo': TAREA_PETICION, ...tarea}),
+          ...tareasJuego.map((tarea) => {'tipo': TAREA_JUEGO, ...tarea}),
         ]; // Combina las listas en 'tareas'
         isLoading = false; // Cambia el estado de carga
       });
@@ -53,6 +57,50 @@ class _TareasPageState extends State<TareasPage> {
         isLoading = false; // Cambia el estado de carga incluso si hay un error
       });
     }
+  }
+
+  void _eliminarTarea(
+      BuildContext context, int id, String tipo) {
+
+    onAccept() async {
+      try {
+        String mensaje = "La tarea ha sido eliminada correctamente";
+        switch (tipo) {
+          case TAREA_POR_PASOS:
+            mensaje = (await TareaPorPasosAPI().eliminarTarea(id))["message"];
+            break;
+          case TAREA_PETICION:
+            mensaje = (await TareaPeticionAPI().eliminarTarea(id))["message"];
+            break;
+          case TAREA_JUEGO:
+            mensaje = (await TareaJuegoAPI().eliminarTarea(id))["message"];
+            break;
+          default:
+            throw Exception('Tipo de tarea no reconocido');
+        }
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SuccessModal(title: "Tarea eliminada", content: mensaje);
+          },
+        );
+        fetchTareas();
+      } catch (e) {
+        print("Error al eliminar tarea: $e");
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return ErrorModal(title: "Error al eliminar tarea", content: "Ha ocurrido un error al eliminar la tarea");
+          },
+        );
+      }
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConfirmationModal(title: "Eliminar Tarea", content: "Los alumnos asignados perderan esta tarea", onAccept: onAccept);
+      },
+    );
   }
 
   @override
@@ -74,6 +122,7 @@ class _TareasPageState extends State<TareasPage> {
           runSpacing: 8.0, // Space between cards vertically
           children: Tareas.map((tarea) {
             return SizedBox(
+              height: 350,
               width: MediaQuery.of(context).size.width > 800
                   ? 200
                   : 150, // Adjust width based on screen size
@@ -99,7 +148,9 @@ class _TareasPageState extends State<TareasPage> {
                     ),
                   );
                 },
-                onDelete: () {},
+                onDelete: () {
+                  _eliminarTarea(context, tarea['ID_tarea'], tarea['tipo']);
+                },
               ),
             );
           }).toList(),

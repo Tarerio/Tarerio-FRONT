@@ -247,14 +247,14 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                       ],
                     ),
                   ),
-                  if (widget.tipoTarea == 'Tarea Por Pasos' || widget.tipoTarea == 'Tarea Peticion')
+                  if (widget.tipoTarea == TAREA_POR_PASOS || widget.tipoTarea == TAREA_PETICION)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: SizedBox(
                         width: 300, // Set the desired width
                         child: NumericInputField(
                           controller: _stepsController,
-                          labelText: widget.tipoTarea == 'Tarea Por Pasos'
+                          labelText: widget.tipoTarea == TAREA_POR_PASOS
                               ? 'Pasos por página'
                               : 'Enunciados por página',
                         ),
@@ -281,7 +281,7 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                   onPressed: () async {
                     if (_selectedDate != null && _selectedTime != null) {
                       int? stepsPerPage = int.tryParse(_stepsController.text);
-                      if (stepsPerPage == null) {
+                      if (stepsPerPage == null && widget.tipoTarea != TAREA_JUEGO) {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
@@ -293,27 +293,27 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
 
                       try {
                         switch (widget.tipoTarea) {
-                          case 'Tarea Peticion':
+                          case TAREA_PETICION:
                             TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
                             await _peticionAPI.asignarAlumnoTarea(
                               widget.origen,
                               alumnoSeleccionado,
                               _selectedDate!,
                               _selectedTime!,
-                              stepsPerPage,
+                              stepsPerPage!,
                             );
                             break;
-                          case 'Tarea Por Pasos':
+                          case TAREA_POR_PASOS:
                             TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
                             await _porPasosAPI.asignarAlumnoTarea(
                               widget.origen,
                               alumnoSeleccionado,
                               _selectedDate!,
                               _selectedTime!,
-                              stepsPerPage,
+                              stepsPerPage!,
                             );
                             break;
-                          case 'Tarea Juego':
+                          case TAREA_JUEGO:
                             TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
                             await _juegoAPI.asignarAlumnoTarea(
                               widget.origen,
