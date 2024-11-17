@@ -1,6 +1,6 @@
 # Generated code do not commit.
-file(TO_CMAKE_PATH "/home/floren/snap/flutter/common/flutter" FLUTTER_ROOT)
-file(TO_CMAKE_PATH "/home/floren/Uni/1/ProyectoDGP-MDA/Tarerio-FRONT" PROJECT_DIR)
+file(TO_CMAKE_PATH "/home/juanmi/snap/flutter/common/flutter" FLUTTER_ROOT)
+file(TO_CMAKE_PATH "/home/juanmi/Escritorio/Ingeniería Informática/4º 1er cuatri/Proyecto MDA-DGP/Tarerio-FRONT" PROJECT_DIR)
 
 set(FLUTTER_VERSION "1.0.0+1" PARENT_SCOPE)
 set(FLUTTER_VERSION_MAJOR 1 PARENT_SCOPE)
@@ -10,12 +10,12 @@ set(FLUTTER_VERSION_BUILD 1 PARENT_SCOPE)
 
 # Environment variables to pass to tool_backend.sh
 list(APPEND FLUTTER_TOOL_ENVIRONMENT
-  "FLUTTER_ROOT=/home/floren/snap/flutter/common/flutter"
-  "PROJECT_DIR=/home/floren/Uni/1/ProyectoDGP-MDA/Tarerio-FRONT"
+  "FLUTTER_ROOT=/home/juanmi/snap/flutter/common/flutter"
+  "PROJECT_DIR=/home/juanmi/Escritorio/Ingeniería Informática/4º 1er cuatri/Proyecto MDA-DGP/Tarerio-FRONT"
   "DART_DEFINES=Zmx1dHRlci5pbnNwZWN0b3Iuc3RydWN0dXJlZEVycm9ycz10cnVl"
   "DART_OBFUSCATION=false"
   "TRACK_WIDGET_CREATION=true"
   "TREE_SHAKE_ICONS=false"
-  "PACKAGE_CONFIG=/home/floren/Uni/1/ProyectoDGP-MDA/Tarerio-FRONT/.dart_tool/package_config.json"
-  "FLUTTER_TARGET=/home/floren/Uni/1/ProyectoDGP-MDA/Tarerio-FRONT/lib/main.dart"
+  "PACKAGE_CONFIG=/home/juanmi/Escritorio/Ingeniería Informática/4º 1er cuatri/Proyecto MDA-DGP/Tarerio-FRONT/.dart_tool/package_config.json"
+  "FLUTTER_TARGET=/home/juanmi/Escritorio/Ingeniería Informática/4º 1er cuatri/Proyecto MDA-DGP/Tarerio-FRONT/lib/main.dart"
 )
