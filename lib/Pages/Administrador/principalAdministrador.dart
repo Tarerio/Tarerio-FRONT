@@ -84,7 +84,7 @@ class AdminDashboard extends StatelessWidget {
         ),
       ),
       drawer: Navbar(
-        screenIndex: 6,
+        screenIndex: 5,
         onLogout: () {
           print("Cerrar sesión");
         },

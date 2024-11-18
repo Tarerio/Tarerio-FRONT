@@ -161,7 +161,7 @@ Widget build(BuildContext context) {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,

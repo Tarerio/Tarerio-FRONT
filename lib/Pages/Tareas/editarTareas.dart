@@ -72,18 +72,18 @@ class _EditarTareasState extends State<EditarTareas> {
       switch (tipoTarea) {
         case TAREA_PETICION:
           TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
-          tarea = await _peticionAPI.obetenerTareaByID(idTarea);
+          tarea = await _peticionAPI.obtenerTareaByID(idTarea);
           _enunciados = tarea['Enunciados'] ?? [];
 
           break;
         case TAREA_POR_PASOS:
           TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
-          tarea = await _porPasosAPI.obetenerTareaByID(idTarea);
+          tarea = await _porPasosAPI.obtenerTareaByID(idTarea);
           _subtareas = tarea['Subtareas'] ?? [];
           break;
         case TAREA_JUEGO:
           TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
-          tarea = await _juegoAPI.obetenerTareaByID(idTarea);
+          tarea = await _juegoAPI.obtenerTareaByID(idTarea);
           break;
       }
 

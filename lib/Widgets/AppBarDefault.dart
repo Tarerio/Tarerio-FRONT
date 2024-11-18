@@ -16,9 +16,9 @@ class AppBarDefault extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     required this.titleColor,
     required this.iconColor,
-    this.titleFontSize = 30.0,
+    this.titleFontSize = 28.0,
     this.titleFontWeight = FontWeight.w600,
-    this.iconSize = 40.0,
+    this.iconSize = 28.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 20.0),
     this.onBackPressed,
     this.actions, // Añadir este parámetro al constructor
