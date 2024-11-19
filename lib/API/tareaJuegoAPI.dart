@@ -78,7 +78,7 @@ class TareaJuegoAPI {
     }
   }
 
-  Future<Map<String, dynamic>> obetenerTareaByID(int idTarea) async{
+  Future<Map<String, dynamic>> obtenerTareaByID(int idTarea) async{
     String url = '$baseUrl/tareaJuego/$idTarea';
 
     final response = await http.get(Uri.parse(url));
@@ -128,6 +128,29 @@ class TareaJuegoAPI {
       print('Error: ${response.statusCode}');
       print('Response body: ${response.body}');
       throw Exception(response.body);
+    }
+  }
+
+  obtenerAsignadasAlumno(String nickname, String? estado, String? fecha) async {
+    String url = '$baseUrl/tareaJuego/$nickname/asignadas';
+
+    // estado y fecha son query arguments, no path parameters
+
+    if (estado != null) {
+      url += '?estado=$estado';
+    }
+
+    if (fecha != null) {
+      url += estado != null ? '&fecha=$fecha' : '?fecha=$fecha';
+    }
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse.map((tarea) => tarea as Map<String, dynamic>).toList();
+    } else {
+      throw Exception('Failed to load tasks');
     }
   }
 

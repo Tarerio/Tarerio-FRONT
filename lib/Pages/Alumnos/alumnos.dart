@@ -156,7 +156,7 @@ class _AlumnosState extends State<AlumnosPage> {
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Wrap(
                 spacing: 8.0, // Space between cards horizontally
                 runSpacing: 8.0, // Space between cards vertically
@@ -173,6 +173,11 @@ class _AlumnosState extends State<AlumnosPage> {
                         Navigator.pushNamed(
                             context, '/administrador/alumnos/editarAlumno',
                             arguments: alumno["id_usuario"]);
+                      },
+                      onGetTasks: () {
+                        Navigator.pushNamed(
+                            context, '/administrador/alumnos/tareas',
+                            arguments: alumno["nickname"]);
                       },
                       onDelete: () {},
                       onAccesibilidad: () {

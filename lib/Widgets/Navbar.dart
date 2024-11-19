@@ -37,11 +37,6 @@ const List<ExampleDestination> destinations = <ExampleDestination>[
       Icon(Icons.school),
       Icon(Icons.school_outlined),
       '/administrador/alumnos'), // ruta
-  ExampleDestination(
-      'Ajustes',
-      Icon(Icons.settings),
-      Icon(Icons.settings_outlined),
-      '/administrador/perfil'), // ruta
   ExampleDestination('Estadísticas',
       Icon(Icons.bar_chart),
       Icon(Icons.bar_chart_outlined),

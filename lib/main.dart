@@ -14,6 +14,8 @@ import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Pages/Profesores/editarContraseniaProfesor.dart';
 import 'package:tarerio/Pages/Alumnos/accesibilidad.dart';
 
+import 'Pages/Alumnos/tareasdelalumno.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -56,7 +58,6 @@ class MyApp extends StatelessWidget {
         '/administrador/aulas': (context) => AulasPage(),
         '/administrador/profesores': (context) => ProfesoresPage(),
         '/administrador/alumnos': (context) => AlumnosPage(),
-        //'/administrador/perfil': (context) => PerfilPage(), // TO ADD pagina de configuración del administrador
         '/administrador/registrarAlumno': (context) => const RegistrarAlumno(),
         '/administrador/alumnos/editarAlumno': (context) => EditarAlumno(
               idUsuario: ModalRoute.of(context)!.settings.arguments as int,
@@ -69,6 +70,9 @@ class MyApp extends StatelessWidget {
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
         '/administrador/estadisticas': (context) => const AdminDashboard(),
+        '/administrador/alumnos/tareas': (context) => TareasDelAlumno(
+              nickname: ModalRoute.of(context)!.settings.arguments as String,
+            ),
       },
     );
   }
