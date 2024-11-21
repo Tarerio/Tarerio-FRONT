@@ -1,10 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
 
 import '../../Widgets/AppBarDefault.dart';
+import '../../Widgets/Avatar.dart';
+import '../../Widgets/DefaultButton.dart';
 import '../../Widgets/ErrorModal.dart';
 import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
@@ -32,6 +36,10 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
   String? _titulo;
   String? _descripcion;
   List<Subtarea> _subtareas = []; // Lista de subtareas
+
+  //Variables para la imagen
+  File? _image;
+  String _base64Image = '';
 
   final TareaPorPasosAPI _api = TareaPorPasosAPI();
 
@@ -158,7 +166,7 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
       // Capturamos la hora de creación actual
       DateTime fechaCreacion = DateTime.now();
 
-      var jsonResponse = await _api.crearTareaPorPasos(
+      await _api.crearTareaPorPasos(
           _titulo!,
           _descripcion!,
           fechaCreacion,
@@ -179,6 +187,20 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
       _showErrorModal(context, 'Error al crear la tarea',
           'Ocurrió un error al crear la tarea por pasos');
     }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+
+    final bytes = await _image!.readAsBytes();
+    _base64Image = base64Encode(bytes);
   }
 
   @override
@@ -360,6 +382,24 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                               fontWeight: FontWeight.bold)),
                     ),
                   ],
+                ),
+                Avatar(
+                  base64Image: _base64Image,
+                  radius: 80.0,
+                  backgroundColor: Colors.grey[300]!,
+                  placeholderIcon: const Icon(Icons.person,
+                      size: 150.0, color: Colors.white),
+                  onClear: () {
+                    setState(() {
+                      _base64Image = '';
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                DefaultButton(
+                  text: 'Subir Foto',
+                  onPressed: _pickImage,
+                  color: Color(colorPrincipal),
                 ),
               ],
             );
