@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Para formatear la fecha
 import '../../Models/menuAccesible.dart';
 import '../../Widgets/Header.dart';
+import '../../API/alumnosAPI.dart';
+import '../../API/tareaJuegoAPI.dart';
+import '../../API/tareaPeticionAPI.dart';
+import '../../API/tareaPorPasosAPI.dart';
 import '../../API/alumnosAPI.dart';
 
 class PrincipalAlumno extends StatefulWidget {
@@ -18,11 +23,79 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
   String _selectedPalette = 'TARERIO';
 
   final AlumnosAPI _api = AlumnosAPI();
+  final TareaJuegoAPI _tareaJuegoAPI = TareaJuegoAPI();
+  final TareaPeticionAPI _tareaPeticionAPI = TareaPeticionAPI();
+  final TareaPorPasosAPI _tareaPorPasosAPI = TareaPorPasosAPI();
+
+  List<Map<String, dynamic>> _tareasDeHoy =
+      []; // Lista de tareas del día actual
 
   @override
   void initState() {
     super.initState();
-    _loadMenuAccesible();
+    _loadTareasDeHoy(); // Cargar las tareas del día al iniciar
+    _loadMenuAccesible(); // Cargar las configuraciones de accesibilidad
+  }
+
+  // Función para cargar las tareas del día actual
+  void _loadTareasDeHoy() async {
+    try {
+      String fechaHoy = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+      final tareasPorPasosAsignadas =
+          await _tareaPorPasosAPI.obtenerAsignadasAlumno(
+        widget.nickname,
+        '',
+        fechaHoy,
+      );
+
+      List tareasPorPasos = [];
+
+      for (int i = 0; i < tareasPorPasosAsignadas.length; i++) {
+        final idTarea = tareasPorPasosAsignadas[i]['ID_tarea'];
+        final tarea = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
+        tareasPorPasos.add(tarea);
+      }
+
+      final tareasPeticionAsignadas =
+          await _tareaPeticionAPI.obtenerAsignadasAlumno(
+        widget.nickname,
+        '',
+        fechaHoy,
+      );
+
+      List tareasPeticion = [];
+
+      for (int i = 0; i < tareasPeticionAsignadas.length; i++) {
+        final idTarea = tareasPeticionAsignadas[i]['ID_tarea'];
+        final tarea = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
+        tareasPeticion.add(tarea);
+      }
+
+      final tareasJuegoAsignadas = await _tareaJuegoAPI.obtenerAsignadasAlumno(
+        widget.nickname,
+        '',
+        fechaHoy,
+      );
+
+      List tareasJuego = [];
+
+      for (int i = 0; i < tareasJuegoAsignadas.length; i++) {
+        final idTarea = tareasJuegoAsignadas[i]['ID_tarea'];
+        final tarea = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
+        tareasJuego.add(tarea);
+      }
+
+      setState(() {
+        _tareasDeHoy = [
+          ...(tareasPorPasos),
+          ...(tareasPeticion),
+          ...(tareasJuego),
+        ];
+      });
+    } catch (e) {
+      print("Error al cargar las tareas del día: $e");
+    }
   }
 
   void _loadMenuAccesible() async {
@@ -30,8 +103,10 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
       final response = await _api.obtenerMenuAccesible(widget.nickname);
       if (response != null) {
         setState(() {
-          _selectedTitleFontSize = response['texto_titulo'] ?? _selectedTitleFontSize;
-          _selectedTextFontSize = response['texto_descripcion'] ?? _selectedTextFontSize;
+          _selectedTitleFontSize =
+              response['texto_titulo'] ?? _selectedTitleFontSize;
+          _selectedTextFontSize =
+              response['texto_descripcion'] ?? _selectedTextFontSize;
           _selectedPalette = response['paleta_colores'] ?? _selectedPalette;
         });
       }
@@ -80,38 +155,39 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
       appBar: Header(nickname: widget.nickname),
       backgroundColor: colorPalette.fondo,
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Este es un título',
+            const Text(
+              "TAREAS DEL DÍA",
               style: TextStyle(
-                fontSize: _getFontSize(_selectedTitleFontSize),
-                fontWeight: FontWeight.bold,
-                color: colorPalette.fuente,
+                fontSize: 60,
+                fontWeight: FontWeight.w800,
+                color: Colors.black,
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                  'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-              style: TextStyle(
-                fontSize: _getFontSize(_selectedTextFontSize),
-                color: colorPalette.fuente,
-              ),
-            ),
-            const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildColorCircle(colorPalette.colorPrincipal, 'Primario', colorPalette.fuente),
-                _buildColorCircle(colorPalette.colorSecundario, 'Secundario', colorPalette.fuente),
-                _buildColorCircle(colorPalette.componentes, 'Componentes', colorPalette.fuente),
-                _buildColorCircle(colorPalette.fuente, 'Texto', colorPalette.fuente),
-                _buildColorCircle(colorPalette.fondo, 'Fondo', colorPalette.fuente),
-              ],
+            const SizedBox(height: 16),
+            // Mostrar las tareas obtenidas
+            Expanded(
+              child: _tareasDeHoy.isEmpty
+                  ? const Center(
+                      child: Text(
+                        "No hay tareas asignadas para hoy.",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: _tareasDeHoy.length,
+                      itemBuilder: (context, index) {
+                        final tarea = _tareasDeHoy[index];
+                        print(tarea);
+                        return _buildTaskCard(
+                          tarea['Titulo'] ?? 'Tarea sin nombre'
+                                           
+                        );
+                      },
+                    ),
             ),
           ],
         ),
@@ -119,26 +195,22 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
     );
   }
 
-  Widget _buildColorCircle(Color color, String label, Color borderColor) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: color,
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: color,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: borderColor, width: 4),
-              ),
-            ),
+  Widget _buildTaskCard(String text) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: ListTile(
+        title: Text(
+          text.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
-        Text(label, style: TextStyle(color: borderColor, fontSize: 16, fontWeight: FontWeight.bold)),
-      ],
+        onTap: () => {},
+      ),
     );
   }
 }
