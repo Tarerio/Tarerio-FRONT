@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class DefaultButton extends StatelessWidget {
   final String text;
+  final Color? colorText;
+  final double? fontSize;
   final VoidCallback onPressed;
   final Color color;
   final double width;
@@ -11,6 +13,8 @@ class DefaultButton extends StatelessWidget {
   const DefaultButton({
     Key? key,
     required this.text,
+    this.colorText,
+    this.fontSize,
     required this.onPressed,
     required this.color,
     this.width = 200,
@@ -35,8 +39,9 @@ class DefaultButton extends StatelessWidget {
         child: Center(
           child: Text(
             upperCase ? text.toUpperCase() : text,
-            style: const TextStyle(
-            fontSize: 20.0,
+            style: TextStyle(
+            fontSize: fontSize ?? 20,
+              color: colorText,
             ),
           ),
         ),

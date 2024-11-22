@@ -81,8 +81,6 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
         ...tareasPorPasos.map((tarea) => {...tarea, 'tipo': 'TareaPorPasos'}),
       ];
 
-      print(allTareas);
-
       List<dynamic> detailedTareas = [];
       for (var tarea in allTareas) {
         final tareaId = tarea['ID_tarea'];
@@ -151,7 +149,7 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                     alignment: Alignment.center,
                     hint: Text('Filtrar por estado'),
                     value: estado,
-                    items: [
+                    items: const [
                       DropdownMenuItem<String>(
                         value: "",
                         child: Text("Todas"),
@@ -185,7 +183,7 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                     iconEnabledColor: Color(colorPrincipal),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Container(
                   width: 213,
                   child: TextField(
@@ -219,7 +217,7 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                     },
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
               ],
             ),
           ),
@@ -255,7 +253,7 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                       ID_tarea: details['ID_tarea'],
                       titulo: details['Titulo'],
                       descripcion: details['Descripcion'],
-                      imagenBase64: details['ImagenBase64'] ?? '',
+                      imagenBase64: details['imagenBase64'],
                       tipo: tipo,
                     ),
                     Positioned(
@@ -270,7 +268,7 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                         ),
                         child: Text(
                           status,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                           ),

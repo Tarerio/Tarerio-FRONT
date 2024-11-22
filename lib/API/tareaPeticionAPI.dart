@@ -11,7 +11,8 @@ class TareaPeticionAPI {
       String descripcion,
       DateTime fechaCreacion,
       int idAdministrador,
-      List<Enunciado> enunciados) async {
+      List<Enunciado> enunciados,
+      String imagen) async {
     String url = '$baseUrl/tareaPeticion';
 
     // Captura la hora de creación actual
@@ -30,6 +31,7 @@ class TareaPeticionAPI {
         "Video": enunciado.video
       })
           .toList(), // Convertir cada enunciado en un mapa
+      "imagen" : imagen,
     };
 
     final response = await http.post(Uri.parse(url),
@@ -46,6 +48,21 @@ class TareaPeticionAPI {
 
   Future<List<Map<String, dynamic>>> obtenerTareas() async {
     String url = '$baseUrl/tareaPeticion';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse
+          .map((tarea) => tarea as Map<String, dynamic>)
+          .toList();
+    } else {
+      throw Exception('Failed to load tasks');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getFilteredTareas({String? nombreTarea}) async {
+    String url = '$baseUrl/tareaPeticion/filtered?nombreTarea=$nombreTarea';
 
     final response = await http.get(Uri.parse(url));
 
@@ -124,7 +141,7 @@ class TareaPeticionAPI {
     final Map<String, dynamic> body = {
       "Titulo": tarea['Titulo'],
       "Descripcion": tarea['Descripcion'],
-      "Fecha_estimada_cierre": tarea['Fecha_estimada_cierre'] ?? null,
+      "imagen" : tarea['imagenBase64'],
       "enunciados": tarea['Enunciados']
           .map((enunciado) =>
       {
