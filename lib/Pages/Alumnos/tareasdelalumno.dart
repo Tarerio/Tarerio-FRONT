@@ -253,7 +253,7 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                       ID_tarea: details['ID_tarea'],
                       titulo: details['Titulo'],
                       descripcion: details['Descripcion'],
-                      imagenBase64: details['imagenBase64'],
+                      imagenBase64: details['imagenBase64'] ?? '',
                       tipo: tipo,
                     ),
                     Positioned(

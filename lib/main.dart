@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TareasPage(),
+      home: Home(),
       debugShowCheckedModeBanner: false, // Quita el banner de debug
       theme: ThemeData(
         primarySwatch: Colors.cyan, // Cambia el color principal aquí
