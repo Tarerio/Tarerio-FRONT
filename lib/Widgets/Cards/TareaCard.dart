@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:tarerio/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
@@ -31,6 +32,21 @@ class TareaCard extends StatefulWidget {
 }
 
 class _TareaCardState extends State<TareaCard> {
+
+  Icon _getIconForTipoTarea(String tipo) {
+    switch (tipo) {
+      case TAREA_JUEGO:
+        return const Icon(Icons.games, color: Colors.white);
+      case TAREA_PETICION:
+        return const Icon(Icons.question_answer, color: Colors.white);
+      case TAREA_POR_PASOS:
+        return const Icon(Icons.list_rounded, color: Colors.white);
+      default:
+        return const Icon(Icons.edit_square, color: Colors.white); // Icono por defecto
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -62,17 +78,13 @@ class _TareaCardState extends State<TareaCard> {
             // Imagen de la tarea
             widget.imagenBase64.isNotEmpty
                 ? CircleAvatar(
-                    radius: 50, // Adjust the size as needed
-                    backgroundImage:
-                        MemoryImage(base64Decode(widget.imagenBase64)),
-                  )
-                : const Avatar(
-                    size: 50,
-                    placeholderIcon: Icon(
-                      Icons.edit_square,
-                      color: Colors.white,
-                    ),
-                  ),
+              radius: 50,
+              backgroundImage: MemoryImage(base64Decode(widget.imagenBase64)),
+            )
+                : Avatar(
+              size: 50,
+              placeholderIcon: _getIconForTipoTarea(widget.tipo),
+            ),
             // Nombre de la tarea
             Padding(
               padding: const EdgeInsets.all(8.0),
