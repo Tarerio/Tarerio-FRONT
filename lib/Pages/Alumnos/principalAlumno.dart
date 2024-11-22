@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatear la fecha
 import '../../Models/menuAccesible.dart';
@@ -149,68 +151,92 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
 
   @override
   Widget build(BuildContext context) {
-    final colorPalette = _getColorPalette(_selectedPalette);
+  final colorPalette = _getColorPalette(_selectedPalette);
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      appBar: Header(nickname: widget.nickname),
-      backgroundColor: colorPalette.fondo,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text(
-              "TAREAS DEL DÍA",
-              style: TextStyle(
-                fontSize: 60,
-                fontWeight: FontWeight.w800,
-                color: Colors.black,
-              ),
-              textAlign: TextAlign.center,
+  return Scaffold(
+    appBar: Header(nickname: widget.nickname),
+    backgroundColor: colorPalette.fondo,
+    body: Padding(
+      padding: EdgeInsets.all(screenWidth * 0.05), // Ajuste dinámico del padding
+      child: Column(
+        children: [
+          Text(
+            "TAREAS DEL DÍA",
+            style: TextStyle(
+              fontSize: screenWidth * 0.ç1, // Ajuste dinámico del tamaño de la fuente
+              fontWeight: FontWeight.w800,
+              color: Colors.black,
             ),
-            const SizedBox(height: 16),
-            // Mostrar las tareas obtenidas
-            Expanded(
-              child: _tareasDeHoy.isEmpty
-                  ? const Center(
-                      child: Text(
-                        "No hay tareas asignadas para hoy.",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _tareasDeHoy.length,
-                      itemBuilder: (context, index) {
-                        final tarea = _tareasDeHoy[index];
-                        print(tarea);
-                        return _buildTaskCard(
-                          tarea['Titulo'] ?? 'Tarea sin nombre'
-                                           
-                        );
-                      },
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: _tareasDeHoy.isEmpty
+                ? Center(
+                    child: Text(
+                      "No hay tareas asignadas para hoy.",
+                      style: TextStyle(fontSize: screenWidth * 0.05), // Ajuste dinámico
                     ),
-            ),
-          ],
-        ),
+                  )
+                : ListView.builder(
+                    itemCount: _tareasDeHoy.take(3).length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final tarea = _tareasDeHoy[index];
+                      return _buildTaskCard(
+                        tarea['Titulo'] ?? 'Tarea sin nombre',
+                        tarea['imagenBase64'] ?? '',
+                        screenWidth, screenHeight,
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildTaskCard(String text) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListTile(
-        title: Text(
-          text.toUpperCase(),
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+Widget _buildTaskCard(String text, String imagen, double screenWidth, double screenHeight) {
+  return Card(
+    elevation: 4,
+    margin: EdgeInsets.symmetric(vertical: screenHeight * 0.03, horizontal: screenWidth * 0.1),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child: Row(
+      children: [
+        // Imagen que ocupa todo el alto de la tarjeta
+        Container(
+          height: screenHeight * 0.15,  // Ajuste dinámico del tamaño de la imagen
+          width: screenWidth * 0.3,     // Ajuste dinámico del ancho de la imagen
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+            image: DecorationImage(
+              image: MemoryImage(base64Decode(imagen)),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-        onTap: () => {},
-      ),
-    );
-  }
+        // Texto al lado de la imagen
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(screenWidth * 0.03),  // Ajuste dinámico del padding
+            child: Text(
+              text.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: screenWidth * 0.08,  // Ajuste dinámico del tamaño de la fuente
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 }
