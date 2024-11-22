@@ -1,6 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tarerio/Pages/Tareas/tareas.dart';
 import 'package:tarerio/Widgets/DefaultButton.dart';
 import 'package:tarerio/Widgets/TextFieldDefault.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
@@ -10,6 +13,8 @@ import 'package:tarerio/Widgets/AppBarDefault.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 import 'package:tarerio/consts.dart';
+
+import '../../Widgets/Avatar.dart';
 
 class Respuesta {
   String? respuesta;
@@ -57,45 +62,43 @@ class _EditarTareasState extends State<EditarTareas> {
   List<dynamic>? _subtareas = [];
   bool isLoading = true;
 
-  DateTime? _selectedDate;
-  TimeOfDay? _selectedTime;
+  TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
+  TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
+  TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
 
+  final TextEditingController _tituloController = TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
+
+  //Variables para la imagen
+  File? _image;
+  String _base64Image = '';
 
   @override
   void initState() {
     super.initState();
-    loadTarea(widget.idTarea, widget.tipoTarea); // Obtener tareas
+    loadTarea(widget.idTarea, widget.tipoTarea); // Obtener tarea
   }
 
   Future<void> loadTarea(int idTarea, String tipoTarea) async {
     try {
       switch (tipoTarea) {
         case TAREA_PETICION:
-          TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
           tarea = await _peticionAPI.obtenerTareaByID(idTarea);
           _enunciados = tarea['Enunciados'] ?? [];
 
           break;
         case TAREA_POR_PASOS:
-          TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
           tarea = await _porPasosAPI.obtenerTareaByID(idTarea);
           _subtareas = tarea['Subtareas'] ?? [];
           break;
         case TAREA_JUEGO:
-          TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
           tarea = await _juegoAPI.obtenerTareaByID(idTarea);
           break;
       }
 
-      if (tarea['Fecha_estimada_cierre'] != null) {
-        String fechaCierreString = tarea['Fecha_estimada_cierre'];
-        DateTime fechaCierre = DateTime.parse(fechaCierreString);
-
-        setState(() {
-          _selectedDate = fechaCierre;
-          _selectedTime = TimeOfDay(hour: fechaCierre.hour, minute: fechaCierre.minute);
-        });
-      }
+      _tituloController.text = tarea['Titulo'];
+      _descripcionController.text = tarea['Descripcion'];
+      _base64Image = tarea['imagenBase64'];
 
       setState(() {
         isLoading = false;
@@ -103,6 +106,21 @@ class _EditarTareasState extends State<EditarTareas> {
     } catch (e) {
       print("Error al obtener la tarea: $e");
     }
+  }
+
+  // Imagen
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+
+    final bytes = await File(pickedFile.path).readAsBytes();
+
+    setState(() {
+      _image = File(pickedFile.path);
+      _base64Image = base64Encode(bytes);
+    });
+
   }
 
   // Enunciados
@@ -268,7 +286,7 @@ class _EditarTareasState extends State<EditarTareas> {
             ),
           ),
           Container(
-            height: 340, // Limitar el contenido
+            height: 295, // Limitar el contenido
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: _enunciados?.length ?? 0,
@@ -526,7 +544,7 @@ class _EditarTareasState extends State<EditarTareas> {
             ),
           ),
           Container(
-            height: 340, // Limitar el contenido
+            height: 295, // Limitar el contenido
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: _subtareas?.length ?? 0,
@@ -634,7 +652,6 @@ class _EditarTareasState extends State<EditarTareas> {
     );
   }
 
-  // Cambiar esto para colores forma etc
   void _showConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -695,15 +712,16 @@ class _EditarTareasState extends State<EditarTareas> {
   }
 
   void _acceptChanges() async {
+    tarea['Titulo'] = _tituloController.text;
+    tarea['Descripcion'] = _descripcionController.text;
+    tarea['imagenBase64'] = _base64Image;
+
     try {
       if (widget.tipoTarea == TAREA_PETICION) {
-        TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
         await _peticionAPI.updateTarea(widget.idTarea, tarea);
       } else if (widget.tipoTarea == TAREA_POR_PASOS) {
-        TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
         await _porPasosAPI.updateTarea(widget.idTarea, tarea);
       } else if (widget.tipoTarea == TAREA_JUEGO) {
-        TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
         await _juegoAPI.updateTarea(widget.idTarea, tarea);
       }
 
@@ -714,6 +732,19 @@ class _EditarTareasState extends State<EditarTareas> {
     }
   }
 
+  Icon _getIconForTipoTarea(String tipo) {
+    switch (tipo) {
+      case TAREA_JUEGO:
+        return const Icon(Icons.games, color: Colors.white);
+      case TAREA_PETICION:
+        return const Icon(Icons.question_answer, color: Colors.white);
+      case TAREA_POR_PASOS:
+        return const Icon(Icons.list_rounded, color: Colors.white);
+      default:
+        return const Icon(Icons.edit_square, color: Colors.white); // Icono por defecto
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -721,115 +752,139 @@ class _EditarTareasState extends State<EditarTareas> {
         title: 'Editar ${widget.tipoTarea}',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TareasPage()),
+          );
+        },
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
+        padding: const EdgeInsets.only(
+          left: 48.0,
+          top: 16.0,
+          right: 48.0,
+          bottom: 16.0,
+        ),
+        child: SingleChildScrollView( // Añadido para poder hacer scroll si la pantalla es pequeña
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Nombre de la actividad',
-                style: TextStyle(
-                  color: Color(0xFF2EC4B6),
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: 500.0,
-                child: TextField(
-                  onChanged: (String value) {
-                    tarea['Titulo'] = value;
-                  },
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: tarea['Titulo'],
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Columna con los campos de nombre y descripción
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        TextFieldDefault(
+                          width: 800,
+                          label: 'Nombre de la actividad',
+                          controller: _tituloController,
+                          labelColor: Color(colorPrincipal),
+                          labelFontSize: 18,
+                          hintText: 'Nombre de la actividad',
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFieldDefault(
+                          width: 800,
+                          label: 'Descripción de la actividad',
+                          controller: _descripcionController,
+                          labelColor: Color(colorPrincipal),
+                          labelFontSize: 18,
+                          hintText: 'Descripción',
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 20), // Espaciado entre las secciones
+                  // Columna con el Avatar y el botón para subir imagen
+                  Column(
+                    children: [
+                      Avatar(
+                        size: 100,
+                        base64Image: _base64Image,
+                        radius: 80.0,
+                        backgroundColor: Colors.grey[300]!,
+                        placeholderIcon: _getIconForTipoTarea(widget.tipoTarea),
+                        onClear: () {
+                          setState(() {
+                            _base64Image = '';
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      DefaultButton(
+                        text: 'Subir Foto',
+                        onPressed: _pickImage,
+                        color: const Color(0xFF2EC4B6),
+                        colorText: Colors.white,
+                      ),
+                    ],
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Descripción de la actividad',
-                style: TextStyle(
-                    color: Color(0xFF2EC4B6),
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                onChanged: (String value) {
-                  tarea['Descripcion'] = value;
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: tarea['Descripcion'],
-                ),
-              ),
-              const SizedBox(height: 20),
+
+              // Condiciones para mostrar diferentes secciones según el tipo de tarea
               if (widget.tipoTarea == TAREA_PETICION)
                 _buildTareaPeticion(),
               if (widget.tipoTarea == TAREA_POR_PASOS)
                 _buildTareaPorPasos(),
               if (widget.tipoTarea == TAREA_JUEGO)
                 _buildTareaJuego(tarea['Enlace'] ?? 'No disponible'),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: 30),
+
+              // Filas con botones de acción
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Alinea todos los botones a la derecha
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Añadir Subtarea si es "Tarea Por Pasos"
+                  // Botón "Añadir Subtarea" si es "Tarea Por Pasos"
                   if (widget.tipoTarea == TAREA_POR_PASOS)
-                    ElevatedButton(
+                    DefaultButton(
+                      width: 250,
+                      text: 'Añadir Subtarea',
                       onPressed: _addSubtarea,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF2EC4B6),
-                      ),
-                      child: const Text('Añadir Subtarea',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
+                      color: const Color(0xFF2EC4B6),
+                      colorText: Colors.white,
+                      fontSize: 20,
+                      upperCase: false,
                     ),
 
-                  // Añadir Enunciado si es "Tarea Peticion"
+                  // Botón "Añadir Enunciado" si es "Tarea Peticion"
                   if (widget.tipoTarea == TAREA_PETICION)
-                    ElevatedButton(
+                    DefaultButton(
+                      width: 250,
+                      text: 'Añadir Enunciado',
                       onPressed: _addEnunciado,
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                            const Color(0xFF2EC4B6)),
-                      ),
-                      child: const Text('Añadir Enunciado',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
+                      color: const Color(0xFF2EC4B6),
+                      colorText: Colors.white,
+                      fontSize: 20,
+                      upperCase: false,
                     ),
 
-                  // Espacio entre los botones de añadir y modificar
-                  const SizedBox(width: 10),
-
-                  // Botón para "Modificar Tarea"
-                  ElevatedButton(
+                  const SizedBox(width: 10), // Espacio entre los botones
+                  // Botón "Modificar Tarea"
+                  DefaultButton(
+                    width: 250,
+                    text: 'Modificar Tarea',
                     onPressed: () {
                       _showConfirmationDialog(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF2EC4B6),
-                    ),
-                    child: const Text(
-                      'Modificar Tarea',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    color: const Color(0xFF2EC4B6),
+                    colorText: Colors.white,
+                    fontSize: 20,
+                    upperCase: false,
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

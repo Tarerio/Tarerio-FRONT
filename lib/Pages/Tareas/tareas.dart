@@ -27,18 +27,35 @@ class _TareasPageState extends State<TareasPage> {
   List<Map<String, dynamic>> Tareas = []; // Lista para almacenar las tareas
   bool isLoading = true; // Indicador de carga
 
+  final TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
+  final TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
+  final TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
+
+  final Map<String, String> categorias = {
+    'Tareas de Juegos': TAREA_JUEGO,
+    'Tareas Por Pasos': TAREA_POR_PASOS,
+    'Tareas de Petición': TAREA_PETICION,
+  };
+
+  String? tipoTareaSeleccionado;
+  final TextEditingController nombreTareaController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     fetchTareas(); // Obtener tareas
   }
 
+  void _cleanFiltros(){
+    setState(() {
+      tipoTareaSeleccionado = null;
+      nombreTareaController.text = '';
+      fetchTareas();
+    });
+  }
+
   Future<void> fetchTareas() async {
     try {
-      TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
-      TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
-      TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
-
       final tareasPorPasos = await _porPasosAPI.obtenerTareas();
       final tareasPeticion = await _peticionAPI.obtenerTareas();
       final tareasJuego = await _juegoAPI.obtenerTareas();
@@ -55,6 +72,55 @@ class _TareasPageState extends State<TareasPage> {
       print("Error al obtener tareas: $e");
       setState(() {
         isLoading = false; // Cambia el estado de carga incluso si hay un error
+      });
+    }
+  }
+
+  Future<void> _filterTareas({String? nombreTarea, String? tipoTarea}) async {
+    try {
+      setState(() {
+        isLoading = true; // Mostrar indicador de carga
+      });
+
+      List<Map<String, dynamic>>? tareasPorPasos = [];
+      List<Map<String, dynamic>>? tareasPeticion = [];
+      List<Map<String, dynamic>>? tareasJuego = [];
+
+      print(nombreTarea);
+
+      if (tipoTarea != null) {
+        switch (tipoTarea) {
+          case TAREA_POR_PASOS:
+            tareasPorPasos = await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            break;
+
+          case TAREA_PETICION:
+            tareasPeticion = await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            break;
+
+          case TAREA_JUEGO:
+            tareasJuego = await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            break;
+        }
+      } else{
+        tareasPorPasos = await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
+        tareasPeticion = await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
+        tareasJuego = await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
+      }
+
+      setState(() {
+        Tareas = [
+          ...?tareasPorPasos?.map((tarea) => {'tipo': TAREA_POR_PASOS, ...tarea}),
+          ...?tareasPeticion?.map((tarea) => {'tipo': TAREA_PETICION, ...tarea}),
+          ...?tareasJuego?.map((tarea) => {'tipo': TAREA_JUEGO, ...tarea}),
+        ];
+        isLoading = false; // Oculta indicador de carga
+      });
+
+    } catch (e) {
+      print("Error al obtener tareas: $e");
+      setState(() {
+        isLoading = false; // Oculta indicador de carga en caso de error
       });
     }
   }
@@ -112,9 +178,77 @@ class _TareasPageState extends State<TareasPage> {
                 color: const Color(0xFF2EC4B6),
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.refresh_sharp,
+                    color: Color(colorPrincipal),
+                  ),
+                  onPressed: () {
+                    _cleanFiltros();
+                  },
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  child: DropdownButton<String>(
+                    alignment: Alignment.center,
+                    hint: const Text('Filtrar por categoria'),
+                    value: tipoTareaSeleccionado,
+                    items: categorias.entries.map((tiposTarea) {
+                      return DropdownMenuItem<String>(
+                        value: tiposTarea.value,
+                        alignment: Alignment.center,
+                        child: Text(tiposTarea.key),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        tipoTareaSeleccionado = newValue;
+                        _filterTareas(tipoTarea: tipoTareaSeleccionado, nombreTarea: nombreTareaController.text);
+                      });
+                    },
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    underline: SizedBox.shrink(),
+                    iconEnabledColor: Color(colorPrincipal),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  width: 213,
+                  child: TextField(
+                    controller: nombreTareaController,
+                    decoration: InputDecoration(
+                      labelText: 'Buscar por nombre',
+                      labelStyle: TextStyle(color: Color(colorPrincipal)),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                      ),
+                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                    ),
+                    onChanged: (value) async {
+                      await _filterTareas(nombreTarea: value, tipoTarea: tipoTareaSeleccionado);
+                      setState(() {
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+          ),
+        ],
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Wrap(
@@ -160,8 +294,8 @@ class _TareasPageState extends State<TareasPage> {
         onPressed: () {
           _showTaskTypeDialog(context);
         },
-        child: const Icon(Icons.add),
         backgroundColor: const Color(0xFF2EC4B6),
+        child: const Icon(Icons.add),
       ),
       drawer: Navbar(
         screenIndex: 0,
@@ -193,7 +327,7 @@ class _TareasPageState extends State<TareasPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.list),
+              leading: const Icon(Icons.list_rounded),
               title: const Text('Tarea Por Pasos'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog
@@ -206,7 +340,7 @@ class _TareasPageState extends State<TareasPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.request_quote),
+              leading: const Icon(Icons.question_answer),
               title: const Text('Tarea Petición'),
               onTap: () {
                 Navigator.pop(context); // Close the dialog

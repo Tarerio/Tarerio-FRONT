@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/Pages/Tareas/tareas.dart';
+import 'package:tarerio/Widgets/TextFieldDefault.dart';
 
 import '../../Widgets/AppBarDefault.dart';
+import '../../Widgets/Avatar.dart';
+import '../../Widgets/DefaultButton.dart';
 import '../../Widgets/ErrorModal.dart';
 import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
@@ -22,29 +27,100 @@ class Subtarea {
 class CrearTareaPorPasos extends StatefulWidget {
   final int idAdministrador;
 
-  CrearTareaPorPasos({required this.idAdministrador});
+  const CrearTareaPorPasos({
+    super.key,
+    required this.idAdministrador});
 
   @override
   _CrearTareaPorPasosState createState() => _CrearTareaPorPasosState();
 }
 
 class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
-  String? _titulo;
-  String? _descripcion;
-  List<Subtarea> _subtareas = []; // Lista de subtareas
+  final List<Subtarea> _subtareas = []; // Lista de subtareas
+
+  final TextEditingController _tituloController = TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
+
+  //Variables para la imagen
+  File? _image;
+  String _base64Image = '';
 
   final TareaPorPasosAPI _api = TareaPorPasosAPI();
 
-  void _setTitulo(String titulo) {
-    setState(() {
-      _titulo = titulo;
-    });
-  }
+  void _editSubtarea(int index) async {
+    final subtareaActual = _subtareas[index];
 
-  void _setDescripcion(String descripcion) {
-    setState(() {
-      _descripcion = descripcion;
-    });
+    // Controladores para los campos de texto
+    final textoController = TextEditingController(text: subtareaActual.texto);
+    final imagenController = TextEditingController(text: subtareaActual.imagen);
+    final pictogramaController = TextEditingController(text: subtareaActual.pictograma);
+    final videoController = TextEditingController(text: subtareaActual.video);
+
+    String? texto = subtareaActual.texto;
+
+    final Subtarea? subtareaEditada = await showDialog<Subtarea>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editar Subtarea'),
+          content: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: textoController,
+                    decoration: const InputDecoration(labelText: 'Texto de la Subtarea'),
+                  ),
+                  TextField(
+                    controller: imagenController,
+                    decoration: const InputDecoration(labelText: 'Imagen URL'),
+                  ),
+                  TextField(
+                    controller: pictogramaController,
+                    decoration: const InputDecoration(labelText: 'Pictograma URL'),
+                  ),
+                  TextField(
+                    controller: videoController,
+                    decoration: const InputDecoration(labelText: 'Video URL'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (texto != null) {
+                  Navigator.of(context).pop(
+                      Subtarea(
+                        texto: textoController.text.isEmpty ? 'No disponible' : textoController.text,
+                        imagen: imagenController.text.isEmpty ? 'No disponible' : imagenController.text,
+                        pictograma: pictogramaController.text.isEmpty ? 'No disponible' : pictogramaController.text,
+                        video: videoController.text.isEmpty ? 'No disponible' : videoController.text,
+                      ),
+                  );
+                }
+              },
+              child: const Text('Guardar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (subtareaEditada != null) {
+      setState(() {
+        _subtareas[index] = subtareaEditada;
+      });
+    }
   }
 
   void _addSubtarea() async {
@@ -145,10 +221,8 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
   }
 
   void _crearTareaPorPasos(BuildContext context) async {
-    if (_titulo == null ||
-        _titulo!.isEmpty ||
-        _descripcion == null ||
-        _descripcion!.isEmpty ||
+    if (_tituloController.text.isEmpty ||
+        _descripcionController.text.isEmpty ||
         _subtareas.isEmpty) {
       _showErrorModal(context, 'Error al crear la tarea',
           'Por favor, llena todos los campos.');
@@ -158,12 +232,13 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
       // Capturamos la hora de creación actual
       DateTime fechaCreacion = DateTime.now();
 
-      var jsonResponse = await _api.crearTareaPorPasos(
-          _titulo!,
-          _descripcion!,
+      await _api.crearTareaPorPasos(
+          _tituloController.text,
+          _descripcionController.text,
           fechaCreacion,
           widget.idAdministrador,
-          _subtareas // Enviar la lista de subtareas
+          _subtareas, // Enviar la lista de subtareas
+          _base64Image,
       );
 
       Navigator.pushReplacement(
@@ -179,6 +254,20 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
       _showErrorModal(context, 'Error al crear la tarea',
           'Ocurrió un error al crear la tarea por pasos');
     }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+
+    final bytes = await File(pickedFile.path).readAsBytes();
+
+    setState(() {
+      _image = File(pickedFile.path);
+      _base64Image = base64Encode(bytes);
+    });
+
   }
 
   @override
@@ -204,48 +293,67 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            bool isSmallScreen = constraints.maxWidth < 790;
-
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
-                  'Nombre de la actividad',
-                  style: TextStyle(
-                      color: Color(0xFF2EC4B6),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: isSmallScreen ? double.infinity : 500.0,
-                  child: TextField(
-                    onChanged: (String value) {
-                      _setTitulo(value);
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Nombre de la actividad',
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Sección izquierda: Nombre y descripción
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          TextFieldDefault(
+                              width: 800,
+                              label: 'Nombre de la actividad',
+                              controller: _tituloController,
+                              labelColor: Color(colorPrincipal),
+                              labelFontSize: 18,
+                              hintText: 'Nombre de la actividad',
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFieldDefault(
+                            width: 800,
+                            label: 'Descripción de la actividad',
+                            controller: _descripcionController,
+                            labelColor: Color(colorPrincipal),
+                            labelFontSize: 18,
+                            hintText: 'Descripción',
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Descripción de la actividad',
-                  style: TextStyle(
-                      color: Color(0xFF2EC4B6),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  onChanged: (String value) {
-                    _setDescripcion(value);
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Descripción',
-                  ),
+                    const SizedBox(width: 20), // Espaciado entre las secciones
+                    // Sección derecha: Avatar y botones
+                    Column(
+                      children: [
+                        Avatar(
+                          size: 110,
+                          base64Image: _base64Image,
+                          radius: 80.0,
+                          backgroundColor: Colors.grey[300]!,
+                          placeholderIcon: const Icon(Icons.list_rounded,
+                              color: Colors.white),
+                          onClear: () {
+                            setState(() {
+                              _base64Image = '';
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        DefaultButton(
+                          text: 'Subir Foto',
+                          onPressed: _pickImage,
+                          color: const Color(0xFF2EC4B6),
+                          colorText: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -255,6 +363,7 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                       fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 10),
                 // Lista de subtareas
                 Expanded(
                   child: ListView.builder(
@@ -277,18 +386,16 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                                   Row(
                                     children: [
                                       Text(
-                                        "${index + 1}. ", // Enumeración de las subtareas
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
+                                        "${index + 1}. ",
+                                        style: const TextStyle(
+                                            fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                                       Flexible(
                                         child: Text(
                                           _subtareas[index].texto ??
                                               'Título de la subtarea',
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
+                                          style: const TextStyle(
+                                              fontSize: 18, fontWeight: FontWeight.bold),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -296,8 +403,7 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                                   ),
                                   const SizedBox(height: 10),
                                   Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Imagen: ${_subtareas[index].imagen ?? 'No disponible'}",
@@ -320,11 +426,17 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                               ),
                             ),
                             const SizedBox(width: 20),
-                            IconButton(
-                              icon: Icon(Icons.close, color: Colors.red),
-                              onPressed: () {
-                                _eliminarSubtarea(index);
-                              },
+                            Column(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.teal),
+                                  onPressed: () => _editSubtarea(index),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.close, color: Colors.red),
+                                  onPressed: () => _eliminarSubtarea(index),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -335,29 +447,24 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(
+                    DefaultButton(
+                      width: 250,
+                      text: 'Añadir Subtarea',
                       onPressed: _addSubtarea,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF2EC4B6),
-                      ),
-                      child: const Text('Añadir Subtarea',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
+                      color: const Color(0xFF2EC4B6),
+                      colorText: Colors.white,
+                      fontSize: 20,
+                      upperCase: false,
                     ),
-                    ElevatedButton(
+                    DefaultButton(
+                      text: 'Crear Tarea',
                       onPressed: () {
                         _crearTareaPorPasos(context);
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF2EC4B6),
-                      ),
-                      child: const Text('Crear Tarea',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
+                      color: const Color(0xFF2EC4B6),
+                      fontSize: 20,
+                      colorText: Colors.white,
+                      upperCase: false,
                     ),
                   ],
                 ),
