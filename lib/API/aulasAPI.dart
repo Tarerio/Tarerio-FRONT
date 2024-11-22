@@ -42,6 +42,27 @@ class AulasAPI {
     }
   }
 
+  Future<Map<String, dynamic>> modificarAula(String id, String clave, String cupo) async {
+    String url = '$baseUrl/aulas/$id';
+
+    final Map<String, dynamic> data = {
+      "clave": clave,
+      "capacidad": cupo,
+    };
+
+    final String jsonBody = json.encode(data);
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    );
+    return json.decode(response.body);
+  }
+
+
   eliminarAula(String id) async {
     String url = '$baseUrl/aulas/$id';
 

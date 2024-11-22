@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
 class AulaCard extends StatelessWidget {
-  final int idUsuario;
+  final int idAula;
   final String imagenAula; // URL o ruta de la imagen
   final String claveAula;
   final int cupoAula;
@@ -14,7 +14,7 @@ class AulaCard extends StatelessWidget {
 
   const AulaCard(
       {Key? key,
-        required this.idUsuario,
+        required this.idAula,
         required this.imagenAula,
         required this.claveAula,
         required this.cupoAula,
