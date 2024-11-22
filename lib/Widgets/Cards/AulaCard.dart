@@ -70,7 +70,7 @@ class AulaCard extends StatelessWidget {
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 TextButton.icon(
-                  onPressed: () => {},
+                  onPressed: onEdit,
                   icon: const Icon(Icons.edit, color: Colors.teal),
                   label: const Text('Editar Aula'),
                   style: TextButton.styleFrom(

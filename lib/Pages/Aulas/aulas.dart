@@ -255,7 +255,8 @@ class _AulasPageState extends State<AulasPage> {
                     context,
                     MaterialPageRoute(builder: (context) => 
                       ModificarAula(claveAula: aula['clave_aula'], aulaId: aula['id_aula'], 
-                      cupoAula: aula['cupo'], imagenAula: aula['imagenBase64']),),
+                      //cupoAula: aula['cupo'], imagenAula: aula['imagenBase64']),),
+                      cupoAula: aula['cupo']),),
                   );
                 },
                 onAssign: () {

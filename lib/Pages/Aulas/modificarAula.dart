@@ -16,9 +16,9 @@ class ModificarAula extends StatefulWidget {
   final int aulaId;
   final String claveAula;
   final int cupoAula;
-  final String imagenAula;
+  //final String imagenAula;
 
-  ModificarAula({required this.aulaId, required this.claveAula, required this.cupoAula, required this.imagenAula});
+  ModificarAula({required this.aulaId, required this.claveAula, required this.cupoAula});
 
   @override
   _ModificarAulaState createState() => _ModificarAulaState();
