@@ -2,18 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatear la fecha
-import '../../Models/menuAccesible.dart';
-import '../../Widgets/Header.dart';
-import '../../API/alumnosAPI.dart';
-import '../../API/tareaJuegoAPI.dart';
-import '../../API/tareaPeticionAPI.dart';
-import '../../API/tareaPorPasosAPI.dart';
-import '../../API/alumnosAPI.dart';
+import 'package:tarerio/Models/menuAccesible.dart';
+import 'package:tarerio/Pages/Alumnos/tarea.dart';
+import 'package:tarerio/Widgets/Header.dart';
+import 'package:tarerio/API/alumnosAPI.dart';
+import 'package:tarerio/API/tareaJuegoAPI.dart';
+import 'package:tarerio/API/tareaPeticionAPI.dart';
+import 'package:tarerio/API/tareaPorPasosAPI.dart';
 
 class PrincipalAlumno extends StatefulWidget {
   final String nickname;
 
-  PrincipalAlumno({super.key, required this.nickname});
+  const PrincipalAlumno({super.key, required this.nickname});
 
   @override
   _PrincipalAlumnoState createState() => _PrincipalAlumnoState();
@@ -110,11 +110,9 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
     try {
       final response = await _api.obtenerMenuAccesible(widget.nickname);
       setState(() {
-        _selectedTitleFontSize =
-            response['texto_titulo'] ?? _selectedTitleFontSize;
-        _selectedTextFontSize =
-            response['texto_descripcion'] ?? _selectedTextFontSize;
-        _selectedPalette = response['paleta_colores'] ?? _selectedPalette;
+        _selectedTitleFontSize = response['texto_titulo'];
+        _selectedTextFontSize = response['texto_descripcion'];
+        _selectedPalette = response['paleta_colores'];
       });
     } catch (e) {
       // Handle error if needed
@@ -171,7 +169,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
               style: TextStyle(
                 fontSize: isTablet ? 75 : 32, // Ajuste según tablet o móvil
                 fontWeight: FontWeight.w800,
-                color: Colors.black,
+                color: colorPalette.fuente,
               ),
               textAlign: TextAlign.center,
             ),
@@ -180,61 +178,69 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
 
           // Área de tareas
           Expanded(
-            child: Column(
-              children: [
-                for (int i = 0;
-                    i < (_tareasDeHoy.length > 3 ? 3 : _tareasDeHoy.length);
-                    i++)
-                  Expanded(
-                    child: _buildTaskCard(
-                      _tareasDeHoy[i]['Titulo'] ?? 'Tarea sin nombre',
-                      _tareasDeHoy[i]['imagenBase64'] ?? '',
-                      context,
-                    ),
-                  ),
-                if (_tareasDeHoy.isEmpty)
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        "No hay tareas asignadas para hoy.",
-                        style: TextStyle(
-                          fontSize: isTablet ? 20 : 16,
-                        ),
+            child: _tareasDeHoy.isEmpty
+                ? Center(
+                    child: Text(
+                      "No hay tareas asignadas para hoy.",
+                      style: TextStyle(
+                        fontSize: isTablet ? 20 : 16,
                       ),
                     ),
+                  )
+                : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount:
+                        _tareasDeHoy.length > 3 ? 3 : _tareasDeHoy.length,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    itemBuilder: (context, index) {
+                      return _buildTaskCard(
+                        _tareasDeHoy[index]['Titulo'] ?? 'Tarea sin nombre',
+                        _tareasDeHoy[index]['Descripcion'] ??
+                            'No hay descripción',
+                        _tareasDeHoy[index]['imagenBase64'] ?? '',
+                        context,
+                      );
+                    },
                   ),
-              ],
-            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTaskCard(String text, String imagen, BuildContext context) {
+  Widget _buildTaskCard(
+      String text, String descripcion, String imagen, BuildContext context) {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
-
     final cardWidth = isTablet ? 500.0 : 300.0;
+    final cardHeight = isTablet ? 150.0 : 100.0; // Altura consistente
+    final colorPalette = _getColorPalette(_selectedPalette);
 
     return GestureDetector(
-      onTap: () {        
-        print('Card tapped: $text');
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => DetalleTareaPage(tarea: text)),
-        // );
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TareaAlumno(
+                    title: text,
+                    descripcion: descripcion,
+                    image: imagen,
+                    nickname: widget.nickname,
+                    colorPalette: colorPalette,
+                  )),
+        );
       },
       child: Card(
+        color: colorPalette.componentes,
         elevation: 4,
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
           children: [
-            // Imagen proporcional
             Container(
               width: cardWidth * 0.5,
+              height: cardHeight, // Altura fija para todas las tarjetas
               decoration: BoxDecoration(
                 borderRadius:
                     const BorderRadius.horizontal(left: Radius.circular(16)),
@@ -244,7 +250,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                 ),
               ),
             ),
-            // Texto al lado de la imagen
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -252,6 +257,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                   text.toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
+                    color: colorPalette.fuente,
                     fontSize: isTablet ? 70 : 50, // Ajuste del tamaño de fuente
                     fontWeight: FontWeight.bold,
                   ),
