@@ -216,41 +216,50 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
 
     final cardWidth = isTablet ? 500.0 : 300.0;
 
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          // Imagen proporcional
-          Container(
-            width: cardWidth * 0.5,
-            decoration: BoxDecoration(
-              borderRadius:
-                  const BorderRadius.horizontal(left: Radius.circular(16)),
-              image: DecorationImage(
-                image: MemoryImage(base64Decode(imagen)),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          // Texto al lado de la imagen
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                text.toUpperCase(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: isTablet ? 70 : 50, // Ajuste del tamaño de fuente
-                  fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {        
+        print('Card tapped: $text');
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => DetalleTareaPage(tarea: text)),
+        // );
+      },
+      child: Card(
+        elevation: 4,
+        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            // Imagen proporcional
+            Container(
+              width: cardWidth * 0.5,
+              decoration: BoxDecoration(
+                borderRadius:
+                    const BorderRadius.horizontal(left: Radius.circular(16)),
+                image: DecorationImage(
+                  image: MemoryImage(base64Decode(imagen)),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-          ),
-        ],
+            // Texto al lado de la imagen
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  text.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: isTablet ? 70 : 50, // Ajuste del tamaño de fuente
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
