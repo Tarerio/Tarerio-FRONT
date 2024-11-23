@@ -39,10 +39,11 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
     _loadMenuAccesible(); // Cargar las configuraciones de accesibilidad
   }
 
-  // Función para cargar las tareas del día actual
   void _loadTareasDeHoy() async {
     try {
       String fechaHoy = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      List<Map<String, dynamic>> tareas = [];
+      List<Map<String, dynamic>> tareasAlumnoDeHoy = [];
 
       final tareasPorPasosAsignadas =
           await _tareaPorPasosAPI.obtenerAsignadasAlumno(
@@ -51,14 +52,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
         fechaHoy,
       );
 
-      List tareasPorPasos = [];
-
-      for (int i = 0; i < tareasPorPasosAsignadas.length; i++) {
-        final idTarea = tareasPorPasosAsignadas[i]['ID_tarea'];
-        final tarea = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
-        tareasPorPasos.add(tarea);
-      }
-
       final tareasPeticionAsignadas =
           await _tareaPeticionAPI.obtenerAsignadasAlumno(
         widget.nickname,
@@ -66,34 +59,47 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
         fechaHoy,
       );
 
-      List tareasPeticion = [];
-
-      for (int i = 0; i < tareasPeticionAsignadas.length; i++) {
-        final idTarea = tareasPeticionAsignadas[i]['ID_tarea'];
-        final tarea = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
-        tareasPeticion.add(tarea);
-      }
-
       final tareasJuegoAsignadas = await _tareaJuegoAPI.obtenerAsignadasAlumno(
         widget.nickname,
         '',
         fechaHoy,
       );
 
-      List tareasJuego = [];
-
-      for (int i = 0; i < tareasJuegoAsignadas.length; i++) {
-        final idTarea = tareasJuegoAsignadas[i]['ID_tarea'];
-        final tarea = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
-        tareasJuego.add(tarea);
+      for (var tarea in tareasPorPasosAsignadas) {
+        tareas.add({'tarea': tarea, 'tipo': 'Por Pasos'});
       }
 
+      for (var tarea in tareasPeticionAsignadas) {
+        tareas.add({'tarea': tarea, 'tipo': 'Peticion'});
+      }
+
+      for (var tarea in tareasJuegoAsignadas) {
+        tareas.add({'tarea': tarea, 'tipo': 'Juego'});
+      }
+      tareas.sort((a, b) {
+        DateTime fechaA = DateTime.parse(a['tarea']['Fecha_fin_asignacion']);
+        DateTime fechaB = DateTime.parse(b['tarea']['Fecha_fin_asignacion']);
+        return fechaA.compareTo(fechaB);
+      });
+
+      for (var i = 0; i < tareas.length; i++) {
+        switch (tareas[i]['tipo']) {
+          case 'Juego':
+            final idTarea = tareas[i]['tarea']['ID_tarea'];
+            final tarea = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
+            tareasAlumnoDeHoy.add(tarea);
+          case 'Por Pasos':
+            final idTarea = tareas[i]['tarea']['ID_tarea'];
+            final tarea = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
+            tareasAlumnoDeHoy.add(tarea);
+          case 'Peticion':
+            final idTarea = tareas[i]['tarea']['ID_tarea'];
+            final tarea = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
+            tareasAlumnoDeHoy.add(tarea);
+        }
+      }
       setState(() {
-        _tareasDeHoy = [
-          ...(tareasPorPasos),
-          ...(tareasPeticion),
-          ...(tareasJuego),
-        ];
+        _tareasDeHoy = tareasAlumnoDeHoy;
       });
     } catch (e) {
       print("Error al cargar las tareas del día: $e");
@@ -103,15 +109,13 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
   void _loadMenuAccesible() async {
     try {
       final response = await _api.obtenerMenuAccesible(widget.nickname);
-      if (response != null) {
-        setState(() {
-          _selectedTitleFontSize =
-              response['texto_titulo'] ?? _selectedTitleFontSize;
-          _selectedTextFontSize =
-              response['texto_descripcion'] ?? _selectedTextFontSize;
-          _selectedPalette = response['paleta_colores'] ?? _selectedPalette;
-        });
-      }
+      setState(() {
+        _selectedTitleFontSize =
+            response['texto_titulo'] ?? _selectedTitleFontSize;
+        _selectedTextFontSize =
+            response['texto_descripcion'] ?? _selectedTextFontSize;
+        _selectedPalette = response['paleta_colores'] ?? _selectedPalette;
+      });
     } catch (e) {
       // Handle error if needed
     }
@@ -151,92 +155,103 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
 
   @override
   Widget build(BuildContext context) {
-  final colorPalette = _getColorPalette(_selectedPalette);
-  final screenWidth = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
+    final colorPalette = _getColorPalette(_selectedPalette);
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
-  return Scaffold(
-    appBar: Header(nickname: widget.nickname),
-    backgroundColor: colorPalette.fondo,
-    body: Padding(
-      padding: EdgeInsets.all(screenWidth * 0.05), // Ajuste dinámico del padding
-      child: Column(
+    return Scaffold(
+      appBar: Header(nickname: widget.nickname),
+      backgroundColor: colorPalette.fondo,
+      body: Column(
         children: [
-          Text(
-            "TAREAS DEL DÍA",
-            style: TextStyle(
-              fontSize: screenWidth * 0.ç1, // Ajuste dinámico del tamaño de la fuente
-              fontWeight: FontWeight.w800,
-              color: Colors.black,
+          // Título principal
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(
+              "TAREAS DEL DÍA",
+              style: TextStyle(
+                fontSize: isTablet ? 75 : 32, // Ajuste según tablet o móvil
+                fontWeight: FontWeight.w800,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
+
+          // Área de tareas
           Expanded(
-            child: _tareasDeHoy.isEmpty
-                ? Center(
-                    child: Text(
-                      "No hay tareas asignadas para hoy.",
-                      style: TextStyle(fontSize: screenWidth * 0.05), // Ajuste dinámico
+            child: Column(
+              children: [
+                for (int i = 0;
+                    i < (_tareasDeHoy.length > 3 ? 3 : _tareasDeHoy.length);
+                    i++)
+                  Expanded(
+                    child: _buildTaskCard(
+                      _tareasDeHoy[i]['Titulo'] ?? 'Tarea sin nombre',
+                      _tareasDeHoy[i]['imagenBase64'] ?? '',
+                      context,
                     ),
-                  )
-                : ListView.builder(
-                    itemCount: _tareasDeHoy.take(3).length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final tarea = _tareasDeHoy[index];
-                      return _buildTaskCard(
-                        tarea['Titulo'] ?? 'Tarea sin nombre',
-                        tarea['imagenBase64'] ?? '',
-                        screenWidth, screenHeight,
-                      );
-                    },
                   ),
+                if (_tareasDeHoy.isEmpty)
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "No hay tareas asignadas para hoy.",
+                        style: TextStyle(
+                          fontSize: isTablet ? 20 : 16,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ],
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _buildTaskCard(String text, String imagen, double screenWidth, double screenHeight) {
-  return Card(
-    elevation: 4,
-    margin: EdgeInsets.symmetric(vertical: screenHeight * 0.03, horizontal: screenWidth * 0.1),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
-    ),
-    child: Row(
-      children: [
-        // Imagen que ocupa todo el alto de la tarjeta
-        Container(
-          height: screenHeight * 0.15,  // Ajuste dinámico del tamaño de la imagen
-          width: screenWidth * 0.3,     // Ajuste dinámico del ancho de la imagen
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
-            image: DecorationImage(
-              image: MemoryImage(base64Decode(imagen)),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        // Texto al lado de la imagen
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(screenWidth * 0.03),  // Ajuste dinámico del padding
-            child: Text(
-              text.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: screenWidth * 0.08,  // Ajuste dinámico del tamaño de la fuente
-                fontWeight: FontWeight.bold,
+  Widget _buildTaskCard(String text, String imagen, BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
+
+    final cardWidth = isTablet ? 500.0 : 300.0;
+
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          // Imagen proporcional
+          Container(
+            width: cardWidth * 0.5,
+            decoration: BoxDecoration(
+              borderRadius:
+                  const BorderRadius.horizontal(left: Radius.circular(16)),
+              image: DecorationImage(
+                image: MemoryImage(base64Decode(imagen)),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+          // Texto al lado de la imagen
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                text.toUpperCase(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: isTablet ? 70 : 50, // Ajuste del tamaño de fuente
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
