@@ -77,7 +77,7 @@ class _CrearAulaState extends State<CrearAula> {
 
   Future<String> _testAula(BuildContext context) async {
     var jsonResponse =
-        await _api.crearAula(_claveController.text, _cupoController.text);
+        await _api.crearAula(_claveController.text, _cupoController.text, _base64Image);
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(context, 'Error al crear aula', jsonResponse['message']);
     }
@@ -173,6 +173,7 @@ class _CrearAulaState extends State<CrearAula> {
                     onClear: () {
                       setState(() {
                         _image = null;
+                        _base64Image = '';
                       });
                     },
                   ),

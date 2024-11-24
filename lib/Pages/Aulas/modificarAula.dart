@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -16,9 +18,9 @@ class ModificarAula extends StatefulWidget {
   final int aulaId;
   final String claveAula;
   final int cupoAula;
-  //final String imagenAula;
+  final String imagenAula;
 
-  ModificarAula({required this.aulaId, required this.claveAula, required this.cupoAula});
+  ModificarAula({required this.aulaId, required this.claveAula, required this.cupoAula, required this.imagenAula});
 
   @override
   _ModificarAulaState createState() => _ModificarAulaState();
@@ -36,12 +38,14 @@ class _ModificarAulaState extends State<ModificarAula> {
 
   //Variables para la imagen
   File? _image;
+  String _base64Image = '';
 
   @override
   void initState() {
     super.initState();
     _claveController.text = widget.claveAula;
     _cupoController.text = widget.cupoAula.toString();
+    _base64Image = widget.imagenAula;
   }
 
   Future<void> _pickImage() async {
@@ -53,6 +57,9 @@ class _ModificarAulaState extends State<ModificarAula> {
     setState(() {
       _image = File(pickedFile.path);
     });
+
+    final bytes = await _image!.readAsBytes();
+    _base64Image = base64Encode(bytes);
   }
 
   void _showErrorModal(BuildContext context, String title, String content) {
@@ -84,7 +91,7 @@ class _ModificarAulaState extends State<ModificarAula> {
   }
 
   Future<String> _testAula(BuildContext context) async {
-    var jsonResponse = await _api.modificarAula(widget.aulaId.toString(), _claveController.text, _cupoController.text);
+    var jsonResponse = await _api.modificarAula(widget.aulaId.toString(), _claveController.text, _cupoController.text, _base64Image);
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(
           context, 'Error al modificar aula', jsonResponse['message']);
@@ -98,10 +105,9 @@ class _ModificarAulaState extends State<ModificarAula> {
   }
 
   void _modificarAula(BuildContext context) async {
-
     if (_claveController.text.isEmpty || _cupoController.text.isEmpty) {
       _showErrorModal(context, 'Falta la clave o el cupo',
-          'Por favor, llena todos los campos.');
+          'Por favor, llena todos los campos.');  
     } else {
       String aula = await _testAula(context);
       if (aula != '') {
@@ -117,6 +123,7 @@ class _ModificarAulaState extends State<ModificarAula> {
     setState(() {
       _claveController.text = widget.claveAula;
       _cupoController.text = widget.cupoAula.toString();
+      _base64Image = widget.imagenAula;
     });
   }
 
@@ -173,7 +180,7 @@ class _ModificarAulaState extends State<ModificarAula> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Avatar(
-                    image: _image,
+                    base64Image: _base64Image,
                     radius: 100.0,
                     backgroundColor: Colors.grey[300]!,
                     placeholderIcon: const Icon(Icons.image,
@@ -181,6 +188,7 @@ class _ModificarAulaState extends State<ModificarAula> {
                     onClear: () {
                       setState(() {
                         _image = null;
+                        _base64Image = '';
                       });
                     },
                   ),
