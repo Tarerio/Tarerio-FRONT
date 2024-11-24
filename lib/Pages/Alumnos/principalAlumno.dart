@@ -212,7 +212,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
       String text, String descripcion, String imagen, BuildContext context) {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     final cardWidth = isTablet ? 500.0 : 300.0;
-    final cardHeight = isTablet ? 150.0 : 100.0; // Altura consistente
     final colorPalette = _getColorPalette(_selectedPalette);
 
     return GestureDetector(
@@ -231,40 +230,50 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
       },
       child: Card(
         color: colorPalette.componentes,
-        elevation: 4,
+        elevation: 6,
         margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Row(
-          children: [
-            Container(
-              width: cardWidth * 0.5,
-              height: cardHeight, // Altura fija para todas las tarjetas
-              decoration: BoxDecoration(
-                borderRadius:
-                    const BorderRadius.horizontal(left: Radius.circular(16)),
-                image: DecorationImage(
-                  image: MemoryImage(base64Decode(imagen)),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  text.toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: colorPalette.fuente,
-                    fontSize: isTablet ? 70 : 50, // Ajuste del tamaño de fuente
-                    fontWeight: FontWeight.bold,
+        child: IntrinsicHeight(
+          // Ajusta la altura dinámica del Row
+          child: Row(
+            children: [
+              Semantics(
+                label: descripcion,
+                child: Container(
+                  width: cardWidth * 0.5,
+                  height: double
+                      .infinity, // Se ajusta a la altura del Row dinámicamente
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.horizontal(
+                        left: Radius.circular(16)),
+                    image: DecorationImage(
+                      image: MemoryImage(base64Decode(imagen)),
+                      fit: BoxFit
+                          .cover, // Hace que la imagen cubra el espacio disponible
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    textScaler: const TextScaler.linear(0.8),
+                    text.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: colorPalette.fuente,
+                      fontSize:
+                          isTablet ? 70 : 50, // Ajuste del tamaño de fuente
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
