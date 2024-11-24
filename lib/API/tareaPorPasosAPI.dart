@@ -10,7 +10,8 @@ class TareaPorPasosAPI {
       String descripcion,
       DateTime fechaCreacion,
       int idAdministrador,
-      List<Subtarea> subtareas) async {
+      List<Subtarea> subtareas,
+      String imagen) async {
     String url = '$baseUrl/tareaPorPasos';
 
     // Captura la hora de creación actual
@@ -22,6 +23,7 @@ class TareaPorPasosAPI {
       "Descripcion": descripcion,
       "Fecha_creacion": formattedCreacionDate,
       "creatorId": idAdministrador,
+      "imagen" : imagen,
       "subtareas": subtareas
           .map((subtarea) =>
       {
@@ -60,12 +62,37 @@ class TareaPorPasosAPI {
     }
   }
 
-  eliminarTarea(String id) {
-    // impletementar logica de eliminar tarea
+  Future<List<Map<String, dynamic>>> getFilteredTareas({String? nombreTarea}) async {
+    String url = '$baseUrl/tareaPorPasos/filtered?nombreTarea=$nombreTarea';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse
+          .map((tarea) => tarea as Map<String, dynamic>)
+          .toList();
+    } else {
+      throw Exception('Failed to load tasks');
+    }
+  }
+
+  eliminarTarea(int id) async {
+    String url = '$baseUrl/tareaPorPasos/$id';
+
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception(response.body);
+    }
   }
 
 
-  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno, DateTime dueDate,TimeOfDay dueTime) async {
+  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno, DateTime dueDate,TimeOfDay dueTime, int stepPages) async {
     String url = '$baseUrl/tareaPorPasos/$idTarea/asignar';
 
     final DateTime fullDueDateTime = DateTime(
@@ -79,7 +106,8 @@ class TareaPorPasosAPI {
 
     final Map<String, dynamic> body = {
       "id_usuario": idAlumno,
-      "Fecha_fin_asignacion": formattedDueDate
+      "Fecha_fin_asignacion": formattedDueDate,
+      "pasosPagina": stepPages
     };
 
 
@@ -95,7 +123,7 @@ class TareaPorPasosAPI {
     }
   }
 
-  Future<Map<String, dynamic>> obetenerTareaByID(int idTarea) async {
+  Future<Map<String, dynamic>> obtenerTareaByID(int idTarea) async {
     String url = '$baseUrl/tareaPorPasos/$idTarea';
 
     final response = await http.get(Uri.parse(url));
@@ -115,7 +143,7 @@ class TareaPorPasosAPI {
     final Map<String, dynamic> body = {
       "Titulo": tarea['Titulo'],
       "Descripcion": tarea['Descripcion'],
-      "Fecha_estimada_cierre": tarea['Fecha_estimada_cierre'] ?? null,
+      "imagen" : tarea['imagenBase64'],
       "subtareas": tarea['Subtareas']
           .map((subtarea) =>
       {
@@ -139,6 +167,27 @@ class TareaPorPasosAPI {
       print('Error: ${response.statusCode}');
       print('Response body: ${response.body}');
       throw Exception('Failed to update task');
+    }
+  }
+
+  obtenerAsignadasAlumno(String nickname, String? estado, String? fecha) async {
+    String url = '$baseUrl/tareaPorPasos/$nickname/asignadas';
+
+    if (estado != null) {
+      url += '?estado=$estado';
+    }
+
+    if (fecha != null) {
+      url += estado != null ? '&fecha=$fecha' : '?fecha=$fecha';
+    }
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse.map((tarea) => tarea as Map<String, dynamic>).toList();
+    } else {
+      throw Exception('Failed to load tasks');
     }
   }
 }

@@ -11,6 +11,7 @@ class AlumnoCard extends StatefulWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onSelect;
   final VoidCallback? onAccesibilidad;
+  final VoidCallback? onGetTasks;
 
   const AlumnoCard({
     Key? key,
@@ -22,6 +23,7 @@ class AlumnoCard extends StatefulWidget {
     this.onDelete,
     this.onSelect,
     this.onAccesibilidad,
+    this.onGetTasks,
   }) : super(key: key);
 
   _AlumnoCardState createState() => _AlumnoCardState();
@@ -51,7 +53,6 @@ class _AlumnoCardState extends State<AlumnoCard> {
                         MemoryImage(base64Decode(widget.imagenBase64)),
                   )
                 : const Avatar(
-                    image: null,
                     size: 50,
                     placeholderIcon: Icon(Icons.school, color: Colors.white),
                   ),
@@ -94,13 +95,13 @@ class _AlumnoCardState extends State<AlumnoCard> {
                   // Accesibilidad
                   if (widget.onAccesibilidad != null)
                     TextButton.icon(
-                    onPressed: widget.onAccesibilidad,
-                    icon: const Icon(Icons.accessibility, color: Colors.teal),
-                    label: const Text('Accesibilidad'),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.teal,
+                      onPressed: widget.onAccesibilidad,
+                      icon: const Icon(Icons.accessibility, color: Colors.teal),
+                      label: const Text('Accesibilidad'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
                     ),
-                  ),
                   // Botón de Asignar tarea solo si onAssign no es null
                   if (widget.onAssign != null)
                     TextButton.icon(
@@ -108,6 +109,15 @@ class _AlumnoCardState extends State<AlumnoCard> {
                       icon:
                           const Icon(Icons.person_add_alt, color: Colors.teal),
                       label: const Text('Asignar tarea'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                      ),
+                    ),
+                  if (widget.onGetTasks != null)
+                    TextButton.icon(
+                      onPressed: widget.onGetTasks,
+                      icon: const Icon(Icons.assignment, color: Colors.teal),
+                      label: const Text('Sus tareas'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
                       ),

@@ -64,7 +64,7 @@ class _MenusPageState extends State<MenusPage> {
       body: isLoadingMenus
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Wrap(
           spacing: 8.0,
           runSpacing: 8.0,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -13,7 +15,6 @@ import 'package:tarerio/API/aulasAPI.dart';
 import 'package:tarerio/Pages/Aulas/aulas.dart';
 
 class CrearAula extends StatefulWidget {
-
   @override
   _CrearAulaState createState() => _CrearAulaState();
 }
@@ -30,6 +31,7 @@ class _CrearAulaState extends State<CrearAula> {
 
   //Variables para la imagen
   File? _image;
+  String _base64Image = '';
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -40,9 +42,12 @@ class _CrearAulaState extends State<CrearAula> {
     setState(() {
       _image = File(pickedFile.path);
     });
+
+    final bytes = await _image!.readAsBytes();
+    _base64Image = base64Encode(bytes);
   }
 
-void _showErrorModal(BuildContext context, String title, String content) {
+  void _showErrorModal(BuildContext context, String title, String content) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -71,10 +76,10 @@ void _showErrorModal(BuildContext context, String title, String content) {
   }
 
   Future<String> _testAula(BuildContext context) async {
-    var jsonResponse = await _api.crearAula(_claveController.text, _cupoController.text);
+    var jsonResponse =
+        await _api.crearAula(_claveController.text, _cupoController.text);
     if (jsonResponse['status'] == 'error') {
-      _showErrorModal(
-          context, 'Error al crear aula', jsonResponse['message']);
+      _showErrorModal(context, 'Error al crear aula', jsonResponse['message']);
     }
     Navigator.pushReplacement(
       context,
@@ -85,7 +90,6 @@ void _showErrorModal(BuildContext context, String title, String content) {
   }
 
   void _crearAula(BuildContext context) async {
-
     if (_claveController.text.isEmpty || _cupoController.text.isEmpty) {
       _showErrorModal(context, 'Falta la clave o el cupo',
           'Por favor, llena todos los campos.');
@@ -161,7 +165,7 @@ void _showErrorModal(BuildContext context, String title, String content) {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Avatar(
-                    image: _image,
+                    base64Image: _base64Image,
                     radius: 100.0,
                     backgroundColor: Colors.grey[300]!,
                     placeholderIcon: const Icon(Icons.image,

@@ -237,7 +237,7 @@ class _AulasPageState extends State<AulasPage> {
       body: isloadingAulas
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Wrap(
           spacing: 8.0,
           runSpacing: 8.0,
