@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Avatar.dart';
 
 class AulaCard extends StatelessWidget {
-  final int idUsuario;
+  final int idAula;
   final String imagenAula; // URL o ruta de la imagen
   final String claveAula;
   final int cupoAula;
@@ -12,17 +12,18 @@ class AulaCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onSeeStudents;
 
-  const AulaCard({
-    Key? key,
-    required this.idUsuario,
-    required this.imagenAula,
-    required this.claveAula,
-    required this.cupoAula,
-    required this.onAssign,
-    required this.onEdit,
-    required this.onDelete,
-    required this.onSeeStudents,
-  }) : super(key: key);
+  const AulaCard(
+      {Key? key,
+        required this.idAula,
+        required this.imagenAula,
+        required this.claveAula,
+        required this.cupoAula,
+        required this.onAssign,
+        required this.onEdit,
+        required this.onDelete,
+        required this.onSeeStudents,
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,7 @@ class AulaCard extends StatelessWidget {
               alignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 TextButton.icon(
-                  onPressed: () => {},
+                  onPressed: onEdit,
                   icon: const Icon(Icons.edit, color: Colors.teal),
                   label: const Text('Editar Aula'),
                   style: TextButton.styleFrom(

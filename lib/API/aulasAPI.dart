@@ -5,12 +5,13 @@ import 'package:tarerio/consts.dart';
 // API de Aulas
 class AulasAPI {
   // Añadir imagen y funcionalidad extra para asignar alumnos
-  Future<Map<String, dynamic>> crearAula(String clave, String cupo) async {
+  Future<Map<String, dynamic>> crearAula(String clave, String cupo, String imagenBase64) async {
     String url = '$baseUrl/aulas/create';
 
     final Map<String, dynamic> data = {
       "clave": clave,
       "capacidad": cupo,
+      "image": imagenBase64,
     };
 
     final String jsonBody = json.encode(data);
@@ -41,11 +42,9 @@ class AulasAPI {
       throw Exception('Failed to load data');
     }
   }
-
+  
   Future<List<dynamic>> filteredObtenerAulas(String claveAula) async {
     String url = '$baseUrl/aulas/filtered?claveAula=$claveAula';
-
-    print(url);
 
     final response = await http.get(
       Uri.parse(url),
@@ -60,7 +59,28 @@ class AulasAPI {
       throw Exception('Failed to filter classrooms');
     }
   }
+  
+  Future<Map<String, dynamic>> modificarAula(String id, String clave, String cupo, String imagenBase64) async {
+    String url = '$baseUrl/aulas/$id';
 
+    final Map<String, dynamic> data = {
+      "clave": clave,
+      "capacidad": cupo,
+      "image": imagenBase64,
+    };
+
+    final String jsonBody = json.encode(data);
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    );
+    return json.decode(response.body);
+  }
+  
   eliminarAula(String id) async {
     String url = '$baseUrl/aulas/$id';
 
