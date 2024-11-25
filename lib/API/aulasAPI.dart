@@ -42,7 +42,24 @@ class AulasAPI {
       throw Exception('Failed to load data');
     }
   }
+  
+  Future<List<dynamic>> filteredObtenerAulas(String claveAula) async {
+    String url = '$baseUrl/aulas/filtered?claveAula=$claveAula';
 
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if(response.statusCode == 200){
+      final List<dynamic> data = jsonDecode(response.body);
+      return data;
+    }else{
+      throw Exception('Failed to filter classrooms');
+    }
+  }
+  
   Future<Map<String, dynamic>> modificarAula(String id, String clave, String cupo, String imagenBase64) async {
     String url = '$baseUrl/aulas/$id';
 
@@ -63,8 +80,7 @@ class AulasAPI {
     );
     return json.decode(response.body);
   }
-
-
+  
   eliminarAula(String id) async {
     String url = '$baseUrl/aulas/$id';
 
