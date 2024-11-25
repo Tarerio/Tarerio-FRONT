@@ -42,6 +42,25 @@ class AulasAPI {
     }
   }
 
+  Future<List<dynamic>> filteredObtenerAulas(String claveAula) async {
+    String url = '$baseUrl/aulas/filtered?claveAula=$claveAula';
+
+    print(url);
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    if(response.statusCode == 200){
+      final List<dynamic> data = jsonDecode(response.body);
+      return data;
+    }else{
+      throw Exception('Failed to filter classrooms');
+    }
+  }
+
   eliminarAula(String id) async {
     String url = '$baseUrl/aulas/$id';
 

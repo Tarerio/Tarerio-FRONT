@@ -21,10 +21,25 @@ class _AulasPageState extends State<AulasPage> {
   bool isloadingAulas = true;
   bool isLoadingProfesores = true;
 
+  final int colorPrincipal = 0xFF2EC4B6;
+
+  //Clase para hacer peticiones a la API
+  final AulasAPI _api = AulasAPI();
+
+  // Filter aulas
+  final TextEditingController _claveController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     fetchAulas();
+  }
+
+  void _cleanFiltros(){
+    setState(() {
+      _claveController.text = '';
+      fetchAulas();
+    });
   }
 
   void _showErrorModal(BuildContext context, String title, String content) {
@@ -57,6 +72,21 @@ class _AulasPageState extends State<AulasPage> {
       print("Error al obtener aulas: $e");
       setState(() {
         isloadingAulas = false;
+      });
+    }
+  }
+
+  Future<void> _filterAulas(String claveAula ) async {
+    try {
+      final response = await _api.filteredObtenerAulas(claveAula);
+      setState(() {
+        aulas = response; // Actualiza la lista de alumnos
+        isloadingAulas = false; // Cambia el estado de carga
+      });
+    } catch (e) {
+      print("Error al obtener las Aulas: $e");
+      setState(() {
+        isloadingAulas = false; // Cambia el estado de carga incluso si hay un error
       });
     }
   }
@@ -232,6 +262,54 @@ class _AulasPageState extends State<AulasPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(
+                      Icons.refresh_sharp,
+                      color: Color(colorPrincipal),
+                  ),
+                  onPressed: () {
+                    _cleanFiltros();
+                  },
+                ),
+                SizedBox(width: 10),
+                Container(
+                  width: 213,
+                  child: TextField(
+                    controller: _claveController,
+                    decoration: InputDecoration(
+                      labelText: 'Buscar por clave',
+                      labelStyle: TextStyle(color: Color(colorPrincipal)),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                      ),
+                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                    ),
+                    onChanged: (value) async {
+                      
+                      final response = await _api.filteredObtenerAulas(value);
+                      setState(() {
+                        aulas = response;
+                      });
+                      
+                      //_filterAulas(_claveController.text);
+                    },
+                  ),
+                ),
+                SizedBox(width: 10),
+              ],
+            ),
+          ),
+        ],
       ),
       body: isloadingAulas
           ? const Center(child: CircularProgressIndicator())
