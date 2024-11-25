@@ -154,125 +154,187 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
   @override
   Widget build(BuildContext context) {
     final colorPalette = _getColorPalette(_selectedPalette);
-    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
 
-    return Scaffold(
-      appBar: Header(nickname: widget.nickname),
-      backgroundColor: colorPalette.fondo,
-      body: Column(
-        children: [
-          // Título principal
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Text(
-              "TAREAS DEL DÍA",
-              style: TextStyle(
-                fontSize: isTablet ? 75 : 32, // Ajuste según tablet o móvil
-                fontWeight: FontWeight.w800,
-                color: colorPalette.fuente,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 16),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double titleFontSize = constraints.maxWidth * 0.05;
 
-          // Área de tareas
-          Expanded(
-            child: _tareasDeHoy.isEmpty
-                ? Center(
-                    child: Text(
-                      "No hay tareas asignadas para hoy.",
-                      style: TextStyle(
-                        fontSize: isTablet ? 20 : 16,
-                      ),
-                    ),
-                  )
-                : ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount:
-                        _tareasDeHoy.length > 3 ? 3 : _tareasDeHoy.length,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    itemBuilder: (context, index) {
-                      return _buildTaskCard(
-                        _tareasDeHoy[index]['Titulo'] ?? 'Tarea sin nombre',
-                        _tareasDeHoy[index]['Descripcion'] ??
-                            'No hay descripción',
-                        _tareasDeHoy[index]['imagenBase64'] ?? '',
-                        context,
-                      );
-                    },
+        return Scaffold(
+          appBar: Header(nickname: widget.nickname),
+          backgroundColor: colorPalette.fondo,
+          body: Column(
+            children: [
+              // Título principal
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Text(
+                  "TAREAS DEL DÍA",
+                  style: TextStyle(
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.w800,
+                    color: colorPalette.fuente,
                   ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Área de tareas
+              Expanded(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.6,
+                  child: _tareasDeHoy.isEmpty
+                      ? Center(
+                          child: Text(
+                            "No hay tareas asignadas para hoy.",
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: colorPalette.fuente,
+                            ),
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: _tareasDeHoy.length > 3
+                                    ? 3
+                                    : _tareasDeHoy.length,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                itemBuilder: (context, index) {
+                                  return _buildTaskCard(
+                                    _tareasDeHoy[index]['Titulo'] ??
+                                        'Tarea sin nombre',
+                                    _tareasDeHoy[index]['Descripcion'] ??
+                                        'No hay descripción',
+                                    _tareasDeHoy[index]['imagenBase64'] ?? '',
+                                    context,
+                                    constraints,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _buildTaskCard(
-      String text, String descripcion, String imagen, BuildContext context) {
-    final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
-    final cardWidth = isTablet ? 500.0 : 300.0;
+    String text,
+    String descripcion,
+    String imagen,
+    BuildContext context,
+    BoxConstraints constraints,
+  ) {
     final colorPalette = _getColorPalette(_selectedPalette);
+    final isTablet = constraints.maxWidth >= 1200;
+    final cardWidth =
+        isTablet ? constraints.maxWidth * 0.7 : constraints.maxWidth * 0.9;
+    final cardHeight = constraints.maxHeight * 0.15;
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
+    return Focus(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
               builder: (context) => TareaAlumno(
-                    title: text,
-                    descripcion: descripcion,
-                    image: imagen,
-                    nickname: widget.nickname,
-                    colorPalette: colorPalette,
-                  )),
-        );
-      },
-      child: Card(
-        color: colorPalette.componentes,
-        elevation: 6,
-        margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: IntrinsicHeight(
-          // Ajusta la altura dinámica del Row
-          child: Row(
-            children: [
-              Semantics(
-                label: descripcion,
-                child: Container(
-                  width: cardWidth * 0.5,
-                  height: double
-                      .infinity, // Se ajusta a la altura del Row dinámicamente
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.horizontal(
-                        left: Radius.circular(16)),
-                    image: DecorationImage(
-                      image: MemoryImage(base64Decode(imagen)),
-                      fit: BoxFit
-                          .cover, // Hace que la imagen cubra el espacio disponible
+                title: text,
+                descripcion: descripcion,
+                image: imagen,
+                nickname: widget.nickname,
+                colorPalette: colorPalette,
+              ),
+            ),
+          );
+        },
+        child: Semantics(
+          label: "Tarjeta de tarea: $text",
+          button: true,
+          child: Card(
+            color: colorPalette.componentes,
+            elevation: 6,
+            margin: EdgeInsets.symmetric(
+              vertical: constraints.maxHeight * 0.04,
+              horizontal: isTablet
+                  ? constraints.maxWidth * 0.2
+                  : constraints.maxWidth * 0.1,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: SizedBox(
+              width: cardWidth,
+              height: cardHeight,
+              child: InkWell(
+                focusColor: Colors.blue.withOpacity(0.2),
+                hoverColor: Colors.blue.withOpacity(0.1),
+                splashColor: Colors.blueAccent,
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TareaAlumno(
+                        title: text,
+                        descripcion: descripcion,
+                        image: imagen,
+                        nickname: widget.nickname,
+                        colorPalette: colorPalette,
+                      ),
                     ),
-                  ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    // Imagen
+                    Semantics(
+                      label: "Imagen relacionada con la tarea",
+                      child: Container(
+                        width: cardWidth * 0.3,
+                        height: cardHeight,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.horizontal(
+                              left: Radius.circular(16)),
+                          image: DecorationImage(
+                            image: MemoryImage(base64Decode(imagen)),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // Texto de la tarea
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          text.toUpperCase(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: colorPalette.fuente,
+                            fontSize:
+                                isTablet ? constraints.maxWidth * 0.044 : 35,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    textScaler: const TextScaler.linear(0.8),
-                    text.toUpperCase(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: colorPalette.fuente,
-                      fontSize:
-                          isTablet ? 70 : 50, // Ajuste del tamaño de fuente
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

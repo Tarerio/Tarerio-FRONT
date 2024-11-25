@@ -86,12 +86,12 @@ class _HeaderState extends State<Header> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 25),
           // Title of the AppBar
           Text(
-            widget.nickname,
+            widget.nickname.toUpperCase(),
             style: const TextStyle(
-              fontSize: 30,
+              fontSize: 40,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -99,8 +99,8 @@ class _HeaderState extends State<Header> {
           TextButton.icon(
             icon: const Icon(Icons.menu_book, size: 40, color: Colors.black),
             label: const Text(
-              'Menú',
-              style: TextStyle(fontSize: 20, color: Colors.black),
+              'MENÚ',
+              style: TextStyle(fontSize: 28, color: Colors.black),
             ),
             onPressed: () {},
           ),
