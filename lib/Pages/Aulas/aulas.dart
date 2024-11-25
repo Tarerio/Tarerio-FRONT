@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:tarerio/Widgets/Cards/AulaCard.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/API/aulasAPI.dart';
-import 'package:tarerio/Pages/Aulas/crearAula.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 
+import 'crearAula.dart';
 import 'alumnosDeAula.dart';
+import 'modificarAula.dart';
 
 class AulasPage extends StatefulWidget {
   const AulasPage({super.key});
@@ -245,12 +246,17 @@ class _AulasPageState extends State<AulasPage> {
               width: MediaQuery.of(context).size.width / 5,
               height: 370,
               child: AulaCard(
-                idUsuario: aula['id_aula'],
+                idAula: aula['id_aula'],
                 claveAula: aula['clave_aula'],
                 cupoAula: aula['cupo'],
                 imagenAula: aula['imagenBase64'] ?? '',
                 onEdit: () {
-                  // Lógica para editar aula
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => 
+                      ModificarAula(claveAula: aula['clave_aula'], aulaId: aula['id_aula'], 
+                      cupoAula: aula['cupo'], imagenAula: aula['imagenBase64'] ?? ''),),
+                  );
                 },
                 onAssign: () {
                   _mostrarDialogProfesores(context, aula['id_aula']);

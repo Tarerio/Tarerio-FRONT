@@ -14,12 +14,19 @@ import 'package:tarerio/Widgets/TextFieldDefault.dart';
 import 'package:tarerio/API/aulasAPI.dart';
 import 'package:tarerio/Pages/Aulas/aulas.dart';
 
-class CrearAula extends StatefulWidget {
+class ModificarAula extends StatefulWidget {
+  final int aulaId;
+  final String claveAula;
+  final int cupoAula;
+  final String imagenAula;
+
+  ModificarAula({required this.aulaId, required this.claveAula, required this.cupoAula, required this.imagenAula});
+
   @override
-  _CrearAulaState createState() => _CrearAulaState();
+  _ModificarAulaState createState() => _ModificarAulaState();
 }
 
-class _CrearAulaState extends State<CrearAula> {
+class _ModificarAulaState extends State<ModificarAula> {
   final int colorPrincipal = 0xFF2EC4B6;
 
   //Clase para hacer peticiones a la API
@@ -32,6 +39,14 @@ class _CrearAulaState extends State<CrearAula> {
   //Variables para la imagen
   File? _image;
   String _base64Image = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _claveController.text = widget.claveAula;
+    _cupoController.text = widget.cupoAula.toString();
+    _base64Image = widget.imagenAula;
+  }
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -76,10 +91,10 @@ class _CrearAulaState extends State<CrearAula> {
   }
 
   Future<String> _testAula(BuildContext context) async {
-    var jsonResponse =
-        await _api.crearAula(_claveController.text, _cupoController.text, _base64Image);
+    var jsonResponse = await _api.modificarAula(widget.aulaId.toString(), _claveController.text, _cupoController.text, _base64Image);
     if (jsonResponse['status'] == 'error') {
-      _showErrorModal(context, 'Error al crear aula', jsonResponse['message']);
+      _showErrorModal(
+          context, 'Error al modificar aula', jsonResponse['message']);
     }
     Navigator.pushReplacement(
       context,
@@ -89,15 +104,15 @@ class _CrearAulaState extends State<CrearAula> {
     return jsonResponse['aula']['clave_aula'];
   }
 
-  void _crearAula(BuildContext context) async {
+  void _modificarAula(BuildContext context) async {
     if (_claveController.text.isEmpty || _cupoController.text.isEmpty) {
       _showErrorModal(context, 'Falta la clave o el cupo',
-          'Por favor, llena todos los campos.');
+          'Por favor, llena todos los campos.');  
     } else {
       String aula = await _testAula(context);
       if (aula != '') {
-        _showSuccessModal(context, 'Aula creada correctamente',
-            'El aula $aula ha sido creada correctamente.');
+        _showSuccessModal(context, 'Aula modificada correctamente',
+            'El aula $aula ha sido modificada correctamente.');
         _claveController.clear();
         _cupoController.clear();
       }
@@ -106,9 +121,9 @@ class _CrearAulaState extends State<CrearAula> {
 
   void _restablecerCampos() {
     setState(() {
-      _claveController.clear();
-      _cupoController.clear();
-      _image = null;
+      _claveController.text = widget.claveAula;
+      _cupoController.text = widget.cupoAula.toString();
+      _base64Image = widget.imagenAula;
     });
   }
 
@@ -116,7 +131,7 @@ class _CrearAulaState extends State<CrearAula> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarDefault(
-        title: 'Creación de aula',
+        title: 'Modificacion de aula',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
         onBackPressed: () {
@@ -187,7 +202,7 @@ class _CrearAulaState extends State<CrearAula> {
                   DefaultButton(
                     text: 'Guardar',
                     onPressed: () {
-                      _crearAula(context);
+                      _modificarAula(context);
                     },
                     color: Color(colorPrincipal),
                   )
