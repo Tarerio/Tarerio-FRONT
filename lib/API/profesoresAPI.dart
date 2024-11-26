@@ -97,4 +97,46 @@ class ProfesoresAPI {
       throw Exception('Failed to delete data');
     }
   }
+
+  Future<Map<String, dynamic>> obtenerAulaYAlumnos(String nickname) async {
+    final response = await http.get(Uri.parse('$baseUrl/profesores/aulario/obtener/$nickname'));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al obtener datos del aula y alumnos');
+    }
+  }
+
+  //profesores/pedidoMaterial/obtener/{nickname}
+  Future<Map<String, dynamic>> obtenerPedidos(String nickname) async {
+    final response = await http.get(Uri.parse('$baseUrl/profesores/pedidoMaterial/obtener/$nickname'));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al obtener pedidos de material');
+    }
+  }
+
+  Future<Map<String, dynamic>> crearPedidoMaterial(String nickname, List<Map<String, dynamic>> materiales) async {
+    final Map<String, dynamic> data = {
+      'nickname': nickname,
+      'materiales': materiales,
+    };
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/profesores/pedidoMaterial/crear'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al crear pedido de material');
+    }
+  }
 }

@@ -61,16 +61,25 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
   }
 
   Future<String> _testRegistrar(BuildContext context) async {
-    var jsonResponse = await _api.registrarProfesor(
-      _nicknameController.text,
-      _patronController.text,
-      _base64Image,
-    );
-    if (jsonResponse['status'] == 'error') {
-      _showErrorModal(
-          context, 'Error al registrar profesor', jsonResponse['message']);
+    try {
+      var jsonResponse = await _api.registrarProfesor(
+        _nicknameController.text,
+        _patronController.text,
+        _base64Image,
+      );
+
+      if (jsonResponse == null || jsonResponse['status'] == 'error') {
+        _showErrorModal(
+            context, 'Error al registrar profesor', jsonResponse?['message'] ?? 'Unknown error');
+        return '';
+      }
+
+      return jsonResponse['profesor']['nickname'];
+    } catch (e) {
+      print("Error: $e");
+      _showErrorModal(context, 'Error', 'Error al registrar profesor');
+      return '';
     }
-    return jsonResponse['profesor']['nickname'];
   }
 
   void _registrarProfesor(BuildContext context) async {
@@ -79,7 +88,7 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
           'Por favor, llena todos los campos.');
     } else {
       String profesor = await _testRegistrar(context);
-      if (profesor != '') {
+      if (profesor.isNotEmpty) {
         _showSuccessModal(context, 'Profesor creado correctamente',
             'El profesor $profesor ha sido creado correctamente.');
         _restablecerCampos();

@@ -130,7 +130,6 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
                 onChanged: (dynamic newValue) {
                   setState(() {
                     alumnoSeleccionado = newValue;
-                    print(alumnoSeleccionado);
                   });
                 },
               ),
@@ -175,27 +174,38 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
+          : alumnos.isEmpty
+          ? Center(
+        child: Text(
+          'Aún no hay alumnos asignados',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          ),
+        ),
+      )
           : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 8.0, // Space between cards horizontally
-                runSpacing: 8.0, // Space between cards vertically
-                children: alumnos.map((alumno) {
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width / 6,
-                    height: 250,
-                    child: AlumnoDeAulaCard(
-                      id_usuario: alumno['id_usuario'],
-                      imagenBase64: alumno['imagenBase64'] ?? '',
-                      nickname: alumno["nickname"],
-                      onDelete: () {
-                        eliminarAlumnoAula(alumno['id_usuario']);
-                      },
-                    ),
-                  );
-                }).toList(),
+        padding: const EdgeInsets.all(8.0),
+        child: Wrap(
+          spacing: 8.0, // Space between cards horizontally
+          runSpacing: 8.0, // Space between cards vertically
+          children: alumnos.map((alumno) {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width / 6,
+              height: 250,
+              child: AlumnoDeAulaCard(
+                id_usuario: alumno['id_usuario'],
+                imagenBase64: alumno['imagenBase64'] ?? '',
+                nickname: alumno["nickname"],
+                onDelete: () {
+                  eliminarAlumnoAula(alumno['id_usuario']);
+                },
               ),
-            ),
+            );
+          }).toList(),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: alumnos.length >= widget.cupoAula
             ? null

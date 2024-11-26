@@ -175,7 +175,6 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                       setState(() {
                         estado = newValue;
                         _filtrarTareas();
-                        print(estado);
                       });
                     },
                     borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -210,7 +209,6 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                       if (pickedDate != null) {
                         setState(() {
                           fecha = "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-                          print(fecha);
                           _filtrarTareas();
                         });
                       }
@@ -224,7 +222,15 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
         ],
       ),
       body: tareas.isEmpty
-          ? Center(child: Text('No hay tareas asignadas a ${widget.nickname}.'))
+          ? Center(child: Text(
+        'Aún tiene tareas asignadas',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+        ),
+      ))
+
           : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

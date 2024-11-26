@@ -4,6 +4,7 @@ import 'package:tarerio/Pages/Administrador/principalAdministrador.dart';
 
 import '../Widgets/AppBarDefault.dart';
 import '../consts.dart';
+import 'Profesores/aularioProfesor.dart';
 
 class InicioAdministrador extends StatelessWidget {
   InicioAdministrador({super.key});
@@ -80,10 +81,10 @@ class InicioAdministrador extends StatelessWidget {
 
     if (profesor.isNotEmpty) {
       print('Profesor');
-      // Navigator.push( // TO ADD
-      //   context,
-      //   MaterialPageRoute(builder: (context) => PrincipalProfesor()),
-      // );
+       Navigator.push( // TO ADD
+         context,
+         MaterialPageRoute(builder: (context) => AularioPage(nickname: usuarioController.text )),
+       );
     } else {
       _showErrorModal(context, 'Error al iniciar sesión',
           'Usuario o contraseña incorrectos.');
