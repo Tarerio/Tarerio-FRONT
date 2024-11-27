@@ -88,7 +88,7 @@ class _InicioAlumnoState extends State<InicioAlumno> {
 
     return Scaffold(
       appBar: AppBarDefault(
-        title: 'Inicio de sesión',
+        title: 'INICIO DE SESIÓN',
         titleColor: Color(colorPrincipal),
         iconColor: Color(colorPrincipal),
       ),
@@ -169,7 +169,7 @@ class _InicioAlumnoState extends State<InicioAlumno> {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  nickname,
+                                  nickname.toUpperCase(),
                                   style: const TextStyle(fontSize: 20),
                                   maxLines: 1, // Limita a una sola línea
                                   overflow: TextOverflow.ellipsis, // Aplica elipsis en caso de overflow

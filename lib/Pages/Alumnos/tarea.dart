@@ -23,7 +23,12 @@ class TareaAlumno extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Header(nickname: nickname),
+      appBar: Header(
+        nickname: nickname,
+        colorPalette: colorPalette,
+        titleFontSize: 28,
+        textFontSize: 16,
+      ),
       backgroundColor: colorPalette.fondo,
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -52,16 +57,16 @@ class TareaAlumno extends StatelessWidget {
                   width: isTablet ? constraints.maxWidth * 0.8 : constraints.maxWidth * 0.9,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    image: DecorationImage(
-                      image: MemoryImage(base64Decode(image)),
-                      fit: BoxFit.cover,
-                    ),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Image.memory(base64Decode(image)),
                   ),
                 ),
                 const SizedBox(height: 24),
                 // Descripción de la tarea
                 Text(
-                  descripcion,
+                  descripcion.toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: isTablet ? 20 : 16,
@@ -71,49 +76,55 @@ class TareaAlumno extends StatelessWidget {
                 ),
                 const Spacer(),
                 // Botón para comenzar tarea
-                SizedBox(
-                  width: double.infinity,
-                  height: isTablet ? 80 : 60,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorPalette.componentes,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 300),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: isTablet ? 80 : 60,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorPalette.componentes,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      'COMENZAR TAREA',
-                      style: TextStyle(
-                        fontSize: isTablet ? 24 : 18,
-                        fontWeight: FontWeight.bold,
-                        color: colorPalette.fuente,
+                      child: Text(
+                        'COMENZAR TAREA',
+                        style: TextStyle(
+                          fontSize: isTablet ? 24 : 18,
+                          fontWeight: FontWeight.bold,
+                          color: colorPalette.fuente,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 16),
                 // Botón para volver atrás
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[400],
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 300),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[400],
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      'VOLVER ATRÁS',
-                      style: TextStyle(
-                        fontSize: isTablet ? 20 : 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                      child: Text(
+                        'VOLVER ATRÁS',
+                        style: TextStyle(
+                          fontSize: isTablet ? 20 : 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
                   ),

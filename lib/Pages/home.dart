@@ -82,7 +82,7 @@ class Home extends StatelessWidget {
                     Icon(Icons.school, size: 50,),
                     SizedBox(height: 5, width: 200,), // Reduce the space between icon and text
                     Text(
-                      'Alumno',
+                      'ALUMNO',
                       style: TextStyle(
                         fontSize: 30,
                         color: Colors.orange,

@@ -101,7 +101,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Color(0xFF2EC4B6), size: 30),
         toolbarHeight: 110,
-        title: Text('Bienvenido: ${widget.nickname}',
+        title: Text('BIENVENIDO: ${widget.nickname.toUpperCase()}',
             style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -134,7 +134,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                 const Padding(
                   padding: EdgeInsets.only(top: 20.0),
                   child: Text(
-                    'Ingrese su patrón:',
+                    'INGRESE SU PATRÓN:',
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -202,7 +202,19 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                     shadowColor: Colors.black,
                     elevation: 10,
                   ),
-                  child: const Icon(Icons.thumb_up, size: 30),
+                  // Añade texto al botón
+
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.login, size: 24),
+                      SizedBox(width: 8),
+                      Text(
+                        'INICIAR SESIÓN',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

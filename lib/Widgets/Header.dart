@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../API/alumnosAPI.dart';
+import '../Models/menuAccesible.dart'; // Assuming you have a ColorPalette model
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
   final String nickname;
+  final ColorPalette colorPalette;
+  final double titleFontSize;
+  final double textFontSize;
 
   const Header({
     super.key,
     required this.nickname,
+    required this.colorPalette,
+    required this.titleFontSize,
+    required this.textFontSize,
   });
 
   @override
@@ -59,6 +66,7 @@ class _HeaderState extends State<Header> {
       toolbarHeight: 100, // Adjust the height of the AppBar
       elevation: 4,
       shadowColor: Colors.black,
+      backgroundColor: widget.colorPalette.componentes,
       title: Row(
         children: [
           // User image or initial with background color
@@ -79,9 +87,9 @@ class _HeaderState extends State<Header> {
               backgroundColor: avatarColor,
               child: Text(
                 initial,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 30,
+                  fontSize: widget.textFontSize,
                 ),
               ),
             ),
@@ -90,17 +98,18 @@ class _HeaderState extends State<Header> {
           // Title of the AppBar
           Text(
             widget.nickname.toUpperCase(),
-            style: const TextStyle(
-              fontSize: 40,
+            style: TextStyle(
+              fontSize: widget.titleFontSize,
               fontWeight: FontWeight.w600,
+              color: widget.colorPalette.fuente,
             ),
           ),
           const Spacer(), // Pushes the menu icon to the right
           TextButton.icon(
-            icon: const Icon(Icons.menu_book, size: 40, color: Colors.black),
-            label: const Text(
+            icon: Icon(Icons.menu_book, size: 30, color: widget.colorPalette.fuente),
+            label: Text(
               'MENÚ',
-              style: TextStyle(fontSize: 28, color: Colors.black),
+              style: TextStyle(fontSize: 30, color: widget.colorPalette.fuente),
             ),
             onPressed: () {},
           ),

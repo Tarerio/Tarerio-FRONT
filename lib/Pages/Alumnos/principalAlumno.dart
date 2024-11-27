@@ -160,7 +160,12 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
         double titleFontSize = constraints.maxWidth * 0.05;
 
         return Scaffold(
-          appBar: Header(nickname: widget.nickname),
+          appBar: Header(
+            nickname: widget.nickname,
+            colorPalette: colorPalette,
+            titleFontSize: 28,
+            textFontSize: 16,
+          ),
           backgroundColor: colorPalette.fondo,
           body: Column(
             children: [
@@ -186,7 +191,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                   child: _tareasDeHoy.isEmpty
                       ? Center(
                           child: Text(
-                            "No hay tareas asignadas para hoy.",
+                            "NO HAY TAREAS PARA EL USUARIO EL DÍA DE HOY.",
                             style: TextStyle(
                               fontSize: 25,
                               color: colorPalette.fuente,
@@ -304,13 +309,12 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                       child: Container(
                         width: cardWidth * 0.3,
                         height: cardHeight,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.horizontal(
-                              left: Radius.circular(16)),
-                          image: DecorationImage(
-                            image: MemoryImage(base64Decode(imagen)),
-                            fit: BoxFit.cover,
-                          ),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+                        ),
+                        child: FittedBox(
+                          fit: BoxFit.contain,
+                          child: Image.memory(base64Decode(imagen)),
                         ),
                       ),
                     ),
@@ -324,8 +328,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: colorPalette.fuente,
-                            fontSize:
-                                isTablet ? constraints.maxWidth * 0.044 : 35,
+                            fontSize: 30,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
