@@ -239,90 +239,82 @@ Interfaz para que el alumno seleccione su patrón para iniciar sesión.
 
 ### Pantalla Asignar Alumno a Aula
 Interfaz que permite asignar a un alumno a una aula específica, facilitando la organización y gestión de las aulas en el sistema.  
-![Asignar Alumno a Aula]( )
+![Asignar Alumno a Aula]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/asignarAlumnoAAula.png?raw=true)
 
 ### Pantalla Asignar Alumno a Tarea
 Pantalla diseñada para asignar tareas específicas a alumnos, personalizando su plan de actividades.  
-![Asignar Alumno a Tarea]( )
+![Asignar Alumno a Tarea]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/asignarAlumnoATarea.png?raw=true)
 
 ### Pantalla Asignar Profesor a Aula
 Interfaz para asignar a un profesor a una aula específica, organizando las aulas de acuerdo con el personal docente disponible.  
-![Asignar Profesor a Aula]( )
+![Asignar Profesor a Aula]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/asignarProfesorAAula.png?raw=true)
 
 ### Pantalla Aulario Profesor
 Vista que muestra el aula asignada al profesor, junto con los alumnos bajo su supervisión.  
-![Aulario Profesor]( )
+![Aulario Profesor](https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/aularioProfesor.png?raw=true )
 
 ### Pantalla Crear Pedido de Material
 Permite a los profesores realizar pedidos de materiales necesarios para llevar a cabo actividades y tareas asignadas.  
-![Crear Pedido de Material]( )
-
-### Pantalla Diagrama
-Visualización esquemática o estructural de los procesos y flujos dentro del sistema.  
-![Diagrama]( )
+![Crear Pedido de Material](https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/crearPedidoMaterial.png?raw=true )
 
 ### Pantalla Editar Alumno
 Interfaz para modificar los datos de un alumno, incluyendo información personal y académica.  
-![Editar Alumno]( )
+![Editar Alumno]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/editarAlumno.png?raw=true)
 
 ### Pantalla Editar Subtarea
 Permite realizar modificaciones a subtareas ya creadas dentro de una tarea mayor.  
-![Editar Subtarea]( )
+![Editar Subtarea](https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/editarSubTarea.png?raw=true )
 
 ### Pantalla Editar Tarea
 Interfaz para ajustar o actualizar información de tareas previamente asignadas.  
-![Editar Tarea]( )
+![Editar Tarea]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/editarTarea.png?raw=true)
 
 ### Pantalla Filtrar Alumnos
 Herramienta para buscar y filtrar alumnos en la base de datos según diferentes criterios.  
-![Filtrar Alumnos]( )
+![Filtrar Alumnos]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/filtrarAlumnos.png?raw=true)
 
 ### Pantalla Filtrar Profesores
 Permite realizar búsquedas avanzadas y filtrar la lista de profesores por criterios específicos.  
-![Filtrar Profesores]( )
+![Filtrar Profesores](https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/filtrarProfesores.png?raw=true )
 
 ### Pantalla Listar Aulas
 Muestra un listado de todas las aulas registradas, con opciones de filtro y visualización detallada.  
-![Listar Aulas]( )
+![Listar Aulas]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/listarAlumnos.png?raw=true)
 
 ### Pantalla Listar Alumnos
 Despliega una lista de alumnos disponibles, con opciones para buscar y filtrar según diferentes parámetros.  
-![Listar Alumnos]( )
+![Listar Alumnos]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/listarAlumnos.png?raw=true)
 
 ### Pantalla Listar Profesores
 Pantalla que muestra una lista de profesores registrados en el sistema, con opciones de búsqueda y filtrado.  
-![Listar Profesores]( )
+![Listar Profesores]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/listarProfesores.png?raw=true)
 
 ### Pantalla Listar Tareas
 Interfaz que presenta un listado general de todas las tareas registradas en el sistema.  
-![Listar Tareas]( )
+![Listar Tareas]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/listarTareas.png?raw=true)
 
 ### Pantalla Listar Tareas Asignadas
 Muestra las tareas que han sido asignadas a alumnos, con detalles de estado y fechas.  
-![Listar Tareas Asignadas]( )
+![Listar Tareas Asignadas](https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/listarTareasAsignadas.png?raw=true )
 
 ### Pantalla Menú Accesible
 Menú diseñado para cumplir con los estándares de accesibilidad, facilitando su uso para personas con discapacidades visuales.  
-![Menú Accesible]( )
+![Menú Accesible]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/menuAccesible.png?raw=true)
 
 ### Pantalla Menú Alumno Accesible
 Interfaz accesible específicamente diseñada para los alumnos, con opciones adaptadas a sus necesidades.  
-![Menú Alumno Accesible]( )
+![Menú Alumno Accesible]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/menuAlumnoAccesible.png?raw=true)
 
 ### Pantalla Modificar Aula
 Permite editar la información de un aula registrada, incluyendo asignaciones de alumnos y profesores.  
-![Modificar Aula]( )
-
-### Pantalla Principal
-Pantalla inicial del sistema que ofrece acceso rápido a las funcionalidades principales según el rol del usuario.  
-![Pantalla Principal]( )
+![Modificar Aula]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/modAula.png?raw=true)
 
 ### Pantalla Pedidos de Material
 Muestra los pedidos de materiales realizados, con detalles sobre estado y disponibilidad.  
-![Pedidos de Material]( )
+![Pedidos de Material]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/pedidosMaterial.png?raw=true)
 
 ### Pantalla Visualizar Tarea
 Interfaz que permite ver los detalles completos de una tarea asignada a un alumno.  
-![Visualizar Tarea]( )
+![Visualizar Tarea]( https://github.com/Tarerio/Tarerio-FRONT/blob/develop/mockups/visualizarTarea.png?raw=true)
 
 ¡Gracias por tu interés en TARERIO!
