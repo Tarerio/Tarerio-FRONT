@@ -139,4 +139,14 @@ class ProfesoresAPI {
       throw Exception('Error al crear pedido de material');
     }
   }
+
+  Future<Map<String, dynamic>> marcarPedidoRecibido(int idPedido) async {
+    final response = await http.put(Uri.parse('$baseUrl/profesores/pedidoMaterial/marcarPedido/$idPedido'));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al marcar pedido como recibido');
+    }
+  }
 }

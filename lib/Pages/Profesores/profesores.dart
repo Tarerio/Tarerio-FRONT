@@ -4,8 +4,6 @@ import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/Cards/ProfesorCard.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 import 'package:tarerio/Widgets/ErrorModal.dart';
-
-
 import '../../API/profesoresAPI.dart';
 import '../../consts.dart';
 
@@ -174,8 +172,9 @@ Widget build(BuildContext context) {
                             id_usuario: profesor['id_usuario'],
                             imagenBase64: profesor['imagenBase64'] ?? '',
                             nickname: profesor["nickname"],
-                            onAssign: () {
-                              // Lógica para asignar profesor
+                            onPedidosMaterial: () {
+                              Navigator.pushNamed(context, '/administrador/profesores/pedidos',
+                                  arguments: profesor["nickname"]);
                             },
                             onDelete: () {
                               _confirmarEliminacion(profesor['id_usuario'].toString());

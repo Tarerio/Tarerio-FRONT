@@ -171,5 +171,30 @@ class TareaJuegoAPI {
     }
   }
 
+  Future<void> markAsDone(int idTarea, String idAlumno) async {
+    String url = '$baseUrl/tareaJuego/marcarTarea/marcar';
+
+    final Map<String, dynamic> body = {
+      "nickname": idAlumno,
+      "ID_tarea": idTarea,
+      "completado": true,
+      "revisado": true
+    };
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to mark task as done');
+    }
+
+  }
   
 }

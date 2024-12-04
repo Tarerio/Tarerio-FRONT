@@ -13,22 +13,7 @@ import '../../Widgets/ErrorModal.dart';
 import '../../Widgets/SuccessModal.dart';
 import '../../Widgets/TextFieldDefault.dart';
 import '../../consts.dart';
-
-class Respuesta {
-  String? respuesta;
-  bool? realizado;
-
-  Respuesta({this.respuesta, this.realizado});
-}
-
-class Enunciado {
-  String? texto;
-  String? imagen;
-  String? video;
-  Respuesta? respuesta;
-
-  Enunciado({this.texto, this.imagen, this.video});
-}
+import 'package:tarerio/Models/enunciado.dart';
 
 class CrearTareaPeticion extends StatefulWidget {
   final int idAdministrador;

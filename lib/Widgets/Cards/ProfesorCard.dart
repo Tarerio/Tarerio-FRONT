@@ -5,39 +5,48 @@ import 'package:tarerio/Widgets/Avatar.dart';
 import 'package:tarerio/API/profesoresAPI.dart';
 import 'package:tarerio/Widgets/SuccessModal.dart';
 
-class ProfesorCard extends StatelessWidget {
+class ProfesorCard extends StatefulWidget {
   final int id_usuario;
   final String imagenBase64; // URL o ruta de la imagen
   final String nickname;
-  final VoidCallback onAssign;
   final VoidCallback onDelete;
+  final VoidCallback? onPedidosMaterial;
 
   const ProfesorCard({
     Key? key,
     required this.id_usuario,
     required this.imagenBase64,
     required this.nickname,
-    required this.onAssign,
     required this.onDelete,
+    this.onPedidosMaterial,
   }) : super(key: key);
 
-  // Future<void> _borrarAula(String idProfesor) async {
-  //   try {
-  //     AulasAPI api = AulasAPI();
-  //     await api.eliminarAula(idProfesor);
-  //     setState(() {
-  //       aulas.removeWhere((aula) => aula['id'] == id);
-  //     });
-  //     SuccessModal(
-  //       content: "Profesor Eliminado Correctamente",
-  //       title: "Exito",
-  //       key: idProfesor,
-  //     );
-  //   } catch (e) {
-  //     print("Error al eliminar aula: $e");
-  //     _showErrorModal(context, "Error", "Error al eliminar el aula");
-  //   }
-  // }
+  @override
+  _ProfesorCardState createState() => _ProfesorCardState();
+}
+
+class _ProfesorCardState extends State<ProfesorCard> {
+  bool hasPendingPedidos = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPedidos();
+  }
+
+  Future<void> fetchPedidos() async {
+    try {
+      ProfesoresAPI api = ProfesoresAPI();
+      final response = await api.obtenerPedidos(widget.nickname);
+      final List<dynamic> allPedidos = response['pedidos'] ?? [];
+
+      setState(() {
+        hasPendingPedidos = allPedidos.any((pedido) => pedido['estado'] == 'Pendiente');
+      });
+    } catch (e) {
+      print("Error al obtener pedidos: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,19 +64,19 @@ class ProfesorCard extends StatelessWidget {
           children: <Widget>[
             const SizedBox(height: 15),
             // Imagen del profesor
-            imagenBase64.isNotEmpty
+            widget.imagenBase64.isNotEmpty
                 ? CircleAvatar(
-                    radius: 50, // Adjust the size as needed
-                    backgroundImage: MemoryImage(base64Decode(imagenBase64)),
-                  )
+              radius: 50, // Adjust the size as needed
+              backgroundImage: MemoryImage(base64Decode(widget.imagenBase64)),
+            )
                 : const Avatar(
-                    size: 50,
-                  ),
+              size: 50,
+            ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                nickname,
+                widget.nickname,
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -84,7 +93,7 @@ class ProfesorCard extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamed(
                         context, '/administrador/profesores/editarContrasenia',
-                        arguments: id_usuario);
+                        arguments: widget.id_usuario);
                   },
                   icon: const Icon(Icons.key, color: Colors.teal),
                   label: const Text('Editar Contraseña'),
@@ -92,14 +101,38 @@ class ProfesorCard extends StatelessWidget {
                     foregroundColor: Colors.teal,
                   ),
                 ),
+                if (widget.onPedidosMaterial != null)
+                  TextButton.icon(
+                    onPressed: widget.onPedidosMaterial,
+                    icon: const Icon(Icons.list, color: Colors.teal),
+                    label: Row(
+                      children: [
+                        const Text('Pedidos Material'),
+                        if (hasPendingPedidos)
+                          Container(
+                            margin: const EdgeInsets.only(left: 8.0),
+                            width: 12,
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: Colors.deepOrange,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                      ],
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.teal,
+                    ),
+                  ),
                 TextButton.icon(
-                  onPressed: onDelete,
+                  onPressed: widget.onDelete,
                   icon: const Icon(Icons.delete, color: Colors.deepOrange),
                   label: const Text('Eliminar'),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.deepOrange,
                   ),
                 ),
+
               ],
             ),
           ],
