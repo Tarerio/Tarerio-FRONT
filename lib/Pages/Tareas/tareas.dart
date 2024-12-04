@@ -11,7 +11,8 @@ import 'package:tarerio/Pages/Tareas/crearTareaPorPasos.dart';
 import 'package:tarerio/Pages/Tareas/crearTareaPeticion.dart';
 import 'dart:async';
 import 'package:tarerio/consts.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../../Widgets/ConfirmationModal.dart';
 import '../../Widgets/ErrorModal.dart';
 import '../../Widgets/SuccessModal.dart';
@@ -24,6 +25,8 @@ class TareasPage extends StatefulWidget {
 }
 
 class _TareasPageState extends State<TareasPage> {
+  int? idAdministrador;
+
   List<Map<String, dynamic>> Tareas = []; // Lista para almacenar las tareas
   bool isLoading = true; // Indicador de carga
 
@@ -44,6 +47,18 @@ class _TareasPageState extends State<TareasPage> {
   void initState() {
     super.initState();
     fetchTareas(); // Obtener tareas
+    _loadIdAdministrador();
+  }
+
+  Future<void> _loadIdAdministrador() async {
+    try {
+      final id = await fetchIdAdministrador();
+      setState(() {
+        idAdministrador = id;
+      });
+    } catch (e) {
+      print('Failed to load idAdministrador: $e');
+    }
   }
 
   void _cleanFiltros(){
@@ -52,6 +67,17 @@ class _TareasPageState extends State<TareasPage> {
       nombreTareaController.text = '';
       fetchTareas();
     });
+  }
+
+  Future<int> fetchIdAdministrador() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/administradores/getIdAdmin'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['id'];
+    } else {
+      throw Exception('Failed to load idAdministrador');
+    }
   }
 
   Future<void> fetchTareas() async {
@@ -307,6 +333,19 @@ class _TareasPageState extends State<TareasPage> {
   }
 
   void _showTaskTypeDialog(BuildContext context) {
+    if (idAdministrador == null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ErrorModal(
+            title: "Error",
+            content: "El idAdministrador no se ha cargado correctamente.",
+          );
+        },
+      );
+      return;
+    }
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -322,7 +361,7 @@ class _TareasPageState extends State<TareasPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          CrearTareaJuego(IdAdministrador: 1)),
+                          CrearTareaJuego(IdAdministrador: idAdministrador!)),
                 );
               },
             ),
@@ -335,7 +374,7 @@ class _TareasPageState extends State<TareasPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          CrearTareaPorPasos(idAdministrador: 1)),
+                          CrearTareaPorPasos(idAdministrador: idAdministrador!)),
                 );
               },
             ),
@@ -348,7 +387,7 @@ class _TareasPageState extends State<TareasPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          CrearTareaPeticion(idAdministrador: 1)),
+                          CrearTareaPeticion(idAdministrador: idAdministrador!)),
                 );
               },
             ),
@@ -357,5 +396,4 @@ class _TareasPageState extends State<TareasPage> {
       },
     );
   }
-
 }

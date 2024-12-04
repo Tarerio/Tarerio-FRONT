@@ -13,6 +13,7 @@ class TareaCard extends StatefulWidget {
   final VoidCallback? onAssign;
   final VoidCallback? onDelete;
   final VoidCallback? onSelect;
+  final VoidCallback? onRevisar;
 
   const TareaCard({
     Key? key,
@@ -25,6 +26,7 @@ class TareaCard extends StatefulWidget {
     this.onAssign,
     this.onDelete,
     this.onSelect,
+    this.onRevisar,
   }) : super(key: key);
 
   @override
@@ -42,10 +44,9 @@ class _TareaCardState extends State<TareaCard> {
       case TAREA_POR_PASOS:
         return const Icon(Icons.list_rounded, color: Colors.white);
       default:
-        return const Icon(Icons.edit_square, color: Colors.white); // Icono por defecto
+        return const Icon(Icons.edit_square, color: Colors.white); // Default icon
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +76,7 @@ class _TareaCardState extends State<TareaCard> {
               ),
             ),
             const SizedBox(height: 15),
-            // Imagen de la tarea
+            // Task image
             widget.imagenBase64.isNotEmpty
                 ? CircleAvatar(
               radius: 50,
@@ -85,7 +86,7 @@ class _TareaCardState extends State<TareaCard> {
               size: 50,
               placeholderIcon: _getIconForTipoTarea(widget.tipo),
             ),
-            // Nombre de la tarea
+            // Task title
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -99,11 +100,12 @@ class _TareaCardState extends State<TareaCard> {
                 ),
               ),
             ),
-            // Botones de Editar, Asignar, Eliminar y Seleccionar
+            // Buttons for Edit, Assign, Delete, Select, and Review
             if (widget.onEdit != null ||
                 widget.onAssign != null ||
                 widget.onDelete != null ||
-                widget.onSelect != null)
+                widget.onSelect != null ||
+                widget.onRevisar != null)
               OverflowBar(
                 alignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
@@ -119,8 +121,7 @@ class _TareaCardState extends State<TareaCard> {
                   if (widget.onAssign != null)
                     TextButton.icon(
                       onPressed: widget.onAssign,
-                      icon:
-                          const Icon(Icons.person_add_alt, color: Colors.teal),
+                      icon: const Icon(Icons.person_add_alt, color: Colors.teal),
                       label: const Text('Asignar a Alumno'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
@@ -138,11 +139,22 @@ class _TareaCardState extends State<TareaCard> {
                   if (widget.onSelect != null)
                     TextButton.icon(
                       onPressed: widget.onSelect,
-                      icon:
-                          const Icon(Icons.assignment_add, color: Colors.teal),
+                      icon: const Icon(Icons.assignment_add, color: Colors.teal),
                       label: const Text('Seleccionar'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
+                      ),
+                    ),
+                  if (widget.onRevisar != null)
+                    TextButton.icon(
+                      onPressed: widget.onRevisar,
+                      icon: const Icon(Icons.check, color: Colors.teal),
+                      label: const Text('Revisar' , style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold, fontSize: 20)),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.teal,
+                        backgroundColor: Colors.white,
+                        shadowColor: Colors.teal,
+                        elevation: 4,
                       ),
                     ),
                 ],

@@ -84,6 +84,7 @@ flutter:
     - assets/images/insectos/insectos1.png
     - assets/images/insectos/insectos2.png
     - assets/images/insectos/insectos3.png
+    - assets/images/tareapeticion.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

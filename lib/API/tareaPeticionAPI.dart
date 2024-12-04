@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../Pages/Tareas/crearTareaPeticion.dart';
 import 'package:tarerio/consts.dart';
+import 'package:tarerio/Models/enunciado.dart';
+import 'package:tarerio/API/profesoresAPI.dart';
 
 // API de TareaPeticion
 class TareaPeticionAPI {
+
+  ProfesoresAPI profesoresAPI = ProfesoresAPI();
+
   Future<Map<String, dynamic>?> crearTareaPeticion(
       String titulo,
       String descripcion,
@@ -186,5 +190,75 @@ class TareaPeticionAPI {
     } else {
       throw Exception('Failed to load tasks');
     }
+  }
+
+  Future<void> createAndAssignTask(
+      String titulo,
+      String descripcion,
+      DateTime fechaCreacion,
+      int idAdministrador,
+      List<Enunciado> enunciados,
+      String imagen,
+      int idAlumno,
+      DateTime dueDate,
+      int id_pedido
+      ) async {
+    try {
+
+      // Create the task
+      final taskResponse = await crearTareaPeticion(
+          titulo,
+          descripcion,
+          fechaCreacion,
+          idAdministrador,
+          enunciados,
+          imagen
+      );
+
+      print( 'Task created with ID: ' + taskResponse.toString());
+
+      if (taskResponse != null) {
+        final int idTarea = taskResponse['ID_tarea'];
+
+        // Assign the task to the student
+        final TimeOfDay dueTime = TimeOfDay(hour: 20, minute: 0); // 8 PM
+        final int stepPage = 3;
+
+        await asignarAlumnoTarea(idTarea, idAlumno, dueDate, dueTime, stepPage);
+
+        await profesoresAPI.marcarPedidoRecibido(id_pedido);
+      } else {
+        throw Exception('Failed to create task');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to create and assign task');
+    }
+  }
+
+  Future<void> markAsDone(int idTarea, String idAlumno) async {
+    String url = '$baseUrl/tareaPeticion/marcarTarea/marcar';
+
+    final Map<String, dynamic> body = {
+      "nickname": idAlumno,
+      "ID_tarea": idTarea,
+      "completado": true,
+      "revisado": true
+    };
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to mark task as done');
+    }
+
   }
 }

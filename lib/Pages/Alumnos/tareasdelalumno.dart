@@ -64,6 +64,31 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
     return null;
   }
 
+  void _markTaskAsDone(int idTarea, String idAlumno, String tipo) async {
+    try {
+      switch (tipo) {
+        case 'TareaJuego':
+          TareaJuegoAPI juegoAPI = TareaJuegoAPI();
+          await juegoAPI.markAsDone(idTarea, idAlumno);
+          break;
+        case 'TareaPeticion':
+          TareaPeticionAPI peticionAPI = TareaPeticionAPI();
+          await peticionAPI.markAsDone(idTarea, idAlumno);
+          break;
+        case 'TareaPorPasos':
+          TareaPorPasosAPI porPasosAPI = TareaPorPasosAPI();
+          await porPasosAPI.markAsDone(idTarea, idAlumno);
+          break;
+        default:
+          throw Exception('Tipo de tarea no reconocido');
+      }
+      // Optionally, refresh the task list after marking as done
+      _cargarTareas();
+    } catch (e) {
+      print('Error marking task as done: $e');
+    }
+  }
+
   Future<void> _cargarTareas() async {
     TareaJuegoAPI juegoAPI = TareaJuegoAPI();
     TareaPeticionAPI peticionAPI = TareaPeticionAPI();
@@ -261,6 +286,11 @@ class _TareasDelAlumnoState extends State<TareasDelAlumno> {
                       descripcion: details['Descripcion'],
                       imagenBase64: details['imagenBase64'] ?? '',
                       tipo: tipo,
+                      onRevisar: tarea['completado'] && !tarea['revisado']
+                          ? () {
+                        _markTaskAsDone(details['ID_tarea'], widget.nickname, tipo);
+                      }
+                          : null,
                     ),
                     Positioned(
                       top: 8,
