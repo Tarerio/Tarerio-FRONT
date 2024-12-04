@@ -139,4 +139,36 @@ class ProfesoresAPI {
       throw Exception('Error al crear pedido de material');
     }
   }
+
+  getProfesor(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/profesores/$id'));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['profesor'];
+    } else {
+      throw Exception('Error al obtener el profesor');
+    }
+  }
+
+  editarProfesor(int idUsuario, String nickname, String base64image) async {
+    final Map<String, dynamic> data = {
+      'nickname': nickname,
+      'image': base64image,
+    };
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/profesores/$idUsuario'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al editar profesor');
+    }
+
+  }
 }
