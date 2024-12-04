@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../API/alumnosAPI.dart';
 import '../Models/menuAccesible.dart'; // Assuming you have a ColorPalette model
+import '../Pages/Alumnos/menuAlumno.dart';
 
 class Header extends StatefulWidget implements PreferredSizeWidget {
   final String nickname;
@@ -21,7 +22,8 @@ class Header extends StatefulWidget implements PreferredSizeWidget {
   _HeaderState createState() => _HeaderState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(100); // Define the size of the AppBar
+  Size get preferredSize =>
+      const Size.fromHeight(100); // Define the size of the AppBar
 }
 
 class _HeaderState extends State<Header> {
@@ -58,7 +60,8 @@ class _HeaderState extends State<Header> {
 
   @override
   Widget build(BuildContext context) {
-    String initial = widget.nickname.isNotEmpty ? widget.nickname[0].toUpperCase() : 'U';
+    String initial =
+        widget.nickname.isNotEmpty ? widget.nickname[0].toUpperCase() : 'U';
     Color avatarColor = _getColorFromInitial(initial);
 
     return AppBar(
@@ -75,24 +78,24 @@ class _HeaderState extends State<Header> {
             backgroundColor: Colors.white,
             child: imageUrl != null
                 ? ClipOval(
-              child: Image.memory(
-                base64Decode(imageUrl!),
-                fit: BoxFit.cover,
-                width: 60,
-                height: 60,
-              ),
-            )
+                    child: Image.memory(
+                      base64Decode(imageUrl!),
+                      fit: BoxFit.cover,
+                      width: 60,
+                      height: 60,
+                    ),
+                  )
                 : CircleAvatar(
-              radius: 30,
-              backgroundColor: avatarColor,
-              child: Text(
-                initial,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: widget.textFontSize,
-                ),
-              ),
-            ),
+                    radius: 30,
+                    backgroundColor: avatarColor,
+                    child: Text(
+                      initial,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: widget.textFontSize,
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(width: 25),
           // Title of the AppBar
@@ -106,12 +109,20 @@ class _HeaderState extends State<Header> {
           ),
           const Spacer(), // Pushes the menu icon to the right
           TextButton.icon(
-            icon: Icon(Icons.menu_book, size: 30, color: widget.colorPalette.fuente),
+            icon: Icon(Icons.menu_book,
+                size: 30, color: widget.colorPalette.fuente),
             label: Text(
               'MENÚ',
               style: TextStyle(fontSize: 30, color: widget.colorPalette.fuente),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PanelAlumno(nickname: widget.nickname, colorPalette: widget.colorPalette, titleFontSize: 24, textFontSize: 16),
+                ),
+              );
+            },
           ),
         ],
       ),
