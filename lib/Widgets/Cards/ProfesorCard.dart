@@ -92,6 +92,19 @@ class _ProfesorCardState extends State<ProfesorCard> {
                 TextButton.icon(
                   onPressed: () {
                     Navigator.pushNamed(
+                        context, '/administrador/profesores/editarProfesor',
+                        arguments: id_usuario);
+                  },
+                  icon: const Icon(Icons.edit, color: Colors.teal),
+                  label: const Text('Editar Profesor'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.teal,
+                  ),
+                ),
+                // Botón de Editar
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(
                         context, '/administrador/profesores/editarContrasenia',
                         arguments: widget.id_usuario);
                   },

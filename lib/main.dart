@@ -16,6 +16,7 @@ import 'package:tarerio/Pages/Alumnos/accesibilidad.dart';
 
 import 'Pages/Alumnos/tareasdelalumno.dart';
 import 'Pages/Profesores/aularioProfesor.dart';
+import 'Pages/Profesores/editarProfesor.dart';
 import 'Pages/Profesores/pedidosMaterial.dart';
 import 'Pages/Profesores/pedidosMaterialAdministrador.dart';
 
@@ -69,6 +70,8 @@ class MyApp extends StatelessWidget {
             const RegistrarProfesor(),
         '/administrador/profesores/editarContrasenia': (context) =>
             const EditarContraseniaProfesor(),
+        '/administrador/profesores/editarProfesor': (context) =>
+            const EditarProfesor(),
         '/administrador/alumnos/accesibilidad': (context) => AccesibilidadPage(
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
