@@ -129,7 +129,12 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                     vertical: 8.0), // Separación entre botones
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/inicioAlumno');
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                      (Route<dynamic> route) =>
+                          false, // elimina todas las rutas anteriores
+                    );
                   },
                   child: Container(
                     width: double.infinity, // Ocupa todo el ancho disponible
