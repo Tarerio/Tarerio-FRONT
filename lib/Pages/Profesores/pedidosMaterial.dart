@@ -153,30 +153,33 @@ class _PedidosPageState extends State<PedidosPage> {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 18),
                     Text(
                       'Materiales:',
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     ...pedido['materiales'].map<Widget>((material) {
-                      return Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(material['nombre']),
-                          Flexible(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 8),
-                              child: const Divider(
-                                color: Colors.black,
-                                thickness: 1,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(material['nombre']),
+                            Flexible(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 8),
+                                child: const Divider(
+                                  color: Colors.black,
+                                  thickness: 1,
+                                ),
                               ),
                             ),
-                          ),
-                          Text(material['cantidad'].toString()),
-                        ],
+                            Text(material['cantidad'].toString()),
+                          ],
+                        ),
                       );
                     }).toList(),
                   ],

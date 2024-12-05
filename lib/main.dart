@@ -17,7 +17,9 @@ import 'package:tarerio/Pages/chat.dart';
 
 import 'Pages/Alumnos/tareasdelalumno.dart';
 import 'Pages/Profesores/aularioProfesor.dart';
+import 'Pages/Profesores/editarProfesor.dart';
 import 'Pages/Profesores/pedidosMaterial.dart';
+import 'Pages/Profesores/pedidosMaterialAdministrador.dart';
 
 void main() {
   runApp(const MyApp());
@@ -69,7 +71,12 @@ class MyApp extends StatelessWidget {
             const RegistrarProfesor(),
         '/administrador/profesores/editarContrasenia': (context) =>
             const EditarContraseniaProfesor(),
+        '/administrador/profesores/editarProfesor': (context) =>
+            const EditarProfesor(),
         '/administrador/alumnos/accesibilidad': (context) => AccesibilidadPage(
+              nickname: ModalRoute.of(context)!.settings.arguments as String,
+            ),
+        '/administrador/profesores/pedidos': (context) => PedidosAdministradorPage(
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
         '/administrador/estadisticas': (context) => const AdminDashboard(),

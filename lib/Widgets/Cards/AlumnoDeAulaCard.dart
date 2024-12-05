@@ -18,6 +18,12 @@ class AlumnoDeAulaCard extends StatelessWidget {
     this.showDeleteButton = true, // Default value is true
   }) : super(key: key);
 
+  void _navegarTareasAlumno(context) {
+    Navigator.pushNamed(
+        context, '/administrador/alumnos/tareas',
+        arguments: nickname);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -51,6 +57,14 @@ class AlumnoDeAulaCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.teal,
                 ),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () => _navegarTareasAlumno(context),
+              icon: const Icon(Icons.assignment, color: Colors.teal),
+              label: const Text('Sus tareas'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.teal,
               ),
             ),
             if (showDeleteButton)
