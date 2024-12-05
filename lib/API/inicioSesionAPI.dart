@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tarerio/consts.dart';
+import 'package:tarerio/consts.dart';
 
 class InicioSesionAPI {
   // A GET request to fetch all students from the system.
@@ -31,6 +32,7 @@ class InicioSesionAPI {
       },
     );
     if (response.statusCode == 200) {
+      User = jsonDecode(response.body);
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load data');
@@ -46,6 +48,8 @@ class InicioSesionAPI {
       'contrasenia': contrasenia,
     });
     if (response.statusCode == 200) {
+      User = jsonDecode(response.body);
+      print(User);
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load data');
@@ -61,6 +65,7 @@ class InicioSesionAPI {
       'contrasenia': contrasenia,
     });
     if (response.statusCode == 200) {
+      User = jsonDecode(response.body);
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load data');

@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   http: any
+  socket_io_client: ^3.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

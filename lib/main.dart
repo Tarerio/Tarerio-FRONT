@@ -13,6 +13,7 @@ import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Pages/Profesores/editarContraseniaProfesor.dart';
 import 'package:tarerio/Pages/Alumnos/accesibilidad.dart';
+import 'package:tarerio/Pages/chat.dart';
 
 import 'Pages/Alumnos/tareasdelalumno.dart';
 import 'Pages/Profesores/aularioProfesor.dart';
@@ -75,13 +76,13 @@ class MyApp extends StatelessWidget {
         '/administrador/alumnos/tareas': (context) => TareasDelAlumno(
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
-        '/profesor/aulario' : (context) => AularioPage(
-          nickname: ModalRoute.of(context)!.settings.arguments as String,
-        ),
-        '/profesor/pedidos' : (context) => PedidosPage(
-          nickname: ModalRoute.of(context)!.settings.arguments as String,
-        ),
-
+        '/profesor/aulario': (context) => AularioPage(
+              nickname: ModalRoute.of(context)!.settings.arguments as String,
+            ),
+        '/profesor/pedidos': (context) => PedidosPage(
+              nickname: ModalRoute.of(context)!.settings.arguments as String,
+            ),
+        '/chat': (context) => Chat(),
       },
     );
   }

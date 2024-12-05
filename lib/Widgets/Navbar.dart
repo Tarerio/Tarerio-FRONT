@@ -17,30 +17,18 @@ const List<ExampleDestination> destinations = <ExampleDestination>[
       Icon(Icons.task_alt_outlined),
       Icon(Icons.task_alt_rounded),
       '/administrador/tareas'), // ruta
-  ExampleDestination(
-      'Menús',
-      Icon(Icons.restaurant_menu),
-      Icon(Icons.restaurant_menu_outlined),
-      '/administrador/menus'), // ruta
-  ExampleDestination(
-      'Aulas',
-      Icon(Icons.class_),
-      Icon(Icons.class_outlined),
+  ExampleDestination('Menús', Icon(Icons.restaurant_menu),
+      Icon(Icons.restaurant_menu_outlined), '/administrador/menus'), // ruta
+  ExampleDestination('Aulas', Icon(Icons.class_), Icon(Icons.class_outlined),
       '/administrador/aulas'), // ruta
-  ExampleDestination(
-      'Profesores',
-      Icon(Icons.person),
-      Icon(Icons.person_outline),
-      '/administrador/profesores'), // ruta
-  ExampleDestination(
-      'Alumnos',
-      Icon(Icons.school),
-      Icon(Icons.school_outlined),
+  ExampleDestination('Profesores', Icon(Icons.person),
+      Icon(Icons.person_outline), '/administrador/profesores'), // ruta
+  ExampleDestination('Alumnos', Icon(Icons.school), Icon(Icons.school_outlined),
       '/administrador/alumnos'), // ruta
-  ExampleDestination('Estadísticas',
-      Icon(Icons.bar_chart),
-      Icon(Icons.bar_chart_outlined),
-      '/administrador/estadisticas'), // ruta
+  ExampleDestination('Estadísticas', Icon(Icons.bar_chart),
+      Icon(Icons.bar_chart_outlined), '/administrador/estadisticas'), // ruta
+  ExampleDestination(
+      'Chat', Icon(Icons.chat), Icon(Icons.chat_outlined), '/chat'),
 ];
 
 class Navbar extends StatefulWidget {
@@ -99,7 +87,8 @@ class _NavbarState extends State<Navbar> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => Home()),
-                    (Route<dynamic> route) => false, // elimina todas las rutas anteriores
+                (Route<dynamic> route) =>
+                    false, // elimina todas las rutas anteriores
               );
             },
           ),
