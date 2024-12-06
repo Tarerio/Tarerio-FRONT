@@ -114,7 +114,7 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          'HORARIO',
+                          'CALENDARIO',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                         ),
                         const SizedBox(height: 20),
                         Icon(
-                          Icons.calendar_today,
+                          Icons.calendar_view_week_sharp,
                           size: 50,
                           color: widget.colorPalette.fondo,
                         ),

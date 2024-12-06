@@ -114,7 +114,7 @@ class _HeaderState extends State<Header> {
                 size: 30, color: widget.colorPalette.fuente),
             label: Text(
               'MENÚ',
-              style: TextStyle(fontSize: 30, color: widget.colorPalette.fuente),
+              style: TextStyle(fontSize: widget.textFontSize, color: widget.colorPalette.fuente),
             ),
             onPressed: () {
               Navigator.push(

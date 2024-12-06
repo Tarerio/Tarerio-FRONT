@@ -20,8 +20,8 @@ class PrincipalAlumno extends StatefulWidget {
 }
 
 class _PrincipalAlumnoState extends State<PrincipalAlumno> {
-  String _selectedTitleFontSize = "GRANDE_PLUS";
-  String _selectedTextFontSize = "GRANDE_PLUS";
+  String _selectedTitleFontSize = "MEDIANO";
+  String _selectedTextFontSize = "MEDIANO";
   String _selectedPalette = 'TARERIO';
 
   final AlumnosAPI _api = AlumnosAPI();
@@ -154,6 +154,8 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
   @override
   Widget build(BuildContext context) {
     final colorPalette = _getColorPalette(_selectedPalette);
+    final textFontSize = _getFontSize(_selectedTextFontSize);
+    final titleFontSize = _getFontSize(_selectedTitleFontSize);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -163,8 +165,8 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
           appBar: Header(
             nickname: widget.nickname,
             colorPalette: colorPalette,
-            titleFontSize: 28,
-            textFontSize: 16,
+            titleFontSize: titleFontSize,
+            textFontSize: textFontSize,
           ),
           backgroundColor: colorPalette.fondo,
           body: Column(
@@ -310,7 +312,8 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                         width: cardWidth * 0.3,
                         height: cardHeight,
                         decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+                          borderRadius: BorderRadius.horizontal(
+                              left: Radius.circular(16)),
                         ),
                         child: FittedBox(
                           fit: BoxFit.contain,

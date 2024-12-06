@@ -185,8 +185,6 @@ class _CalendarPageState extends State<CalendarPage> {
                               itemBuilder: (context, index) {
                                 final tarea = _tasks[currentDay]![index];
                                 return ListTile(
-                                  leading:
-                                      const Icon(Icons.check_circle_outline),
                                   title: Text(
                                     tarea['Titulo'] ?? 'TAREA SIN NOMBRE',
                                     style: TextStyle(
