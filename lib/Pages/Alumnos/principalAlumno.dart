@@ -20,8 +20,8 @@ class PrincipalAlumno extends StatefulWidget {
 }
 
 class _PrincipalAlumnoState extends State<PrincipalAlumno> {
-  String _selectedTitleFontSize = "MEDIANO";
-  String _selectedTextFontSize = "MEDIANO";
+  String _selectedTitleFontSize = "GRANDE_PLUS";
+  String _selectedTextFontSize = "GRANDE_PLUS";
   String _selectedPalette = 'TARERIO';
 
   final AlumnosAPI _api = AlumnosAPI();

@@ -123,8 +123,8 @@ class _HeaderState extends State<Header> {
                   builder: (context) => PanelAlumno(
                       nickname: widget.nickname,
                       colorPalette: widget.colorPalette,
-                      titleFontSize: 24,
-                      textFontSize: 16),
+                      titleFontSize: widget.titleFontSize,
+                      textFontSize: widget.textFontSize),
                 ),
               );
             },

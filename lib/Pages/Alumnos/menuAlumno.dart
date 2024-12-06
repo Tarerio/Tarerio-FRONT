@@ -58,25 +58,25 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                   child: Container(
                     width: double.infinity, // Ocupa todo el ancho disponible
                     decoration: BoxDecoration(
-                      color: Colors.amber.shade50,
+                      color: widget.colorPalette.colorPrincipal,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.black, width: 1),
+                      border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'TAREAS',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 20),
                         Icon(
                           Icons.assignment,
                           size: 50,
-                          color: Colors.purple,
+                          color: widget.colorPalette.fondo,
                         ),
                       ],
                     ),
@@ -106,25 +106,25 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                   child: Container(
                     width: double.infinity, // Ocupa todo el ancho disponible
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade100,
+                      color: widget.colorPalette.colorSecundario,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.black, width: 1),
+                      border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'HORARIO',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 20),
                         Icon(
                           Icons.calendar_today,
                           size: 50,
-                          color: Colors.blue,
+                          color: widget.colorPalette.fondo,
                         ),
                       ],
                     ),
@@ -149,25 +149,25 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                   child: Container(
                     width: double.infinity, // Ocupa todo el ancho disponible
                     decoration: BoxDecoration(
-                      color: Colors.red.shade100,
+                      color: widget.colorPalette.componentes,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.black, width: 1),
+                      border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child: const Column(
+                    child:  Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'CERRAR SESIÓN',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 20),
                         Icon(
                           Icons.exit_to_app,
                           size: 50,
-                          color: Colors.red,
+                          color: widget.colorPalette.fondo,
                         ),
                       ],
                     ),

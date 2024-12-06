@@ -128,68 +128,101 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Header(
-          nickname: widget.nickname,
-          colorPalette: widget.colorPalette,
-          textFontSize: widget.textFontSize,
-          titleFontSize: widget.titleFontSize),
+        nickname: widget.nickname,
+        colorPalette: widget.colorPalette,
+        textFontSize: widget.textFontSize,
+        titleFontSize: widget.titleFontSize,
+      ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Padding(padding: EdgeInsets.only(top: 30.0)),
           // Día actual
           Text(
             currentDay.toUpperCase(),
             style: TextStyle(
-                fontSize: widget.titleFontSize, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-
-          // Lista de tareas del día
-          Expanded(
-            child: ListView.builder(
-              itemCount: _tasks[currentDay]!.length,
-              itemBuilder: (context, index) {
-                final tarea = _tasks[currentDay]![index];
-                return ListTile(
-                  leading: Icon(Icons.check_circle_outline),
-                  title: Text(
-                    tarea['Titulo'] ?? 'TAREA SIN NOMBRE',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  subtitle: Text(
-                    tarea['Descripcion'],
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                );
-              },
+              fontSize: widget.titleFontSize,
+              fontWeight: FontWeight.bold,
             ),
           ),
 
-          // Botones de navegación (anterior/siguiente)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: _currentDayIndex > 0
-                    ? () {
-                        setState(() {
-                          _currentDayIndex--;
-                        });
-                      }
-                    : null,
-              ),
-              IconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onPressed: _currentDayIndex < _tasks.keys.length - 1
-                    ? () {
-                        setState(() {
-                          _currentDayIndex++;
-                        });
-                      }
-                    : null,
-              ),
-            ],
+          // Flechas y lista de tareas en una fila
+          Expanded(
+            child: Row(
+              children: [
+                // Flecha izquierda
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: widget.colorPalette.colorSecundario,
+                    size: 90,
+                  ),
+                  onPressed: _currentDayIndex > 0
+                      ? () {
+                          setState(() {
+                            _currentDayIndex--;
+                          });
+                        }
+                      : null,
+                ),
+
+                // Lista de tareas
+                Expanded(
+                  child: Center(
+                    child: _tasks[currentDay]!.isEmpty
+                        ? Text(
+                            'NO HAY TAREAS PARA ESTE DÍA',
+                            style: TextStyle(
+                                fontSize: widget.textFontSize,
+                                color: Colors.grey),
+                          )
+                        : SizedBox(
+                            width: MediaQuery.of(context).size.width *
+                                0.8, // Ajustar ancho
+                            child: ListView.builder(
+                              shrinkWrap:
+                                  true, // Permite que se ajuste al contenido
+                              itemCount: _tasks[currentDay]!.length,
+                              itemBuilder: (context, index) {
+                                final tarea = _tasks[currentDay]![index];
+                                return ListTile(
+                                  leading:
+                                      const Icon(Icons.check_circle_outline),
+                                  title: Text(
+                                    tarea['Titulo'] ?? 'TAREA SIN NOMBRE',
+                                    style: TextStyle(
+                                        fontSize: widget.textFontSize),
+                                  ),
+                                  subtitle: Text(
+                                    tarea['Descripcion'] ?? 'SIN DESCRIPCIÓN',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                  ),
+                ),
+
+                // Flecha derecha
+                IconButton(
+                  icon: Icon(
+                    Icons.arrow_forward_ios,
+                    color: widget.colorPalette.colorSecundario,
+                    size: 90,
+                  ),
+                  onPressed: _currentDayIndex < _tasks.keys.length - 1
+                      ? () {
+                          setState(() {
+                            _currentDayIndex++;
+                          });
+                        }
+                      : null,
+                ),
+              ],
+            ),
           ),
         ],
       ),
