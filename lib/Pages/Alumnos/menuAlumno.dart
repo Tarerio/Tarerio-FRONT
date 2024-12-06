@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
-import 'package:tarerio/Pages/Alumnos/inicioAlumno.dart';
+import 'package:tarerio/Pages/Alumnos/calendario.dart';
 import 'package:tarerio/Pages/Alumnos/principalAlumno.dart';
 import 'package:tarerio/Pages/home.dart';
-import 'package:tarerio/Pages/inicioAdministradorProfesor.dart';
 import 'package:tarerio/Widgets/Header.dart';
 
 class PanelAlumno extends StatefulWidget {
@@ -47,12 +46,13 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                     vertical: 8.0), // Separación entre botones
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PrincipalAlumno(
-                                nickname: widget.nickname,
-                              )),
+                          builder: (context) =>
+                              PrincipalAlumno(nickname: widget.nickname)),
+                      (Route<dynamic> route) =>
+                          false, // elimina todas las rutas anteriores
                     );
                   },
                   child: Container(
@@ -91,7 +91,17 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                     vertical: 8.0), // Separación entre botones
                 child: GestureDetector(
                   onTap: () {
-                    // Acción para Horario
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CalendarPage(
+                              nickname: widget.nickname,
+                              colorPalette: widget.colorPalette,
+                              textFontSize: widget.textFontSize,
+                              titleFontSize: widget.titleFontSize)),
+                      (Route<dynamic> route) =>
+                          false, // elimina todas las rutas anteriores
+                    );
                   },
                   child: Container(
                     width: double.infinity, // Ocupa todo el ancho disponible
@@ -131,7 +141,7 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) => Home()),
+                      MaterialPageRoute(builder: (context) => const Home()),
                       (Route<dynamic> route) =>
                           false, // elimina todas las rutas anteriores
                     );
