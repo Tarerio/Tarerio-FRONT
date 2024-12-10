@@ -20,30 +20,30 @@ class PanelAlumno extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
   _PanelAlumnoState createState() => _PanelAlumnoState();
 }
 
 class _PanelAlumnoState extends State<PanelAlumno> {
   @override
   Widget build(BuildContext context) {
+    final colorPalette = widget.colorPalette;
+    final textFontSize = widget.textFontSize;
+    final titleFontSize = widget.titleFontSize;
+
     return Scaffold(
       appBar: Header(
         nickname: widget.nickname,
-        colorPalette: widget.colorPalette,
-        titleFontSize: widget.titleFontSize,
-        textFontSize: widget.textFontSize,
+        colorPalette: colorPalette,
+        titleFontSize: titleFontSize,
+        textFontSize: textFontSize,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(
-            16.0), // Padding general para todo el contenido
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Botón Tareas
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 8.0), // Separación entre botones
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
@@ -51,32 +51,32 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                       MaterialPageRoute(
                           builder: (context) =>
                               PrincipalAlumno(nickname: widget.nickname)),
-                      (Route<dynamic> route) =>
-                          false, // elimina todas las rutas anteriores
+                          (Route<dynamic> route) => false,
                     );
                   },
                   child: Container(
-                    width: double.infinity, // Ocupa todo el ancho disponible
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      color: widget.colorPalette.colorPrincipal,
+                      color: colorPalette.componentes,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.black, width: 2),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'TAREAS',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: titleFontSize,
                             fontWeight: FontWeight.bold,
+                            color: colorPalette.fuente,
                           ),
                         ),
                         const SizedBox(height: 20),
                         Icon(
                           Icons.assignment,
                           size: 50,
-                          color: widget.colorPalette.fondo,
+                          color: colorPalette.fuente,
                         ),
                       ],
                     ),
@@ -84,11 +84,9 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                 ),
               ),
             ),
-            // Botón Horario
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 8.0), // Separación entre botones
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
@@ -96,35 +94,35 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                       MaterialPageRoute(
                           builder: (context) => CalendarPage(
                               nickname: widget.nickname,
-                              colorPalette: widget.colorPalette,
-                              textFontSize: widget.textFontSize,
-                              titleFontSize: widget.titleFontSize)),
-                      (Route<dynamic> route) =>
-                          false, // elimina todas las rutas anteriores
+                              colorPalette: colorPalette,
+                              textFontSize: textFontSize,
+                              titleFontSize: titleFontSize)),
+                          (Route<dynamic> route) => false,
                     );
                   },
                   child: Container(
-                    width: double.infinity, // Ocupa todo el ancho disponible
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      color: widget.colorPalette.colorSecundario,
+                      color: colorPalette.colorSecundario,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.black, width: 2),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'CALENDARIO',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: titleFontSize,
                             fontWeight: FontWeight.bold,
+                            color: colorPalette.fuente,
                           ),
                         ),
                         const SizedBox(height: 20),
                         Icon(
                           Icons.calendar_view_week_sharp,
                           size: 50,
-                          color: widget.colorPalette.fondo,
+                          color: colorPalette.fuente,
                         ),
                       ],
                     ),
@@ -132,42 +130,40 @@ class _PanelAlumnoState extends State<PanelAlumno> {
                 ),
               ),
             ),
-            // Botón Cerrar Sesión
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 8.0), // Separación entre botones
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => const Home()),
-                      (Route<dynamic> route) =>
-                          false, // elimina todas las rutas anteriores
+                          (Route<dynamic> route) => false,
                     );
                   },
                   child: Container(
-                    width: double.infinity, // Ocupa todo el ancho disponible
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      color: widget.colorPalette.componentes,
+                      color: colorPalette.componentes,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.black, width: 2),
                     ),
-                    child:  Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           'CERRAR SESIÓN',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: titleFontSize,
                             fontWeight: FontWeight.bold,
+                            color: colorPalette.fuente,
                           ),
                         ),
                         const SizedBox(height: 20),
                         Icon(
                           Icons.exit_to_app,
                           size: 50,
-                          color: widget.colorPalette.fondo,
+                          color: colorPalette.fuente,
                         ),
                       ],
                     ),

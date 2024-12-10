@@ -62,7 +62,7 @@ class _HeaderState extends State<Header> {
   @override
   Widget build(BuildContext context) {
     String initial =
-        widget.nickname.isNotEmpty ? widget.nickname[0].toUpperCase() : 'U';
+    widget.nickname.isNotEmpty ? widget.nickname[0].toUpperCase() : 'U';
     Color avatarColor = _getColorFromInitial(initial);
 
     return AppBar(
@@ -79,24 +79,24 @@ class _HeaderState extends State<Header> {
             backgroundColor: Colors.white,
             child: imageUrl != null
                 ? ClipOval(
-                    child: Image.memory(
-                      base64Decode(imageUrl!),
-                      fit: BoxFit.cover,
-                      width: 60,
-                      height: 60,
-                    ),
-                  )
+              child: Image.memory(
+                base64Decode(imageUrl!),
+                fit: BoxFit.cover,
+                width: 60,
+                height: 60,
+              ),
+            )
                 : CircleAvatar(
-                    radius: 30,
-                    backgroundColor: avatarColor,
-                    child: Text(
-                      initial,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: widget.textFontSize,
-                      ),
-                    ),
-                  ),
+              radius: 30,
+              backgroundColor: avatarColor,
+              child: Text(
+                initial,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: widget.textFontSize,
+                ),
+              ),
+            ),
           ),
           const SizedBox(width: 25),
           // Title of the AppBar
@@ -121,10 +121,11 @@ class _HeaderState extends State<Header> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => PanelAlumno(
-                      nickname: widget.nickname,
-                      colorPalette: widget.colorPalette,
-                      titleFontSize: widget.titleFontSize,
-                      textFontSize: widget.textFontSize),
+                    nickname: widget.nickname,
+                    colorPalette: widget.colorPalette,
+                    titleFontSize: widget.titleFontSize,
+                    textFontSize: widget.textFontSize,
+                  ),
                 ),
               );
             },
