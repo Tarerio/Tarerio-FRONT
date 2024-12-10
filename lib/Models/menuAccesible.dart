@@ -46,10 +46,10 @@ class ColorPalette {
 
   static const ColorPalette HIGH_CONTRAST = ColorPalette(
     colorPrincipal: Color(0xFF000000),
-    colorSecundario: Colors.white30,
+    colorSecundario: Color(0xFF888383),
     fuente: Colors.yellow,
     fondo: Colors.black,
-    componentes: Colors.white10,
+    componentes: Color(0xFF222121),
   );
 
   static const ColorPalette SOFT_PASTEL = ColorPalette(

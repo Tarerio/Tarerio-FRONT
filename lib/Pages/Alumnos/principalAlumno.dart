@@ -160,7 +160,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
     return LayoutBuilder(
       builder: (context, constraints) {
         double titleFontSize = constraints.maxWidth * 0.05;
-
         return Scaffold(
           appBar: Header(
             nickname: widget.nickname,
