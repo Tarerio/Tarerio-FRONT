@@ -3,6 +3,8 @@ import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
 import 'package:tarerio/Widgets/Cards/AlumnoCard.dart';
+import 'package:tarerio/Widgets/ErrorModal.dart';
+import 'package:tarerio/Widgets/SuccessModal.dart';
 import 'package:tarerio/consts.dart';
 import '../../API/alumnosAPI.dart';
 
@@ -33,6 +35,24 @@ class _AlumnosState extends State<AlumnosPage> {
   void initState() {
     super.initState();
     fetchAlumnos(); // Llamar a la función para obtener los Alumnos
+  }
+
+  void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
   }
 
   void _cleanFiltros(){
@@ -71,6 +91,54 @@ class _AlumnosState extends State<AlumnosPage> {
       });
     }
 
+  }
+
+  void _confirmarEliminacion(String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Eliminación'),
+          content:
+              const Text('¿Estás seguro de que deseas eliminar este alumno?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _borrarAula(id);
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _borrarAula(String id) async {
+    try {
+      await _api.eliminarAlumno(id);
+      setState(() {
+        Alumnos.removeWhere((aula) => aula['id'] == id);
+      });
+      _showSuccessModal(context, "Éxito", "Éxito al eliminar el alumno");
+      
+      //Recargamos alumnos segun si se ha filtrado o no
+      if(categoriaSeleccionada == null && nicknameController.text == ""){
+        fetchAlumnos();
+      } else{
+        _filterAlumnos(categoria: categoriaSeleccionada, nickname: nicknameController.text);
+      }
+    } catch (e) {
+      print("Error al eliminar aula: $e");
+      _showErrorModal(context, "Error", "Error al eliminar el alumno");
+    }
   }
 
   @override
@@ -179,7 +247,9 @@ class _AlumnosState extends State<AlumnosPage> {
                             context, '/administrador/alumnos/tareas',
                             arguments: alumno["nickname"]);
                       },
-                      onDelete: () {},
+                      onDelete: () {
+                        _confirmarEliminacion(alumno['id_usuario'].toString());
+                      },
                       onAccesibilidad: () {
                         Navigator.pushNamed(
                             context, '/administrador/alumnos/accesibilidad',
