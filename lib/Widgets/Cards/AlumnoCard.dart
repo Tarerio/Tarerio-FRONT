@@ -34,7 +34,7 @@ class _AlumnoCardState extends State<AlumnoCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 200, // Set the desired width
-      height: 300, // Set the desired height
+      height: 400, // Set the desired height
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
