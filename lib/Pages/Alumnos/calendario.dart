@@ -5,6 +5,7 @@ import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
+import 'package:tarerio/Widgets/TareaAlumnoCard.dart';
 
 class CalendarPage extends StatefulWidget {
   final String nickname;
@@ -21,18 +22,15 @@ class CalendarPage extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
   _CalendarPageState createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  int _currentDayIndex =
-      0; // Índice del día actual (0 = Lunes, 1 = Martes, ...)
+  int _currentDayIndex = 0;
   final TareaJuegoAPI _tareaJuegoAPI = TareaJuegoAPI();
   final TareaPeticionAPI _tareaPeticionAPI = TareaPeticionAPI();
   final TareaPorPasosAPI _tareaPorPasosAPI = TareaPorPasosAPI();
 
-  // Lista de tareas por día
   final Map<String, List<Map<String, dynamic>>> _tasks = {
     'Lunes': [],
     'Martes': [],
@@ -51,12 +49,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _loadTareasDeLaSemana() async {
     try {
-      // Obtener el lunes de la semana actual
       DateTime hoy = DateTime.now();
       int diasDesdeLunes = hoy.weekday - DateTime.monday;
       DateTime lunes = hoy.subtract(Duration(days: diasDesdeLunes));
 
-      // Nombres de los días de la semana
       List<String> diasSemana = [
         'Lunes',
         'Martes',
@@ -68,52 +64,34 @@ class _CalendarPageState extends State<CalendarPage> {
       ];
 
       for (int i = 0; i < diasSemana.length; i++) {
-        // Calcular la fecha para cada día de la semana
         DateTime fechaDia = lunes.add(Duration(days: i));
         String fechaStr = DateFormat('yyyy-MM-dd').format(fechaDia);
 
-        // Obtener las TAREAS POR PASOS del día actual
-        List<Map<String, dynamic>> tareasPorPasos =
-            await _tareaPorPasosAPI.obtenerAsignadasAlumno(
-          widget.nickname,
-          '',
-          fechaStr,
-        );
+        List<Map<String, dynamic>> tareasPorPasos = await _tareaPorPasosAPI
+            .obtenerAsignadasAlumno(widget.nickname, '', fechaStr);
 
-        for (int j = 0;
-            tareasPorPasos.isNotEmpty && j < tareasPorPasos.length;
-            j++) {
-          int idTarea = tareasPorPasos[j]['ID_tarea'];
-          final tarea = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
-          _tasks[diasSemana[i]]!.add(tarea);
+        for (var tarea in tareasPorPasos) {
+          int idTarea = tarea['ID_tarea'];
+          final tareaData = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
+          _tasks[diasSemana[i]]?.add(tareaData);
         }
 
-        // Obtener las TAREAS PETICION del día actual
-        List<Map<String, dynamic>> tareasPeticion =
-            await _tareaPeticionAPI.obtenerAsignadasAlumno(
-          widget.nickname,
-          '',
-          fechaStr,
-        );
+        List<Map<String, dynamic>> tareasPeticion = await _tareaPeticionAPI
+            .obtenerAsignadasAlumno(widget.nickname, '', fechaStr);
 
-        for (int j = 0; j < tareasPeticion.length; j++) {
-          int idTarea = tareasPeticion[j]['ID_tarea'];
-          final tarea = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
-          _tasks[diasSemana[i]]?.add(tarea);
+        for (var tarea in tareasPeticion) {
+          int idTarea = tarea['ID_tarea'];
+          final tareaData = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
+          _tasks[diasSemana[i]]?.add(tareaData);
         }
 
-        // Obtener las TAREAS JUEGO del día actual
-        List<Map<String, dynamic>> tareasJuego =
-            await _tareaJuegoAPI.obtenerAsignadasAlumno(
-          widget.nickname,
-          '',
-          fechaStr,
-        );
+        List<Map<String, dynamic>> tareasJuego = await _tareaJuegoAPI
+            .obtenerAsignadasAlumno(widget.nickname, '', fechaStr);
 
-        for (int j = 0; j < tareasJuego.length; j++) {
-          int idTarea = tareasJuego[j]['ID_tarea'];
-          final tarea = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
-          _tasks[diasSemana[i]]?.add(tarea);
+        for (var tarea in tareasJuego) {
+          int idTarea = tarea['ID_tarea'];
+          final tareaData = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
+          _tasks[diasSemana[i]]?.add(tareaData);
         }
       }
     } catch (e) {
@@ -121,109 +99,96 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
-  // Obtiene el día de la semana actual basado en el índice
   String get currentDay => _tasks.keys.toList()[_currentDayIndex];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: Header(
-        nickname: widget.nickname,
-        colorPalette: widget.colorPalette,
-        textFontSize: widget.textFontSize,
-        titleFontSize: widget.titleFontSize,
-      ),
-      body: Column(
-        children: [
-          const Padding(padding: EdgeInsets.only(top: 30.0)),
-          // Día actual
-          Text(
-            currentDay.toUpperCase(),
-            style: TextStyle(
-              fontSize: widget.titleFontSize,
-              fontWeight: FontWeight.bold,
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Scaffold(
+          appBar: Header(
+            nickname: widget.nickname,
+            colorPalette: widget.colorPalette,
+            textFontSize: widget.textFontSize,
+            titleFontSize: widget.titleFontSize,
           ),
-
-          // Flechas y lista de tareas en una fila
-          Expanded(
-            child: Row(
-              children: [
-                // Flecha izquierda
-                IconButton(
-                  icon: Icon(
-                    Icons.arrow_back_ios_new,
-                    color: widget.colorPalette.colorSecundario,
-                    size: 90,
-                  ),
-                  onPressed: _currentDayIndex > 0
-                      ? () {
-                          setState(() {
-                            _currentDayIndex--;
-                          });
-                        }
-                      : null,
+          body: Column(
+            children: [
+              const Padding(padding: EdgeInsets.only(top: 30.0)),
+              Text(
+                currentDay.toUpperCase(),
+                style: TextStyle(
+                  fontSize: widget.titleFontSize,
+                  fontWeight: FontWeight.bold,
                 ),
-
-                // Lista de tareas
-                Expanded(
-                  child: Center(
-                    child: _tasks[currentDay]!.isEmpty
-                        ? Text(
-                            'NO HAY TAREAS PARA ESTE DÍA',
-                            style: TextStyle(
-                                fontSize: widget.textFontSize,
-                                color: Colors.grey),
-                          )
-                        : SizedBox(
-                            width: MediaQuery.of(context).size.width *
-                                0.8, // Ajustar ancho
-                            child: ListView.builder(
-                              shrinkWrap:
-                                  true, // Permite que se ajuste al contenido
-                              itemCount: _tasks[currentDay]!.length,
-                              itemBuilder: (context, index) {
-                                final tarea = _tasks[currentDay]![index];
-                                return ListTile(
-                                  title: Text(
-                                    tarea['Titulo'] ?? 'TAREA SIN NOMBRE',
-                                    style: TextStyle(
-                                        fontSize: widget.textFontSize),
-                                  ),
-                                  subtitle: Text(
-                                    tarea['Descripcion'] ?? 'SIN DESCRIPCIÓN',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                  ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: widget.colorPalette.colorSecundario,
+                        size: 90,
+                      ),
+                      onPressed: _currentDayIndex > 0
+                          ? () {
+                              setState(() {
+                                _currentDayIndex--;
+                              });
+                            }
+                          : null,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: _tasks[currentDay]!.isEmpty
+                            ? Text(
+                                'NO HAY TAREAS PARA ESTE DÍA',
+                                style: TextStyle(
+                                  fontSize: widget.textFontSize,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            : ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _tasks[currentDay]!.length,
+                                itemBuilder: (context, index) {
+                                  final tarea = _tasks[currentDay]![index];
+                                  return TareaAlumnoCard(
+                                    text: tarea['Titulo'],
+                                    descripcion: tarea['Descripcion'],
+                                    imagen: tarea['imagenBase64'],
+                                    nickname: widget.nickname,
+                                    colorPalette: widget.colorPalette,
+                                    titleFontSize: widget.titleFontSize,
+                                    textFontSize: widget.textFontSize,
+                                    constraints: constraints,
+                                  );
+                                },
+                              ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward_ios,
+                        color: widget.colorPalette.colorSecundario,
+                        size: 90,
+                      ),
+                      onPressed: _currentDayIndex < _tasks.keys.length - 1
+                          ? () {
+                              setState(() {
+                                _currentDayIndex++;
+                              });
+                            }
+                          : null,
+                    ),
+                  ],
                 ),
-
-                // Flecha derecha
-                IconButton(
-                  icon: Icon(
-                    Icons.arrow_forward_ios,
-                    color: widget.colorPalette.colorSecundario,
-                    size: 90,
-                  ),
-                  onPressed: _currentDayIndex < _tasks.keys.length - 1
-                      ? () {
-                          setState(() {
-                            _currentDayIndex++;
-                          });
-                        }
-                      : null,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
