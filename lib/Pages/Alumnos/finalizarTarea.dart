@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
+import 'package:tarerio/Pages/Alumnos/principalAlumno.dart';
 import 'package:tarerio/Widgets/Header.dart';
 
 class FinalizarTareaPage extends StatelessWidget {
@@ -31,7 +32,12 @@ class FinalizarTareaPage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PrincipalAlumno(nickname: nickname)
+                  ),
+                );
               },
               style: TextButton.styleFrom(
                 backgroundColor: colorPalette.componentes,

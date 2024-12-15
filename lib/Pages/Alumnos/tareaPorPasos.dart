@@ -30,11 +30,11 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
   final TareaPorPasosAPI _tareaPorPasosAPI = TareaPorPasosAPI();
 
   Map<String, dynamic> explicaciones = {
-    'texto': false,
     'imagenes': false,
     'pictograma': false,
-    'video': false,
+    'texto': false,
     'audio': false,
+    'video': false,
   };
 
   List<String> tiposActivos = [];
@@ -220,15 +220,6 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
                 }).toList(),
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // Volver a la pantalla anterior
-              },
-              child: const Text('Volver'),
-            ),
-          ),
         ],
       ),
     );
