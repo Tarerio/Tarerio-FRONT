@@ -215,6 +215,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                                     const EdgeInsets.symmetric(vertical: 10),
                                 itemBuilder: (context, index) {
                                   return TareaAlumnoCard(
+                                    idTarea: _tareasDeHoy[index]['ID_tarea'],
                                     text: _tareasDeHoy[index]['Titulo'] ??
                                         'Tarea sin nombre',
                                     descripcion:  _tareasDeHoy[index]['Descripcion'] ??

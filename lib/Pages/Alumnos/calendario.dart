@@ -163,6 +163,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                     titleFontSize: widget.titleFontSize,
                                     textFontSize: widget.textFontSize,
                                     constraints: constraints,
+                                    idTarea: tarea['ID_tarea'],
                                   );
                                 },
                               ),

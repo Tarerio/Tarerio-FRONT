@@ -5,6 +5,7 @@ import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/Pages/Alumnos/tarea.dart';
 
 class TareaAlumnoCard extends StatefulWidget {
+  final int idTarea;
   final String text;
   final String descripcion;
   final String imagen;
@@ -16,6 +17,7 @@ class TareaAlumnoCard extends StatefulWidget {
 
   const TareaAlumnoCard({
     super.key,
+    required this.idTarea,
     required this.text,
     required this.descripcion,
     required this.imagen,
@@ -46,11 +48,11 @@ class _TareaAlumnoCardState extends State<TareaAlumnoCard> {
             context,
             MaterialPageRoute(
               builder: (context) => TareaAlumno(
-                title: widget.text,
-                descripcion: widget.descripcion,
-                image: widget.imagen,
+                idTarea: widget.idTarea,
                 nickname: widget.nickname,
                 colorPalette: widget.colorPalette,
+                textFontSize: widget.textFontSize,
+                titleFontSize: widget.titleFontSize,
               ),
             ),
           );
@@ -83,11 +85,11 @@ class _TareaAlumnoCardState extends State<TareaAlumnoCard> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => TareaAlumno(
-                        title: widget.text,
-                        descripcion: widget.descripcion,
-                        image: widget.imagen,
+                        idTarea: widget.idTarea,
                         nickname: widget.nickname,
                         colorPalette: widget.colorPalette,
+                        textFontSize: widget.textFontSize,
+                        titleFontSize: widget.titleFontSize,
                       ),
                     ),
                   );
