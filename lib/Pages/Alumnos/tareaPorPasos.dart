@@ -1,22 +1,18 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:tarerio/Pages/Alumnos/finalizarTarea.dart';
 import 'package:tarerio/Widgets/Header.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
-import 'package:tarerio/API/tareaJuegoAPI.dart';
-import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
 
-class TareaAlumno extends StatefulWidget {
+class TareaAlumnoPorPasos extends StatefulWidget {
   final String nickname;
   final ColorPalette colorPalette;
   final double titleFontSize;
   final double textFontSize;
   final int idTarea;
 
-  const TareaAlumno({
+  const TareaAlumnoPorPasos({
     super.key,
     required this.nickname,
     required this.colorPalette,
@@ -29,8 +25,9 @@ class TareaAlumno extends StatefulWidget {
   _TareaAlumno createState() => _TareaAlumno();
 }
 
-class _TareaAlumno extends State<TareaAlumno> {
+class _TareaAlumno extends State<TareaAlumnoPorPasos> {
   final AlumnosAPI _api = AlumnosAPI();
+  final TareaPorPasosAPI _tareaPorPasosAPI = TareaPorPasosAPI();
 
   Map<String, dynamic> explicaciones = {
     'texto': false,
@@ -43,7 +40,7 @@ class _TareaAlumno extends State<TareaAlumno> {
   List<String> tiposActivos = [];
   String? tipoExplicacionSeleccionado;
   int pasoActual = 0; // Paso actual de la tarea
-  List<Map<String, dynamic>> pasos = [];
+  List<dynamic> pasos = [];
 
   @override
   void initState() {
@@ -52,22 +49,18 @@ class _TareaAlumno extends State<TareaAlumno> {
     cargarPasosTarea();
   }
 
-  void cargarPasosTarea() {
+  void cargarPasosTarea() async {
+    try {
+      Map<String, dynamic> infoTarea =
+          await _tareaPorPasosAPI.obtenerTareaByID(widget.idTarea);
+      setState(() {
+        pasos = infoTarea['Subtareas'];
+      });
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
     // Simulación de pasos de la tarea
-    pasos = [
-      {
-        'texto': 'Explicación del paso 1 en texto',
-        'imagenes': 'imagen_paso1.png'
-      },
-      {
-        'texto': 'Explicación del paso 2 en texto',
-        'imagenes': 'imagen_paso2.png'
-      },
-      {
-        'texto': 'Explicación del paso 3 en texto',
-        'imagenes': 'imagen_paso3.png'
-      },
-    ];
   }
 
   void cargarInfoAlumno() async {
@@ -98,15 +91,19 @@ class _TareaAlumno extends State<TareaAlumno> {
     final paso = pasos[pasoActual];
     switch (tipoExplicacionSeleccionado) {
       case 'texto':
-        return Text(paso['texto'] ?? 'Texto no disponible');
+        return Text(paso['Texto'] ?? 'Texto no disponible',
+            style: TextStyle(
+              fontSize: 40,
+              color: widget.colorPalette.fuente,
+            ));
       case 'imagenes':
         return Image.asset(
-          paso['imagenes'] ?? 'assets/placeholder.png',
+          'assets/images/explicaciones/imagenes.png',
           fit: BoxFit.cover,
         );
       case 'pictograma':
         return Image.asset(
-          paso['pictograma'] ?? 'assets/placeholder.png',
+          'assets/images/explicaciones/pictogramas.png',
           fit: BoxFit.cover,
         );
       case 'video':
@@ -123,6 +120,20 @@ class _TareaAlumno extends State<TareaAlumno> {
       final nuevoPaso = pasoActual + incremento;
       if (nuevoPaso >= 0 && nuevoPaso < pasos.length) {
         pasoActual = nuevoPaso;
+      } else if (nuevoPaso == pasos.length) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FinalizarTareaPage(
+              nickname: widget.nickname,
+              colorPalette: widget.colorPalette,
+              titleFontSize: widget.titleFontSize,
+              textFontSize: widget.textFontSize,
+            ),
+          ),
+        );
+      } else {
+        Navigator.pop(context);
       }
     });
   }
@@ -145,7 +156,7 @@ class _TareaAlumno extends State<TareaAlumno> {
               children: [
                 // Flecha izquierda
                 IconButton(
-                  icon: Icon(Icons.arrow_back_ios,
+                  icon: Icon(Icons.arrow_back_ios_new,
                       color: widget.colorPalette.componentes, size: 90),
                   onPressed: () => cambiarPaso(-1), // Retroceder paso
                 ),
@@ -168,7 +179,8 @@ class _TareaAlumno extends State<TareaAlumno> {
           // Indicador del paso actual
           Text(
             'PASO ${pasoActual + 1}',
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: widget.textFontSize, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
           // Selector de tipo de contenido
@@ -208,7 +220,15 @@ class _TareaAlumno extends State<TareaAlumno> {
                 }).toList(),
               ),
             ),
-          
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Volver a la pantalla anterior
+              },
+              child: const Text('Volver'),
+            ),
+          ),
         ],
       ),
     );

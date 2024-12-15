@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
-import 'package:tarerio/Pages/Alumnos/tarea.dart';
+import 'package:tarerio/Pages/Alumnos/tareaPorPasos.dart';
+import 'package:tarerio/Pages/Alumnos/tareaJuego.dart';
 
 class TareaAlumnoCard extends StatefulWidget {
   final int idTarea;
@@ -14,6 +15,7 @@ class TareaAlumnoCard extends StatefulWidget {
   final double titleFontSize;
   final double textFontSize;
   final BoxConstraints constraints;
+  final String tipoTarea;
 
   const TareaAlumnoCard({
     super.key,
@@ -26,6 +28,7 @@ class TareaAlumnoCard extends StatefulWidget {
     required this.titleFontSize,
     required this.textFontSize,
     required this.constraints,
+    required this.tipoTarea,
   });
 
   @override
@@ -47,7 +50,7 @@ class _TareaAlumnoCardState extends State<TareaAlumnoCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TareaAlumno(
+              builder: (context) => TareaAlumnoPorPasos(
                 idTarea: widget.idTarea,
                 nickname: widget.nickname,
                 colorPalette: widget.colorPalette,
@@ -83,15 +86,25 @@ class _TareaAlumnoCardState extends State<TareaAlumnoCard> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => TareaAlumno(
-                        idTarea: widget.idTarea,
-                        nickname: widget.nickname,
-                        colorPalette: widget.colorPalette,
-                        textFontSize: widget.textFontSize,
-                        titleFontSize: widget.titleFontSize,
-                      ),
-                    ),
+                    widget.tipoTarea == 'Juego'
+                        ? MaterialPageRoute(
+                            builder: (context) => TareaAlumnoJuego(
+                              idTarea: widget.idTarea,
+                              nickname: widget.nickname,
+                              colorPalette: widget.colorPalette,
+                              textFontSize: widget.textFontSize,
+                              titleFontSize: widget.titleFontSize,
+                            ),
+                          )
+                        : MaterialPageRoute(
+                            builder: (context) => TareaAlumnoPorPasos(
+                              idTarea: widget.idTarea,
+                              nickname: widget.nickname,
+                              colorPalette: widget.colorPalette,
+                              textFontSize: widget.textFontSize,
+                              titleFontSize: widget.titleFontSize,
+                            ),
+                          ),
                   );
                 },
                 child: Row(

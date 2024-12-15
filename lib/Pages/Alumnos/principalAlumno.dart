@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatear la fecha
 import 'package:tarerio/Models/menuAccesible.dart';
-import 'package:tarerio/Pages/Alumnos/tarea.dart';
+import 'package:tarerio/Pages/Alumnos/tareaPorPasos.dart';
 import 'package:tarerio/Widgets/Header.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
@@ -77,6 +77,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
       for (var tarea in tareasJuegoAsignadas) {
         tareas.add({'tarea': tarea, 'tipo': 'Juego'});
       }
+
       tareas.sort((a, b) {
         DateTime fechaA = DateTime.parse(a['tarea']['Fecha_fin_asignacion']);
         DateTime fechaB = DateTime.parse(b['tarea']['Fecha_fin_asignacion']);
@@ -88,15 +89,15 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
           case 'Juego':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add(tarea);
+            tareasAlumnoDeHoy.add({'tarea': tarea, 'tipo': 'Juego'});
           case 'Por Pasos':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add(tarea);
+            tareasAlumnoDeHoy.add({'tarea': tarea, 'tipo': 'Por Pasos'});
           case 'Peticion':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add(tarea);
+            tareasAlumnoDeHoy.add({'tarea': tarea, 'tipo': 'Peticion'});
         }
       }
       setState(() {
@@ -215,17 +216,23 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                                     const EdgeInsets.symmetric(vertical: 10),
                                 itemBuilder: (context, index) {
                                   return TareaAlumnoCard(
-                                    idTarea: _tareasDeHoy[index]['ID_tarea'],
-                                    text: _tareasDeHoy[index]['Titulo'] ??
+                                    idTarea: _tareasDeHoy[index]['tarea']
+                                        ['ID_tarea'],
+                                    text: _tareasDeHoy[index]['tarea']
+                                            ['Titulo'] ??
                                         'Tarea sin nombre',
-                                    descripcion:  _tareasDeHoy[index]['Descripcion'] ??
+                                    descripcion: _tareasDeHoy[index]['tarea']
+                                            ['Descripcion'] ??
                                         'No hay descripción',
-                                    imagen: _tareasDeHoy[index]['imagenBase64'] ?? '',
-                                    nickname: widget.nickname, 
+                                    imagen: _tareasDeHoy[index]['tarea']
+                                            ['imagenBase64'] ??
+                                        '',
+                                    nickname: widget.nickname,
                                     colorPalette: colorPalette,
-                                    titleFontSize: titleFontSize, 
+                                    titleFontSize: titleFontSize,
                                     textFontSize: textFontSize,
-                                    constraints:  constraints,
+                                    constraints: constraints,
+                                    tipoTarea: _tareasDeHoy[index]['tipo'],
                                   );
                                 },
                               ),
