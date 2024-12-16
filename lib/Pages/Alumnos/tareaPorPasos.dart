@@ -164,6 +164,8 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
               colorPalette: widget.colorPalette,
               titleFontSize: widget.titleFontSize,
               textFontSize: widget.textFontSize,
+              tipoTarea: 'Por Pasos',
+              idTarea: widget.idTarea,
             ),
           ),
         );

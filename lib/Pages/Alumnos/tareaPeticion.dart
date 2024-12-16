@@ -66,6 +66,8 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
               colorPalette: widget.colorPalette,
               titleFontSize: widget.titleFontSize,
               textFontSize: widget.textFontSize,
+              tipoTarea: 'Peticion',
+              idTarea: widget.idTarea,
             ),
           ),
         );

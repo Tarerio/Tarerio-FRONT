@@ -169,6 +169,8 @@ class _TareaAlumno extends State<TareaAlumnoJuego> {
                             colorPalette: widget.colorPalette,
                             titleFontSize: widget.titleFontSize,
                             textFontSize: widget.textFontSize,
+                            tipoTarea: 'Juego',
+                            idTarea: widget.idTarea,
                           ),
                         ),
                       )
