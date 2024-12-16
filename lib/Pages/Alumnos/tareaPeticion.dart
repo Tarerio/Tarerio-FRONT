@@ -28,6 +28,7 @@ class TareaAlumnoPeticion extends StatefulWidget {
 class _TareaAlumno extends State<TareaAlumnoPeticion> {
   final AlumnosAPI _api = AlumnosAPI();
   final TareaPeticionAPI _tareaPeticionAPI = TareaPeticionAPI();
+  Map<String, dynamic> infoTarea = {};
 
   int pasoActual = 0; // Paso actual de la tarea
   List<dynamic> enunciados = [];
@@ -40,8 +41,7 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
 
   void cargarEnunciadosTarea() async {
     try {
-      Map<String, dynamic> infoTarea =
-          await _tareaPeticionAPI.obtenerTareaByID(widget.idTarea);
+      infoTarea = await _tareaPeticionAPI.obtenerTareaByID(widget.idTarea);
       setState(() {
         enunciados = List.from(infoTarea['Enunciados'].reversed.toList());
       });
@@ -89,28 +89,84 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
           : Column(
               children: [
                 Expanded(
-                    child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back_ios_new,
-                          color: widget.colorPalette.componentes, size: 90),
-                      onPressed: () => cambiarPaso(-1), // Retroceder paso
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.arrow_back_ios_new,
+                            color: widget.colorPalette.componentes, size: 90),
+                        onPressed: () => cambiarPaso(-1), // Retroceder paso
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Text(
+                                  enunciados[pasoActual]['Texto'].toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: widget.titleFontSize,
+                                    fontWeight: FontWeight.bold,
+                                    color: widget.colorPalette.fuente,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  child: cargarPictograma(
+                                      enunciados[pasoActual]['Imagen']),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.arrow_forward_ios,
+                            color: widget.colorPalette.componentes, size: 90),
+                        onPressed: () => cambiarPaso(1), // Avanzar paso
+                      ),
+                    ],
+                  ),
+                ),
+                // Aquí añadimos el enunciado centrado en la parte inferior
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Text(
+                    'ENUNCIADO ${pasoActual + 1}',
+                    style: TextStyle(
+                      fontSize: widget.textFontSize,
+                      fontWeight: FontWeight.bold,
+                      color: widget.colorPalette.fuente,
                     ),
-                    Expanded(
-                      child:
-                          Center(child: Text(enunciados[pasoActual]['Texto'])),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.arrow_forward_ios,
-                          color: widget.colorPalette.componentes, size: 90),
-                      onPressed: () => cambiarPaso(1), // Avanzar paso
-                    ),
-                  ],
-                ))
+                  ),
+                ),
               ],
             ),
+    );
+  }
+
+  Widget cargarPictograma(String url) {
+    final pictogramaURL = url
+        .replaceAll('/file/d/', '/uc?export=view&id=')
+        .replaceAll('/view?usp=sharing', '');
+
+    return Image.network(
+      pictogramaURL,
+      fit: BoxFit.cover,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+      errorBuilder: (context, error, stackTrace) {
+        return const Center(child: Text('ERROR AL CARGAR EL PICTOGRAMA'));
+      },
     );
   }
 }

@@ -122,7 +122,6 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
         );
 
       case 'pictograma':
-
         final pictogramaURL = paso['Pictograma']
             .replaceAll('/file/d/', '/uc?export=view&id=')
             .replaceAll('/view?usp=sharing', '');
@@ -248,8 +247,12 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
                               vertical:
                                   20), // Aumenta el tamaño vertical del botón
                         ),
-                        child:
-                            _getImagenForTipo(tipo), // Asigna un ícono por tipo
+                        child: Image.asset(
+                          'assets/images/explicaciones/$tipo.png',
+                          width: 30,
+                          height: 30,
+                          fit: BoxFit.cover,
+                        ), // Asigna un ícono por tipo
                       ),
                     ),
                   );
@@ -259,52 +262,5 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
         ],
       ),
     );
-  }
-
-  Widget _getImagenForTipo(String tipo) {
-    switch (tipo) {
-      case 'texto':
-        return Image.asset(
-          'assets/images/explicaciones/texto.png',
-          width: 30,
-          height: 30,
-          fit: BoxFit.cover,
-        );
-      case 'imagenes':
-        return Image.asset(
-          'assets/images/explicaciones/imagenes.png',
-          width: 30,
-          height: 30,
-          fit: BoxFit.cover,
-        );
-      case 'pictograma':
-        return Image.asset(
-          'assets/images/explicaciones/pictogramas.png',
-          width: 30,
-          height: 30,
-          fit: BoxFit.cover,
-        );
-      case 'video':
-        return Image.asset(
-          'assets/images/explicaciones/video.png',
-          width: 30,
-          height: 30,
-          fit: BoxFit.cover,
-        );
-      case 'audio':
-        return Image.asset(
-          'assets/images/explicaciones/audio.png',
-          width: 30,
-          height: 30,
-          fit: BoxFit.cover,
-        );
-      default:
-        return Image.asset(
-          'assets/placeholder.png',
-          width: 30,
-          height: 30,
-          fit: BoxFit.cover,
-        );
-    }
   }
 }
