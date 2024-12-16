@@ -224,7 +224,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
                                 itemBuilder: (context, index) {
-                                  print(_tareasDeHoy[index]['completado']);
                                   return TareaAlumnoCard(
                                     idTarea: _tareasDeHoy[index]['tarea']
                                         ['ID_tarea'],
