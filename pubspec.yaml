@@ -32,6 +32,7 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.1.2
+  video_player: ^2.5.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -87,11 +88,10 @@ flutter:
     - assets/images/insectos/insectos2.png
     - assets/images/insectos/insectos3.png
     - assets/images/tareapeticion.jpg
-    - assets/images/explicaciones/texto.png
-    - assets/images/explicaciones/imagenes.png
-    - assets/images/explicaciones/pictogramas.png
-    - assets/images/explicaciones/video.png
-    - assets/images/explicaciones/audio.png
+    - assets/images/explicaciones/
+    - assets/images/tareaPorPasos/imagenes/
+    - assets/images/tareaPorPasos/pictogramas/
+    - assets/images/tareaPorPasos/video/
     - assets/images/tareaCompletada.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

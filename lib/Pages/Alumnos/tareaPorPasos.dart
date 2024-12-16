@@ -4,6 +4,7 @@ import 'package:tarerio/Widgets/Header.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
+import 'package:video_player/video_player.dart';
 
 class TareaAlumnoPorPasos extends StatefulWidget {
   final String nickname;
@@ -91,19 +92,19 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
     final paso = pasos[pasoActual];
     switch (tipoExplicacionSeleccionado) {
       case 'texto':
-        return Text(paso['Texto'] ?? 'Texto no disponible',
+        return Text((paso['Texto'] ?? 'Texto no disponible').toUpperCase(),
             style: TextStyle(
-              fontSize: 40,
+              fontSize: widget.textFontSize,
               color: widget.colorPalette.fuente,
             ));
       case 'imagenes':
         return Image.asset(
-          'assets/images/explicaciones/imagenes.png',
+          'assets/images/tareaPorPasos/imagenes/${paso['Imagen']}',
           fit: BoxFit.cover,
         );
       case 'pictograma':
         return Image.asset(
-          'assets/images/explicaciones/pictogramas.png',
+          'assets/images/tareaPorPasos/pictogramas/${paso['Pictograma']}',
           fit: BoxFit.cover,
         );
       case 'video':
