@@ -193,7 +193,7 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
           children: alumnos.map((alumno) {
             return SizedBox(
               width: MediaQuery.of(context).size.width / 6,
-              height: 250,
+              height: 300,
               child: AlumnoDeAulaCard(
                 id_usuario: alumno['id_usuario'],
                 imagenBase64: alumno['imagenBase64'] ?? '',
