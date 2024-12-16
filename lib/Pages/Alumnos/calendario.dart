@@ -74,7 +74,8 @@ class _CalendarPageState extends State<CalendarPage> {
           int idTarea = tarea['ID_tarea'];
           final tareaData = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
           setState(() {
-            _tasks[diasSemana[i]]?.add(tareaData);
+            _tasks[diasSemana[i]]
+                ?.add({'tarea': tareaData, 'tipo': 'Por Pasos'});
           });
         }
 
@@ -85,7 +86,8 @@ class _CalendarPageState extends State<CalendarPage> {
           int idTarea = tarea['ID_tarea'];
           final tareaData = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
           setState(() {
-            _tasks[diasSemana[i]]?.add(tareaData);
+            _tasks[diasSemana[i]]
+                ?.add({'tarea': tareaData, 'tipo': 'Peticion'});
           });
         }
 
@@ -96,7 +98,7 @@ class _CalendarPageState extends State<CalendarPage> {
           int idTarea = tarea['ID_tarea'];
           final tareaData = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
           setState(() {
-            _tasks[diasSemana[i]]?.add(tareaData);
+            _tasks[diasSemana[i]]?.add({'tarea': tareaData, 'tipo': 'Juego'});
           });
         }
       }
@@ -166,7 +168,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                 shrinkWrap: true,
                                 itemCount: _tasks[currentDay]!.length,
                                 itemBuilder: (context, index) {
-                                  final tarea = _tasks[currentDay]![index];
+                                  final tarea = _tasks[currentDay]![index]['tarea'];
                                   return TareaAlumnoCard(
                                     text: tarea['Titulo'],
                                     descripcion: tarea['Descripcion'],
@@ -177,7 +179,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                     textFontSize: widget.textFontSize,
                                     constraints: constraints,
                                     idTarea: tarea['ID_tarea'],
-                                    tipoTarea: '',
+                                    tipoTarea: _tasks[currentDay]![index]['tipo'],
                                   );
                                 },
                               ),

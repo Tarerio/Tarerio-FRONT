@@ -85,7 +85,7 @@ class _TareaAlumno extends State<TareaAlumnoJuego> {
                   label:
                       'Título de la tarea: ${tareaJuego['Titulo'] ?? 'Sin título'}',
                   child: Text(
-                    tareaJuego['Titulo'] ?? 'Sin título',
+                    (tareaJuego['Titulo'] ?? 'Sin título').toUpperCase(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: widget.titleFontSize,
@@ -94,12 +94,12 @@ class _TareaAlumno extends State<TareaAlumnoJuego> {
                   ),
                 ),
                 const SizedBox(
-                    height: 8), // Espaciado entre título y descripción
+                    height: 20), // Espaciado entre título y descripción
                 Semantics(
                   label:
                       'Descripción de la tarea: ${tareaJuego['Descripcion'] ?? 'Sin descripción'}',
                   child: Text(
-                    tareaJuego['Descripcion'] ?? 'Sin descripción',
+                    (tareaJuego['Descripcion'] ?? 'Sin descripción').toUpperCase(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: widget.textFontSize,

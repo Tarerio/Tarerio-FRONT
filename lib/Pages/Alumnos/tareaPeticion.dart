@@ -61,6 +61,7 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
         titleFontSize: widget.titleFontSize,
         textFontSize: widget.textFontSize,
       ),
+      body: Text('Tarea Peticion'),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:tarerio/Widgets/Header.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
+import 'package:tarerio/Widgets/VideoPlayer.dart';
 import 'package:video_player/video_player.dart';
 
 class TareaAlumnoPorPasos extends StatefulWidget {
@@ -29,6 +30,7 @@ class TareaAlumnoPorPasos extends StatefulWidget {
 class _TareaAlumno extends State<TareaAlumnoPorPasos> {
   final AlumnosAPI _api = AlumnosAPI();
   final TareaPorPasosAPI _tareaPorPasosAPI = TareaPorPasosAPI();
+  VideoPlayerController? _videoController;
 
   Map<String, dynamic> explicaciones = {
     'imagenes': false,
@@ -48,6 +50,12 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
     super.initState();
     cargarInfoAlumno();
     cargarPasosTarea();
+  }
+
+  @override
+  void dispose() {
+    _videoController?.dispose(); // Libera recursos del reproductor.
+    super.dispose();
   }
 
   void cargarPasosTarea() async {
@@ -105,12 +113,18 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
       case 'pictograma':
         return Image.asset(
           'assets/images/tareaPorPasos/pictogramas/${paso['Pictograma']}',
+          height: 400,
           fit: BoxFit.cover,
         );
-      case 'video':
-        return const Text('Video');
       case 'audio':
         return const Text('Audio');
+      case 'video':
+        final videoPath = 'assets/images/tareaPorPasos/video/${paso['Video']}';
+        if (videoPath.isEmpty) {
+          return const Text('VIDEO NO DISPONIBLE');
+        }
+        return VideoPlayerWidget(videoPath: videoPath);
+            
       default:
         return const Text('Tipo no soportado.');
     }
