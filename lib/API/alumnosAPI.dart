@@ -251,4 +251,15 @@ class AlumnosAPI {
     }
   }
 
+  eliminarAlumno(String id) async {
+    String url = '$baseUrl/alumnos/$id';
+    final response = await http.delete(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('Failed to delete data');
+    }
+  }
+
 }
