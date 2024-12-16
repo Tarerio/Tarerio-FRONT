@@ -180,6 +180,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                     constraints: constraints,
                                     idTarea: tarea['ID_tarea'],
                                     tipoTarea: _tasks[currentDay]![index]['tipo'],
+                                    completada: false,
                                   );
                                 },
                               ),

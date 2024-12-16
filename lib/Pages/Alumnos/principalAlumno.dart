@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatear la fecha
 import 'package:tarerio/Models/menuAccesible.dart';
-import 'package:tarerio/Pages/Alumnos/tareaPorPasos.dart';
 import 'package:tarerio/Widgets/Header.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
@@ -89,15 +86,27 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
           case 'Juego':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add({'tarea': tarea, 'tipo': 'Juego'});
+            tareasAlumnoDeHoy.add({
+              'tarea': tarea,
+              'tipo': 'Juego',
+              'completado': tareas[i]['tarea']['completado']
+            });
           case 'Por Pasos':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add({'tarea': tarea, 'tipo': 'Por Pasos'});
+            tareasAlumnoDeHoy.add({
+              'tarea': tarea,
+              'tipo': 'Por Pasos',
+              'completado': tareas[i]['tarea']['completado']
+            });
           case 'Peticion':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add({'tarea': tarea, 'tipo': 'Peticion'});
+            tareasAlumnoDeHoy.add({
+              'tarea': tarea,
+              'tipo': 'Peticion',
+              'completado': tareas[i]['tarea']['completado']
+            });
         }
       }
       setState(() {
@@ -215,6 +224,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
                                 itemBuilder: (context, index) {
+                                  print(_tareasDeHoy[index]['completado']);
                                   return TareaAlumnoCard(
                                     idTarea: _tareasDeHoy[index]['tarea']
                                         ['ID_tarea'],
@@ -233,6 +243,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                                     textFontSize: textFontSize,
                                     constraints: constraints,
                                     tipoTarea: _tareasDeHoy[index]['tipo'],
+                                    completada: _tareasDeHoy[index]['completado'],
                                   );
                                 },
                               ),

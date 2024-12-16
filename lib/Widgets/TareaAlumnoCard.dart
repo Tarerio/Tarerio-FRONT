@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/Pages/Alumnos/tareaPeticion.dart';
@@ -17,6 +16,7 @@ class TareaAlumnoCard extends StatefulWidget {
   final double textFontSize;
   final BoxConstraints constraints;
   final String tipoTarea;
+  final bool completada;
 
   const TareaAlumnoCard({
     super.key,
@@ -30,6 +30,7 @@ class TareaAlumnoCard extends StatefulWidget {
     required this.textFontSize,
     required this.constraints,
     required this.tipoTarea,
+    required this.completada,
   });
 
   @override
@@ -65,7 +66,9 @@ class _TareaAlumnoCardState extends State<TareaAlumnoCard> {
           label: "Tarjeta de tarea: ${widget.text}",
           button: true,
           child: Card(
-            color: widget.colorPalette.componentes,
+            color: widget.completada
+                ? widget.colorPalette.componentes
+                : widget.colorPalette.colorSecundario,
             elevation: 6,
             margin: EdgeInsets.symmetric(
               vertical: widget.constraints.maxHeight * 0.04,
