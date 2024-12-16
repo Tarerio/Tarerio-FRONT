@@ -10,17 +10,16 @@ class AlumnoDeAulaCard extends StatelessWidget {
   final bool showDeleteButton;
 
   const AlumnoDeAulaCard({
-    Key? key,
+    super.key,
     required this.id_usuario,
     required this.imagenBase64,
     required this.nickname,
     required this.onDelete,
     this.showDeleteButton = true, // Default value is true
-  }) : super(key: key);
+  });
 
   void _navegarTareasAlumno(context) {
-    Navigator.pushNamed(
-        context, '/administrador/alumnos/tareas',
+    Navigator.pushNamed(context, '/administrador/alumnos/tareas',
         arguments: nickname);
   }
 
@@ -38,7 +37,7 @@ class AlumnoDeAulaCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             imagenBase64.isNotEmpty
                 ? CircleAvatar(
                     radius: 50,

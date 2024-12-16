@@ -9,7 +9,7 @@ import '../../API/alumnosAPI.dart';
 class AccesibilidadPage extends StatefulWidget {
   final String nickname;
 
-  const AccesibilidadPage({Key? key, required this.nickname}) : super(key: key);
+  const AccesibilidadPage({super.key, required this.nickname});
 
   @override
   _AccesibilidadPageState createState() => _AccesibilidadPageState();
@@ -31,13 +31,13 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
   void _loadMenuAccesible() async {
     try {
       final response = await _api.obtenerMenuAccesible(widget.nickname);
-      if (response != null) {
-        setState(() {
-          _selectedTitleFontSize = response['texto_titulo'] ?? _selectedTitleFontSize;
-          _selectedTextFontSize = response['texto_descripcion'] ?? _selectedTextFontSize;
-          _selectedPalette = response['paleta_colores'] ?? _selectedPalette;
-        });
-      }
+      setState(() {
+        _selectedTitleFontSize =
+            response['texto_titulo'] ?? _selectedTitleFontSize;
+        _selectedTextFontSize =
+            response['texto_descripcion'] ?? _selectedTextFontSize;
+        _selectedPalette = response['paleta_colores'] ?? _selectedPalette;
+      });
     } catch (e) {
       // Handle error if needed
     }
@@ -63,14 +63,18 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
 
   void crearModificarMenuAccesible(BuildContext context) async {
     try {
-      final response = await _api.crearModificarMenuAccesible(widget.nickname, _selectedTitleFontSize, _selectedTextFontSize, _selectedPalette);
+      final response = await _api.crearModificarMenuAccesible(widget.nickname,
+          _selectedTitleFontSize, _selectedTextFontSize, _selectedPalette);
       if (response['status'] != 'error') {
-        _showSuccessModal(context, 'Éxito', 'Configuración de accesibilidad actualizada correctamente.');
+        _showSuccessModal(context, 'Éxito',
+            'Configuración de accesibilidad actualizada correctamente.');
       } else {
-        _showErrorModal(context, 'Error', 'Ocurrió un error al intentar actualizar la configuración de accesibilidad.');
+        _showErrorModal(context, 'Error',
+            'Ocurrió un error al intentar actualizar la configuración de accesibilidad.');
       }
     } catch (e) {
-      _showErrorModal(context, 'Error', 'Ocurrió un error al intentar actualizar la configuración de accesibilidad.');
+      _showErrorModal(context, 'Error',
+          'Ocurrió un error al intentar actualizar la configuración de accesibilidad.');
     }
   }
 
@@ -80,7 +84,7 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
       appBar: AppBar(
         title: Text(
           'Accesibilidad ${widget.nickname}',
-          style: TextStyle(
+          style: const TextStyle(
             color: Color(0xFF2EC4B6),
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -99,13 +103,14 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Selecciona la fuente de títulos:',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       DropdownButton<String>(
                         value: _selectedTitleFontSize,
-                        items: [
+                        items: const [
                           DropdownMenuItem(
                             value: "PEQUEÑO",
                             child: Text('PEQUEÑO (14)'),
@@ -129,14 +134,15 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                           });
                         },
                       ),
-                      SizedBox(height: 20),
-                      Text(
+                      const SizedBox(height: 20),
+                      const Text(
                         'Selecciona la fuente para el texto normal:',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       DropdownButton<String>(
                         value: _selectedTextFontSize,
-                        items: [
+                        items: const [
                           DropdownMenuItem(
                             value: "PEQUEÑO",
                             child: Text('PEQUEÑO (16)'),
@@ -160,10 +166,11 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                           });
                         },
                       ),
-                      SizedBox(height: 20),
-                      Text(
+                      const SizedBox(height: 20),
+                      const Text(
                         'Selecciona la paleta de colores:',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       DropdownButton<String>(
                         value: _selectedPalette,
@@ -172,13 +179,16 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                             value: 'TARERIO',
                             child: Row(
                               children: [
-                                _buildColorBox(ColorPalette.TARERIO.colorPrincipal),
-                                _buildColorBox(ColorPalette.TARERIO.colorSecundario),
+                                _buildColorBox(
+                                    ColorPalette.TARERIO.colorPrincipal),
+                                _buildColorBox(
+                                    ColorPalette.TARERIO.colorSecundario),
                                 _buildColorBox(ColorPalette.TARERIO.fuente),
                                 _buildColorBox(ColorPalette.TARERIO.fondo),
-                                _buildColorBox(ColorPalette.TARERIO.componentes),
-                                SizedBox(width: 10),
-                                Text('TARERIO'),
+                                _buildColorBox(
+                                    ColorPalette.TARERIO.componentes),
+                                const SizedBox(width: 10),
+                                const Text('TARERIO'),
                               ],
                             ),
                           ),
@@ -186,13 +196,16 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                             value: 'TARERIO_INV',
                             child: Row(
                               children: [
-                                _buildColorBox(ColorPalette.TARERIO_INV.colorPrincipal),
-                                _buildColorBox(ColorPalette.TARERIO_INV.colorSecundario),
+                                _buildColorBox(
+                                    ColorPalette.TARERIO_INV.colorPrincipal),
+                                _buildColorBox(
+                                    ColorPalette.TARERIO_INV.colorSecundario),
                                 _buildColorBox(ColorPalette.TARERIO_INV.fuente),
                                 _buildColorBox(ColorPalette.TARERIO_INV.fondo),
-                                _buildColorBox(ColorPalette.TARERIO_INV.componentes),
-                                SizedBox(width: 10),
-                                Text('TARERIO_INV'),
+                                _buildColorBox(
+                                    ColorPalette.TARERIO_INV.componentes),
+                                const SizedBox(width: 10),
+                                const Text('TARERIO_INV'),
                               ],
                             ),
                           ),
@@ -200,13 +213,18 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                             value: 'HIGH_CONTRAST',
                             child: Row(
                               children: [
-                                _buildColorBox(ColorPalette.HIGH_CONTRAST.colorPrincipal),
-                                _buildColorBox(ColorPalette.HIGH_CONTRAST.colorSecundario),
-                                _buildColorBox(ColorPalette.HIGH_CONTRAST.fuente),
-                                _buildColorBox(ColorPalette.HIGH_CONTRAST.fondo),
-                                _buildColorBox(ColorPalette.HIGH_CONTRAST.componentes),
-                                SizedBox(width: 10),
-                                Text('HIGH_CONTRAST'),
+                                _buildColorBox(
+                                    ColorPalette.HIGH_CONTRAST.colorPrincipal),
+                                _buildColorBox(
+                                    ColorPalette.HIGH_CONTRAST.colorSecundario),
+                                _buildColorBox(
+                                    ColorPalette.HIGH_CONTRAST.fuente),
+                                _buildColorBox(
+                                    ColorPalette.HIGH_CONTRAST.fondo),
+                                _buildColorBox(
+                                    ColorPalette.HIGH_CONTRAST.componentes),
+                                const SizedBox(width: 10),
+                                const Text('HIGH_CONTRAST'),
                               ],
                             ),
                           ),
@@ -214,13 +232,16 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                             value: 'SOFT_PASTEL',
                             child: Row(
                               children: [
-                                _buildColorBox(ColorPalette.SOFT_PASTEL.colorPrincipal),
-                                _buildColorBox(ColorPalette.SOFT_PASTEL.colorSecundario),
+                                _buildColorBox(
+                                    ColorPalette.SOFT_PASTEL.colorPrincipal),
+                                _buildColorBox(
+                                    ColorPalette.SOFT_PASTEL.colorSecundario),
                                 _buildColorBox(ColorPalette.SOFT_PASTEL.fuente),
                                 _buildColorBox(ColorPalette.SOFT_PASTEL.fondo),
-                                _buildColorBox(ColorPalette.SOFT_PASTEL.componentes),
-                                SizedBox(width: 10),
-                                Text('SOFT_PASTEL'),
+                                _buildColorBox(
+                                    ColorPalette.SOFT_PASTEL.componentes),
+                                const SizedBox(width: 10),
+                                const Text('SOFT_PASTEL'),
                               ],
                             ),
                           ),
@@ -228,13 +249,16 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                             value: 'DARK_MODE',
                             child: Row(
                               children: [
-                                _buildColorBox(ColorPalette.DARK_MODE.colorPrincipal),
-                                _buildColorBox(ColorPalette.DARK_MODE.colorSecundario),
+                                _buildColorBox(
+                                    ColorPalette.DARK_MODE.colorPrincipal),
+                                _buildColorBox(
+                                    ColorPalette.DARK_MODE.colorSecundario),
                                 _buildColorBox(ColorPalette.DARK_MODE.fuente),
                                 _buildColorBox(ColorPalette.DARK_MODE.fondo),
-                                _buildColorBox(ColorPalette.DARK_MODE.componentes),
-                                SizedBox(width: 10),
-                                Text('DARK_MODE'),
+                                _buildColorBox(
+                                    ColorPalette.DARK_MODE.componentes),
+                                const SizedBox(width: 10),
+                                const Text('DARK_MODE'),
                               ],
                             ),
                           ),
@@ -245,18 +269,21 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                           });
                         },
                       ),
-                      SizedBox(height: 20),
-                      DefaultButton(text: "Actualizar", onPressed: () {
-                        crearModificarMenuAccesible(context);
-                      }, color: Color(0xFF2EC4B6)),
+                      const SizedBox(height: 20),
+                      DefaultButton(
+                          text: "Actualizar",
+                          onPressed: () {
+                            crearModificarMenuAccesible(context);
+                          },
+                          color: const Color(0xFF2EC4B6)),
                     ],
                   ),
                 ),
-                VerticalDivider(),
+                const VerticalDivider(),
                 Expanded(
                   child: Container(
                     color: _getColorPalette(_selectedPalette).fondo,
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -269,7 +296,7 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                             color: _getColorPalette(_selectedPalette).fuente,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Text(
                           'Ejemplo de Texto',
                           style: TextStyle(
@@ -277,17 +304,29 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
                             color: _getColorPalette(_selectedPalette).fuente,
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Wrap(
                           spacing: 20,
                           runSpacing: 20,
                           alignment: WrapAlignment.center,
                           children: [
-                            _buildColorCircle(_getColorPalette(_selectedPalette).colorPrincipal, 'Principal'),
-                            _buildColorCircle(_getColorPalette(_selectedPalette).colorSecundario, 'Secundario'),
-                            _buildColorCircle(_getColorPalette(_selectedPalette).fondo, 'Fondo'),
-                            _buildColorCircle(_getColorPalette(_selectedPalette).componentes, 'Componentes'),
-                            _buildColorCircle(_getColorPalette(_selectedPalette).fuente, 'Fuente'),
+                            _buildColorCircle(
+                                _getColorPalette(_selectedPalette)
+                                    .colorPrincipal,
+                                'Principal'),
+                            _buildColorCircle(
+                                _getColorPalette(_selectedPalette)
+                                    .colorSecundario,
+                                'Secundario'),
+                            _buildColorCircle(
+                                _getColorPalette(_selectedPalette).fondo,
+                                'Fondo'),
+                            _buildColorCircle(
+                                _getColorPalette(_selectedPalette).componentes,
+                                'Componentes'),
+                            _buildColorCircle(
+                                _getColorPalette(_selectedPalette).fuente,
+                                'Fuente'),
                           ],
                         ),
                       ],
@@ -343,12 +382,17 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color,
-            border: Border.all(color: _getColorPalette(_selectedPalette).fuente, width: 2),
+            border: Border.all(
+                color: _getColorPalette(_selectedPalette).fuente, width: 2),
           ),
-          margin: EdgeInsets.symmetric(horizontal: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 5),
         ),
-        SizedBox(height: 5),
-        Text(label, style: TextStyle( fontSize: 16, color: _getColorPalette(_selectedPalette).fuente),),
+        const SizedBox(height: 5),
+        Text(
+          label,
+          style: TextStyle(
+              fontSize: 16, color: _getColorPalette(_selectedPalette).fuente),
+        ),
       ],
     );
   }
@@ -358,7 +402,7 @@ class _AccesibilidadPageState extends State<AccesibilidadPage> {
       width: 20,
       height: 20,
       color: color,
-      margin: EdgeInsets.symmetric(horizontal: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 2),
     );
   }
 }

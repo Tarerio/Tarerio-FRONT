@@ -8,7 +8,7 @@ import '../../API/profesoresAPI.dart';
 import '../../consts.dart';
 
 class ProfesoresPage extends StatefulWidget {
-  ProfesoresPage({super.key});
+  const ProfesoresPage({super.key});
 
   @override
   _ProfesoresPageState createState() => _ProfesoresPageState();
@@ -17,8 +17,8 @@ class ProfesoresPage extends StatefulWidget {
 class _ProfesoresPageState extends State<ProfesoresPage> {
   List<dynamic> profesores = [];
   bool isLoading = true; // Indicador de carga
-  ProfesoresAPI _api = ProfesoresAPI();
-  TextEditingController _nicknameController = TextEditingController();
+  final ProfesoresAPI _api = ProfesoresAPI();
+  final TextEditingController _nicknameController = TextEditingController();
 
   @override
   void initState() {
@@ -97,13 +97,13 @@ class _ProfesoresPageState extends State<ProfesoresPage> {
   }
 
   @override
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
         title: const Text('Profesores',
             style: TextStyle(
-                color: const Color(0xFF2EC4B6),
+                color: Color(0xFF2EC4B6),
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
         actions: [
@@ -115,8 +115,8 @@ Widget build(BuildContext context) {
               children: [
                 IconButton(
                   icon: Icon(
-                      Icons.refresh_sharp,
-                      color: Color(colorPrincipal),
+                    Icons.refresh_sharp,
+                    color: Color(colorPrincipal),
                   ),
                   onPressed: () {
                     _cleanFiltros();
@@ -124,7 +124,7 @@ Widget build(BuildContext context) {
                 ),
                 const SizedBox(width: 10),
                 const SizedBox(width: 10),
-                Container(
+                SizedBox(
                   width: 213,
                   child: TextField(
                     controller: _nicknameController,
@@ -135,9 +135,11 @@ Widget build(BuildContext context) {
                         borderSide: BorderSide(color: Color(colorPrincipal)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                        borderSide: BorderSide(
+                            color: Color(colorPrincipal), width: 2.0),
                       ),
-                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                      suffixIcon:
+                          Icon(Icons.search, color: Color(colorPrincipal)),
                     ),
                     onChanged: (value) async {
                       final response = await _api.filtrarProfesor(value);
@@ -153,55 +155,57 @@ Widget build(BuildContext context) {
           ),
         ],
       ),
-    body: isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Wrap(
-                    spacing: 8.0,
-                    runSpacing: 8.0,
-                    children: profesores.map((profesor) {
-                      return SizedBox(
-                        width: MediaQuery.of(context).size.width > 800
-                            ? 200
-                            : 150,
-                        child: ProfesorCard(
-                            id_usuario: profesor['id_usuario'],
-                            imagenBase64: profesor['imagenBase64'] ?? '',
-                            nickname: profesor["nickname"],
-                            onPedidosMaterial: () {
-                              Navigator.pushNamed(context, '/administrador/profesores/pedidos',
-                                  arguments: profesor["nickname"]);
-                            },
-                            onDelete: () {
-                              _confirmarEliminacion(profesor['id_usuario'].toString());
-                            }),
-                      );
-                    }).toList(),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: profesores.map((profesor) {
+                        return SizedBox(
+                          width: MediaQuery.of(context).size.width > 800
+                              ? 200
+                              : 150,
+                          child: ProfesorCard(
+                              id_usuario: profesor['id_usuario'],
+                              imagenBase64: profesor['imagenBase64'] ?? '',
+                              nickname: profesor["nickname"],
+                              onPedidosMaterial: () {
+                                Navigator.pushNamed(context,
+                                    '/administrador/profesores/pedidos',
+                                    arguments: profesor["nickname"]);
+                              },
+                              onDelete: () {
+                                _confirmarEliminacion(
+                                    profesor['id_usuario'].toString());
+                              }),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => RegistrarProfesor()),
-        );
-      },
-      child: const Icon(Icons.add),
-      backgroundColor: const Color(0xFF2EC4B6),
-    ),
-    drawer: Navbar(
-      screenIndex: 3,
-      onLogout: () {
-        print("Cerrar sesión");
-      },
-    ),
-  );
-}
+              ],
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const RegistrarProfesor()),
+          );
+        },
+        backgroundColor: const Color(0xFF2EC4B6),
+        child: const Icon(Icons.add),
+      ),
+      drawer: Navbar(
+        screenIndex: 3,
+        onLogout: () {
+          print("Cerrar sesión");
+        },
+      ),
+    );
+  }
 }

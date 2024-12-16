@@ -46,8 +46,8 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
   String _porDefecto = 'texto';
 
   // Función para agregar una imagen al patrón
-  List<String> _selectedImages = [];
-  List<String> _selectedCodes = [];
+  final List<String> _selectedImages = [];
+  final List<String> _selectedCodes = [];
   List<Map<String, String>> _selectedCategoryImages = [];
   int _currentColumn = 0;
   final List<String> _category = [
@@ -518,7 +518,7 @@ class _RegistrarAlumnoState extends State<RegistrarAlumno> {
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 200),
+                        constraints: const BoxConstraints(maxWidth: 200),
                         child: Column(
                           children: [
                             DefaultSwitch(

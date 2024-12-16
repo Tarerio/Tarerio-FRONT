@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
+      home: const Home(),
       debugShowCheckedModeBanner: false, // Quita el banner de debug
       theme: ThemeData(
         primarySwatch: Colors.cyan, // Cambia el color principal aquí
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
         '/inicioAdministrador': (context) => InicioAdministrador(),
         '/administrador/tareas': (context) => TareasPage(),
         '/administrador/menus': (context) => MenusPage(),
-        '/administrador/aulas': (context) => AulasPage(),
+        '/administrador/aulas': (context) => const AulasPage(),
         '/administrador/profesores': (context) => ProfesoresPage(),
         '/administrador/alumnos': (context) => AlumnosPage(),
         '/administrador/registrarAlumno': (context) => const RegistrarAlumno(),
@@ -76,7 +76,8 @@ class MyApp extends StatelessWidget {
         '/administrador/alumnos/accesibilidad': (context) => AccesibilidadPage(
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
-        '/administrador/profesores/pedidos': (context) => PedidosAdministradorPage(
+        '/administrador/profesores/pedidos': (context) =>
+            PedidosAdministradorPage(
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
         '/administrador/estadisticas': (context) => const AdminDashboard(),

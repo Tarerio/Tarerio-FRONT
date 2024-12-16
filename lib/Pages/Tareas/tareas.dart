@@ -18,7 +18,7 @@ import '../../Widgets/ErrorModal.dart';
 import '../../Widgets/SuccessModal.dart';
 
 class TareasPage extends StatefulWidget {
-  TareasPage({super.key});
+  const TareasPage({super.key});
 
   @override
   _TareasPageState createState() => _TareasPageState();
@@ -61,7 +61,7 @@ class _TareasPageState extends State<TareasPage> {
     }
   }
 
-  void _cleanFiltros(){
+  void _cleanFiltros() {
     setState(() {
       tipoTareaSeleccionado = null;
       nombreTareaController.text = '';
@@ -70,7 +70,8 @@ class _TareasPageState extends State<TareasPage> {
   }
 
   Future<int> fetchIdAdministrador() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/administradores/getIdAdmin'));
+    final response = await http
+        .get(Uri.parse('http://localhost:3000/administradores/getIdAdmin'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -117,32 +118,39 @@ class _TareasPageState extends State<TareasPage> {
       if (tipoTarea != null) {
         switch (tipoTarea) {
           case TAREA_POR_PASOS:
-            tareasPorPasos = await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            tareasPorPasos =
+                await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
             break;
 
           case TAREA_PETICION:
-            tareasPeticion = await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            tareasPeticion =
+                await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
             break;
 
           case TAREA_JUEGO:
-            tareasJuego = await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            tareasJuego =
+                await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
             break;
         }
-      } else{
-        tareasPorPasos = await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
-        tareasPeticion = await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
-        tareasJuego = await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
+      } else {
+        tareasPorPasos =
+            await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
+        tareasPeticion =
+            await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
+        tareasJuego =
+            await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
       }
 
       setState(() {
         Tareas = [
-          ...?tareasPorPasos?.map((tarea) => {'tipo': TAREA_POR_PASOS, ...tarea}),
-          ...?tareasPeticion?.map((tarea) => {'tipo': TAREA_PETICION, ...tarea}),
+          ...?tareasPorPasos
+              ?.map((tarea) => {'tipo': TAREA_POR_PASOS, ...tarea}),
+          ...?tareasPeticion
+              ?.map((tarea) => {'tipo': TAREA_PETICION, ...tarea}),
           ...?tareasJuego?.map((tarea) => {'tipo': TAREA_JUEGO, ...tarea}),
         ];
         isLoading = false; // Oculta indicador de carga
       });
-
     } catch (e) {
       print("Error al obtener tareas: $e");
       setState(() {
@@ -151,9 +159,7 @@ class _TareasPageState extends State<TareasPage> {
     }
   }
 
-  void _eliminarTarea(
-      BuildContext context, int id, String tipo) {
-
+  void _eliminarTarea(BuildContext context, int id, String tipo) {
     onAccept() async {
       try {
         String mensaje = "La tarea ha sido eliminada correctamente";
@@ -182,15 +188,21 @@ class _TareasPageState extends State<TareasPage> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return ErrorModal(title: "Error al eliminar tarea", content: "Ha ocurrido un error al eliminar la tarea");
+            return const ErrorModal(
+                title: "Error al eliminar tarea",
+                content: "Ha ocurrido un error al eliminar la tarea");
           },
         );
       }
     }
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ConfirmationModal(title: "Eliminar Tarea", content: "Los alumnos asignados perderan esta tarea", onAccept: onAccept);
+        return ConfirmationModal(
+            title: "Eliminar Tarea",
+            content: "Los alumnos asignados perderan esta tarea",
+            onAccept: onAccept);
       },
     );
   }
@@ -201,7 +213,7 @@ class _TareasPageState extends State<TareasPage> {
       appBar: AppBar(
         title: const Text('Tareas',
             style: TextStyle(
-                color: const Color(0xFF2EC4B6),
+                color: Color(0xFF2EC4B6),
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
         actions: [
@@ -236,16 +248,18 @@ class _TareasPageState extends State<TareasPage> {
                     onChanged: (newValue) {
                       setState(() {
                         tipoTareaSeleccionado = newValue;
-                        _filterTareas(tipoTarea: tipoTareaSeleccionado, nombreTarea: nombreTareaController.text);
+                        _filterTareas(
+                            tipoTarea: tipoTareaSeleccionado,
+                            nombreTarea: nombreTareaController.text);
                       });
                     },
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    underline: SizedBox.shrink(),
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    underline: const SizedBox.shrink(),
                     iconEnabledColor: Color(colorPrincipal),
                   ),
                 ),
                 const SizedBox(width: 10),
-                Container(
+                SizedBox(
                   width: 213,
                   child: TextField(
                     controller: nombreTareaController,
@@ -256,14 +270,16 @@ class _TareasPageState extends State<TareasPage> {
                         borderSide: BorderSide(color: Color(colorPrincipal)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                        borderSide: BorderSide(
+                            color: Color(colorPrincipal), width: 2.0),
                       ),
-                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                      suffixIcon:
+                          Icon(Icons.search, color: Color(colorPrincipal)),
                     ),
                     onChanged: (value) async {
-                      await _filterTareas(nombreTarea: value, tipoTarea: tipoTareaSeleccionado);
-                      setState(() {
-                      });
+                      await _filterTareas(
+                          nombreTarea: value, tipoTarea: tipoTareaSeleccionado);
+                      setState(() {});
                     },
                   ),
                 ),
@@ -276,46 +292,52 @@ class _TareasPageState extends State<TareasPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Wrap(
-          spacing: 8.0, // Space between cards horizontally
-          runSpacing: 8.0, // Space between cards vertically
-          children: Tareas.map((tarea) {
-            return SizedBox(
-              height: 350,
-              width: MediaQuery.of(context).size.width > 800
-                  ? 200
-                  : 150, // Adjust width based on screen size
-              child: TareaCard(
-                ID_tarea: tarea['ID_tarea'],
-                titulo: tarea['Titulo'],
-                descripcion: tarea['Descripcion'],
-                imagenBase64: tarea['imagenBase64'] ?? '', // No hay imagen en las tareas de momento
-                tipo: tarea['tipo'],
-                onEdit: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditarTareas(idTarea: tarea['ID_tarea'], tipoTarea: tarea['tipo']),
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                spacing: 8.0, // Space between cards horizontally
+                runSpacing: 8.0, // Space between cards vertically
+                children: Tareas.map((tarea) {
+                  return SizedBox(
+                    height: 350,
+                    width: MediaQuery.of(context).size.width > 800
+                        ? 200
+                        : 150, // Adjust width based on screen size
+                    child: TareaCard(
+                      ID_tarea: tarea['ID_tarea'],
+                      titulo: tarea['Titulo'],
+                      descripcion: tarea['Descripcion'],
+                      imagenBase64: tarea['imagenBase64'] ??
+                          '', // No hay imagen en las tareas de momento
+                      tipo: tarea['tipo'],
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditarTareas(
+                                idTarea: tarea['ID_tarea'],
+                                tipoTarea: tarea['tipo']),
+                          ),
+                        );
+                      },
+                      onAssign: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AsignarTareaAlumno(
+                                origen: tarea['ID_tarea'],
+                                tipoTarea: tarea['tipo']),
+                          ),
+                        );
+                      },
+                      onDelete: () {
+                        _eliminarTarea(
+                            context, tarea['ID_tarea'], tarea['tipo']);
+                      },
                     ),
                   );
-                },
-                onAssign: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AsignarTareaAlumno(origen: tarea['ID_tarea'], tipoTarea: tarea['tipo']),
-                    ),
-                  );
-                },
-                onDelete: () {
-                  _eliminarTarea(context, tarea['ID_tarea'], tarea['tipo']);
-                },
+                }).toList(),
               ),
-            );
-          }).toList(),
-        ),
-      ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showTaskTypeDialog(context);
@@ -337,7 +359,7 @@ class _TareasPageState extends State<TareasPage> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return ErrorModal(
+          return const ErrorModal(
             title: "Error",
             content: "El idAdministrador no se ha cargado correctamente.",
           );
@@ -373,8 +395,8 @@ class _TareasPageState extends State<TareasPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          CrearTareaPorPasos(idAdministrador: idAdministrador!)),
+                      builder: (context) => CrearTareaPorPasos(
+                          idAdministrador: idAdministrador!)),
                 );
               },
             ),
@@ -386,8 +408,8 @@ class _TareasPageState extends State<TareasPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          CrearTareaPeticion(idAdministrador: idAdministrador!)),
+                      builder: (context) => CrearTareaPeticion(
+                          idAdministrador: idAdministrador!)),
                 );
               },
             ),

@@ -60,8 +60,8 @@ class AlumnosAPI {
       bool audio,
       String porDefecto,
       String image) async {
-    final String url = '$baseUrl/alumnos/create';
-    final String urlAccesibilidad = '$baseUrl/menuAccesible';
+    const String url = '$baseUrl/alumnos/create';
+    const String urlAccesibilidad = '$baseUrl/menuAccesible';
 
     var perfil = {
       'texto': texto,
@@ -159,12 +159,9 @@ class AlumnosAPI {
     }
   }
 
-  Future<Map<String, dynamic>> crearModificarMenuAccesible(
-      String nickname,
-      String texto_titulo,
-      String texto_descripcion,
-      String paleta_colores) async {
-    final String urlCrear = '$baseUrl/menuAccesible';
+  Future<Map<String, dynamic>> crearModificarMenuAccesible(String nickname,
+      String textoTitulo, String textoDescripcion, String paletaColores) async {
+    const String urlCrear = '$baseUrl/menuAccesible';
     final String urlModificarObtener = '$baseUrl/menuAccesible/$nickname';
 
     // Primero se verifica si el menú accesible ya existe
@@ -173,9 +170,9 @@ class AlumnosAPI {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = {
-        'texto_titulo': texto_titulo,
-        'texto_descripcion': texto_descripcion,
-        'paleta_colores': paleta_colores
+        'texto_titulo': textoTitulo,
+        'texto_descripcion': textoDescripcion,
+        'paleta_colores': paletaColores
       };
 
       final String jsonBody = json.encode(data);
@@ -192,9 +189,9 @@ class AlumnosAPI {
     } else {
       final Map<String, dynamic> data = {
         'nickname': nickname,
-        'texto_titulo': texto_titulo,
-        'texto_descripcion': texto_descripcion,
-        'paleta_colores': paleta_colores
+        'texto_titulo': textoTitulo,
+        'texto_descripcion': textoDescripcion,
+        'paleta_colores': paletaColores
       };
 
       final String jsonBody = json.encode(data);
@@ -231,14 +228,15 @@ class AlumnosAPI {
     }
   }
 
-  Future<List<dynamic>> getFilteredAlumnos(String? nickname, String? categoria) async {
-  String url = '$baseUrl/alumnos/filtered';
+  Future<List<dynamic>> getFilteredAlumnos(
+      String? nickname, String? categoria) async {
+    String url = '$baseUrl/alumnos/filtered';
 
-  if (nickname != null && categoria != null) {
+    if (nickname != null && categoria != null) {
       url += '?categoria=$categoria&nickname=$nickname';
-    } else if (nickname != null){
+    } else if (nickname != null) {
       url += '?nickname=$nickname';
-    } else if (categoria != null){
+    } else if (categoria != null) {
       url += '?categoria=$categoria';
     }
 
@@ -250,5 +248,4 @@ class AlumnosAPI {
       throw Exception('Failed to load data');
     }
   }
-
 }

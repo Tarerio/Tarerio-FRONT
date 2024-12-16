@@ -7,7 +7,6 @@ import 'package:tarerio/API/profesoresAPI.dart';
 
 // API de TareaPeticion
 class TareaPeticionAPI {
-
   ProfesoresAPI profesoresAPI = ProfesoresAPI();
 
   Future<Map<String, dynamic>?> crearTareaPeticion(
@@ -30,12 +29,12 @@ class TareaPeticionAPI {
       "creatorId": idAdministrador,
       "enunciados": enunciados
           .map((enunciado) => {
-        "Texto": enunciado.texto,
-        "Imagen": enunciado.imagen,
-        "Video": enunciado.video
-      })
+                "Texto": enunciado.texto,
+                "Imagen": enunciado.imagen,
+                "Video": enunciado.video
+              })
           .toList(), // Convertir cada enunciado en un mapa
-      "imagen" : imagen,
+      "imagen": imagen,
     };
 
     final response = await http.post(Uri.parse(url),
@@ -65,7 +64,8 @@ class TareaPeticionAPI {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getFilteredTareas({String? nombreTarea}) async {
+  Future<List<Map<String, dynamic>>> getFilteredTareas(
+      {String? nombreTarea}) async {
     String url = '$baseUrl/tareaPeticion/filtered?nombreTarea=$nombreTarea';
 
     final response = await http.get(Uri.parse(url));
@@ -94,8 +94,8 @@ class TareaPeticionAPI {
     }
   }
 
-
-  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno, DateTime dueDate, TimeOfDay dueTime, int stepPage) async {
+  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno,
+      DateTime dueDate, TimeOfDay dueTime, int stepPage) async {
     String url = '$baseUrl/tareaPeticion/$idTarea/asignar';
 
     final DateTime fullDueDateTime = DateTime(
@@ -125,7 +125,7 @@ class TareaPeticionAPI {
     }
   }
 
-  Future<Map<String, dynamic>> obtenerTareaByID(int idTarea) async{
+  Future<Map<String, dynamic>> obtenerTareaByID(int idTarea) async {
     String url = '$baseUrl/tareaPeticion/$idTarea';
 
     final response = await http.get(Uri.parse(url));
@@ -138,21 +138,20 @@ class TareaPeticionAPI {
     }
   }
 
-  Future<Map<String, dynamic>> updateTarea(int idTarea, Map<String, dynamic> tarea) async
-  {
+  Future<Map<String, dynamic>> updateTarea(
+      int idTarea, Map<String, dynamic> tarea) async {
     String url = '$baseUrl/tareaPeticion/$idTarea';
 
     final Map<String, dynamic> body = {
       "Titulo": tarea['Titulo'],
       "Descripcion": tarea['Descripcion'],
-      "imagen" : tarea['imagenBase64'],
+      "imagen": tarea['imagenBase64'],
       "enunciados": tarea['Enunciados']
-          .map((enunciado) =>
-      {
-        "Texto": enunciado['Texto'],
-        "Imagen": enunciado['Imagen'],
-        "Video": enunciado['Video'],
-      })
+          .map((enunciado) => {
+                "Texto": enunciado['Texto'],
+                "Imagen": enunciado['Imagen'],
+                "Video": enunciado['Video'],
+              })
           .toList(), // Convertir cada enunciado en un mapa
     };
 
@@ -186,7 +185,9 @@ class TareaPeticionAPI {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       List<dynamic> jsonResponse = jsonDecode(response.body);
-      return jsonResponse.map((tarea) => tarea as Map<String, dynamic>).toList();
+      return jsonResponse
+          .map((tarea) => tarea as Map<String, dynamic>)
+          .toList();
     } else {
       throw Exception('Failed to load tasks');
     }
@@ -201,32 +202,24 @@ class TareaPeticionAPI {
       String imagen,
       int idAlumno,
       DateTime dueDate,
-      int id_pedido
-      ) async {
+      int idPedido) async {
     try {
-
       // Create the task
-      final taskResponse = await crearTareaPeticion(
-          titulo,
-          descripcion,
-          fechaCreacion,
-          idAdministrador,
-          enunciados,
-          imagen
-      );
+      final taskResponse = await crearTareaPeticion(titulo, descripcion,
+          fechaCreacion, idAdministrador, enunciados, imagen);
 
-      print( 'Task created with ID: ' + taskResponse.toString());
+      print('Task created with ID: $taskResponse');
 
       if (taskResponse != null) {
         final int idTarea = taskResponse['ID_tarea'];
 
         // Assign the task to the student
-        final TimeOfDay dueTime = TimeOfDay(hour: 20, minute: 0); // 8 PM
-        final int stepPage = 3;
+        final TimeOfDay dueTime = const TimeOfDay(hour: 20, minute: 0); // 8 PM
+        const int stepPage = 3;
 
         await asignarAlumnoTarea(idTarea, idAlumno, dueDate, dueTime, stepPage);
 
-        await profesoresAPI.marcarPedidoRecibido(id_pedido);
+        await profesoresAPI.marcarPedidoRecibido(idPedido);
       } else {
         throw Exception('Failed to create task');
       }
@@ -259,6 +252,5 @@ class TareaPeticionAPI {
       print('Response body: ${response.body}');
       throw Exception('Failed to mark task as done');
     }
-
   }
 }

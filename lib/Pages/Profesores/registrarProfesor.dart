@@ -68,9 +68,9 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
         _base64Image,
       );
 
-      if (jsonResponse == null || jsonResponse['status'] == 'error') {
-        _showErrorModal(
-            context, 'Error al registrar profesor', jsonResponse?['message'] ?? 'Unknown error');
+      if (jsonResponse['status'] == 'error') {
+        _showErrorModal(context, 'Error al registrar profesor',
+            jsonResponse['message'] ?? 'Unknown error');
         return '';
       }
 

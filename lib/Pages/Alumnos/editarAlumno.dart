@@ -15,7 +15,7 @@ import 'package:tarerio/Widgets/TextFieldDefault.dart';
 
 class EditarAlumno extends StatefulWidget {
   final int idUsuario;
-  const EditarAlumno({Key? key, required this.idUsuario}) : super(key: key);
+  const EditarAlumno({super.key, required this.idUsuario});
 
   @override
   _EditarAlumnoState createState() => _EditarAlumnoState();
@@ -56,7 +56,7 @@ class _EditarAlumnoState extends State<EditarAlumno> {
   String _porDefecto = 'texto';
 
   // Función para agregar una imagen al patrón
-  List<String> _selectedImages = [];
+  final List<String> _selectedImages = [];
   List<String> _selectedCodes = [];
   List<Map<String, String>> _selectedCategoryImages = [];
   int _currentColumn = 0;
@@ -168,33 +168,37 @@ class _EditarAlumnoState extends State<EditarAlumno> {
     }
     setState(() {
       _nicknameController.text = jsonResponse['alumno']['nickname'];
-      String _patron = jsonResponse['alumno']['contrasenia'];
+      String patron = jsonResponse['alumno']['contrasenia'];
       RegExp exp = RegExp(r'..');
       _selectedCodes =
-          exp.allMatches(_patron).map((match) => match.group(0)!).toList();
-      if(_selectedCodes[0][0] == 'S'){
+          exp.allMatches(patron).map((match) => match.group(0)!).toList();
+      if (_selectedCodes[0][0] == 'S') {
         _selectedCategory = 'Superheroes';
         _selectCategory(_selectedCategory);
-        for(int i = 0; i < _selectedCodes.length; i++){
-          _selectedImages.add('assets/images/superheroes/superheroes${_selectedCodes[i][1]}.png');
+        for (int i = 0; i < _selectedCodes.length; i++) {
+          _selectedImages.add(
+              'assets/images/superheroes/superheroes${_selectedCodes[i][1]}.png');
         }
-      }else if(_selectedCodes[0][0] == 'I'){
+      } else if (_selectedCodes[0][0] == 'I') {
         _selectedCategory = 'Insectos';
         _selectCategory(_selectedCategory);
-        for(int i = 0; i < _selectedCodes.length; i++){
-          _selectedImages.add('assets/images/insectos/insectos${_selectedCodes[i][1]}.png');
+        for (int i = 0; i < _selectedCodes.length; i++) {
+          _selectedImages.add(
+              'assets/images/insectos/insectos${_selectedCodes[i][1]}.png');
         }
-      }else if(_selectedCodes[0][0] == 'F'){
+      } else if (_selectedCodes[0][0] == 'F') {
         _selectedCategory = 'Formas';
         _selectCategory(_selectedCategory);
-        for(int i = 0; i < _selectedCodes.length; i++){
-          _selectedImages.add('assets/images/formas/formas${_selectedCodes[i][1]}.png');
+        for (int i = 0; i < _selectedCodes.length; i++) {
+          _selectedImages
+              .add('assets/images/formas/formas${_selectedCodes[i][1]}.png');
         }
-      }else if(_selectedCodes[0][0] == 'D'){
+      } else if (_selectedCodes[0][0] == 'D') {
         _selectedCategory = 'Dinosaurios';
         _selectCategory(_selectedCategory);
-        for(int i = 0; i < _selectedCodes.length; i++){
-          _selectedImages.add('assets/images/dinosaurios/dinosaurios${_selectedCodes[i][1]}.png');
+        for (int i = 0; i < _selectedCodes.length; i++) {
+          _selectedImages.add(
+              'assets/images/dinosaurios/dinosaurios${_selectedCodes[i][1]}.png');
         }
       }
 

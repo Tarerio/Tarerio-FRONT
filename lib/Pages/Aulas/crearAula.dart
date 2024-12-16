@@ -15,6 +15,8 @@ import 'package:tarerio/API/aulasAPI.dart';
 import 'package:tarerio/Pages/Aulas/aulas.dart';
 
 class CrearAula extends StatefulWidget {
+  const CrearAula({super.key});
+
   @override
   _CrearAulaState createState() => _CrearAulaState();
 }
@@ -76,14 +78,14 @@ class _CrearAulaState extends State<CrearAula> {
   }
 
   Future<String> _testAula(BuildContext context) async {
-    var jsonResponse =
-        await _api.crearAula(_claveController.text, _cupoController.text, _base64Image);
+    var jsonResponse = await _api.crearAula(
+        _claveController.text, _cupoController.text, _base64Image);
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(context, 'Error al crear aula', jsonResponse['message']);
     }
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => AulasPage()),
+      MaterialPageRoute(builder: (context) => const AulasPage()),
     );
 
     return jsonResponse['aula']['clave_aula'];
@@ -122,7 +124,7 @@ class _CrearAulaState extends State<CrearAula> {
         onBackPressed: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => AulasPage()),
+            MaterialPageRoute(builder: (context) => const AulasPage()),
           );
         },
       ),

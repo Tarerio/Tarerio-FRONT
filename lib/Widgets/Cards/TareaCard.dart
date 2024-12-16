@@ -16,7 +16,7 @@ class TareaCard extends StatefulWidget {
   final VoidCallback? onRevisar;
 
   const TareaCard({
-    Key? key,
+    super.key,
     required this.ID_tarea,
     required this.titulo,
     required this.descripcion,
@@ -27,14 +27,13 @@ class TareaCard extends StatefulWidget {
     this.onDelete,
     this.onSelect,
     this.onRevisar,
-  }) : super(key: key);
+  });
 
   @override
   _TareaCardState createState() => _TareaCardState();
 }
 
 class _TareaCardState extends State<TareaCard> {
-
   Icon _getIconForTipoTarea(String tipo) {
     switch (tipo) {
       case TAREA_JUEGO:
@@ -44,7 +43,8 @@ class _TareaCardState extends State<TareaCard> {
       case TAREA_POR_PASOS:
         return const Icon(Icons.list_rounded, color: Colors.white);
       default:
-        return const Icon(Icons.edit_square, color: Colors.white); // Default icon
+        return const Icon(Icons.edit_square,
+            color: Colors.white); // Default icon
     }
   }
 
@@ -79,13 +79,14 @@ class _TareaCardState extends State<TareaCard> {
             // Task image
             widget.imagenBase64.isNotEmpty
                 ? CircleAvatar(
-              radius: 50,
-              backgroundImage: MemoryImage(base64Decode(widget.imagenBase64)),
-            )
+                    radius: 50,
+                    backgroundImage:
+                        MemoryImage(base64Decode(widget.imagenBase64)),
+                  )
                 : Avatar(
-              size: 50,
-              placeholderIcon: _getIconForTipoTarea(widget.tipo),
-            ),
+                    size: 50,
+                    placeholderIcon: _getIconForTipoTarea(widget.tipo),
+                  ),
             // Task title
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -121,7 +122,8 @@ class _TareaCardState extends State<TareaCard> {
                   if (widget.onAssign != null)
                     TextButton.icon(
                       onPressed: widget.onAssign,
-                      icon: const Icon(Icons.person_add_alt, color: Colors.teal),
+                      icon:
+                          const Icon(Icons.person_add_alt, color: Colors.teal),
                       label: const Text('Asignar a Alumno'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
@@ -139,7 +141,8 @@ class _TareaCardState extends State<TareaCard> {
                   if (widget.onSelect != null)
                     TextButton.icon(
                       onPressed: widget.onSelect,
-                      icon: const Icon(Icons.assignment_add, color: Colors.teal),
+                      icon:
+                          const Icon(Icons.assignment_add, color: Colors.teal),
                       label: const Text('Seleccionar'),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
@@ -149,7 +152,11 @@ class _TareaCardState extends State<TareaCard> {
                     TextButton.icon(
                       onPressed: widget.onRevisar,
                       icon: const Icon(Icons.check, color: Colors.teal),
-                      label: const Text('Revisar' , style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold, fontSize: 20)),
+                      label: const Text('Revisar',
+                          style: TextStyle(
+                              color: Colors.teal,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)),
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.teal,
                         backgroundColor: Colors.white,

@@ -12,7 +12,7 @@ class AppBarDefault extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions; // Añadir este parámetro
 
   const AppBarDefault({
-    Key? key,
+    super.key,
     required this.title,
     required this.titleColor,
     required this.iconColor,
@@ -22,7 +22,7 @@ class AppBarDefault extends StatelessWidget implements PreferredSizeWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 20.0),
     this.onBackPressed,
     this.actions, // Añadir este parámetro al constructor
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -13,13 +13,13 @@ class ProfesorCard extends StatefulWidget {
   final VoidCallback? onPedidosMaterial;
 
   const ProfesorCard({
-    Key? key,
+    super.key,
     required this.id_usuario,
     required this.imagenBase64,
     required this.nickname,
     required this.onDelete,
     this.onPedidosMaterial,
-  }) : super(key: key);
+  });
 
   @override
   _ProfesorCardState createState() => _ProfesorCardState();
@@ -41,7 +41,8 @@ class _ProfesorCardState extends State<ProfesorCard> {
       final List<dynamic> allPedidos = response['pedidos'] ?? [];
 
       setState(() {
-        hasPendingPedidos = allPedidos.any((pedido) => pedido['estado'] == 'Pendiente');
+        hasPendingPedidos =
+            allPedidos.any((pedido) => pedido['estado'] == 'Pendiente');
       });
     } catch (e) {
       print("Error al obtener pedidos: $e");
@@ -66,12 +67,13 @@ class _ProfesorCardState extends State<ProfesorCard> {
             // Imagen del profesor
             widget.imagenBase64.isNotEmpty
                 ? CircleAvatar(
-              radius: 50, // Adjust the size as needed
-              backgroundImage: MemoryImage(base64Decode(widget.imagenBase64)),
-            )
+                    radius: 50, // Adjust the size as needed
+                    backgroundImage:
+                        MemoryImage(base64Decode(widget.imagenBase64)),
+                  )
                 : const Avatar(
-              size: 50,
-            ),
+                    size: 50,
+                  ),
             // Nombre del aula
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -126,7 +128,7 @@ class _ProfesorCardState extends State<ProfesorCard> {
                             margin: const EdgeInsets.only(left: 8.0),
                             width: 12,
                             height: 12,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.deepOrange,
                               shape: BoxShape.circle,
                             ),
@@ -145,7 +147,6 @@ class _ProfesorCardState extends State<ProfesorCard> {
                     foregroundColor: Colors.deepOrange,
                   ),
                 ),
-
               ],
             ),
           ],

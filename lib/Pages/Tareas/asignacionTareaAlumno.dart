@@ -18,10 +18,10 @@ class NumericInputField extends StatefulWidget {
   final String labelText;
 
   const NumericInputField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.labelText,
-  }) : super(key: key);
+  });
 
   @override
   _NumericInputFieldState createState() => _NumericInputFieldState();
@@ -53,16 +53,16 @@ class _NumericInputFieldState extends State<NumericInputField> {
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: widget.labelText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         suffix: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_drop_up),
+              icon: const Icon(Icons.arrow_drop_up),
               onPressed: _increment,
             ),
             IconButton(
-              icon: Icon(Icons.arrow_drop_down),
+              icon: const Icon(Icons.arrow_drop_down),
               onPressed: _decrement,
             ),
           ],
@@ -77,10 +77,10 @@ class AsignarTareaAlumno extends StatefulWidget {
   final String tipoTarea;
 
   const AsignarTareaAlumno({
-    Key? key,
+    super.key,
     required this.origen,
     required this.tipoTarea,
-  }) : super(key: key);
+  });
 
   @override
   _AsignarTareaAlumnoState createState() => _AsignarTareaAlumnoState();
@@ -117,10 +117,10 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
   }
 
   Future<void> _cargarItems() async {
-    AlumnosAPI _api = AlumnosAPI();
+    AlumnosAPI api = AlumnosAPI();
 
     try {
-      final alumnos = await _api.getAlumnos();
+      final alumnos = await api.getAlumnos();
       setState(() {
         Alumnos = alumnos;
       });
@@ -167,7 +167,8 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Selecciona la fecha y hora de cierre para la tarea'),
+          title:
+              const Text('Selecciona la fecha y hora de cierre para la tarea'),
           content: StatefulBuilder(
             builder: (context, setStateDialog) {
               return Column(
@@ -188,7 +189,7 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2EC4B6),
+                            backgroundColor: const Color(0xFF2EC4B6),
                           ),
                           child: const SizedBox(
                             width: 120,
@@ -198,14 +199,14 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 20),
-                        Icon(Icons.calendar_today),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 20),
+                        const Icon(Icons.calendar_today),
+                        const SizedBox(width: 10),
                         Text(
                           _selectedDate != null
                               ? DateFormat('dd-MM').format(_selectedDate!)
                               : 'Selecciona una fecha',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -225,7 +226,7 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2EC4B6),
+                            backgroundColor: const Color(0xFF2EC4B6),
                           ),
                           child: const SizedBox(
                             width: 120,
@@ -235,19 +236,20 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 20),
-                        Icon(Icons.access_time),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 20),
+                        const Icon(Icons.access_time),
+                        const SizedBox(width: 10),
                         Text(
                           _selectedTime != null
                               ? _formatTime(_selectedTime!)
                               : 'Selecciona una hora',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
                   ),
-                  if (widget.tipoTarea == TAREA_POR_PASOS || widget.tipoTarea == TAREA_PETICION)
+                  if (widget.tipoTarea == TAREA_POR_PASOS ||
+                      widget.tipoTarea == TAREA_PETICION)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: SizedBox(
@@ -281,12 +283,17 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                   onPressed: () async {
                     if (_selectedDate != null && _selectedTime != null) {
                       int? stepsPerPage = int.tryParse(_stepsController.text);
-                      if (stepsPerPage == null && widget.tipoTarea != TAREA_JUEGO) {
+                      if (stepsPerPage == null &&
+                          widget.tipoTarea != TAREA_JUEGO) {
                         Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AsignarTareaAlumno(
+                                    origen: widget.origen,
+                                    tipoTarea: widget.tipoTarea)));
 
-                          _showErrorModal(context, 'Error', 'Por favor ingrese un número válido.');
+                        _showErrorModal(context, 'Error',
+                            'Por favor ingrese un número válido.');
 
                         return;
                       }
@@ -294,8 +301,8 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                       try {
                         switch (widget.tipoTarea) {
                           case TAREA_PETICION:
-                            TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
-                            await _peticionAPI.asignarAlumnoTarea(
+                            TareaPeticionAPI peticionAPI = TareaPeticionAPI();
+                            await peticionAPI.asignarAlumnoTarea(
                               widget.origen,
                               alumnoSeleccionado,
                               _selectedDate!,
@@ -304,8 +311,8 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                             );
                             break;
                           case TAREA_POR_PASOS:
-                            TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
-                            await _porPasosAPI.asignarAlumnoTarea(
+                            TareaPorPasosAPI porPasosAPI = TareaPorPasosAPI();
+                            await porPasosAPI.asignarAlumnoTarea(
                               widget.origen,
                               alumnoSeleccionado,
                               _selectedDate!,
@@ -314,8 +321,8 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                             );
                             break;
                           case TAREA_JUEGO:
-                            TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
-                            await _juegoAPI.asignarAlumnoTarea(
+                            TareaJuegoAPI juegoAPI = TareaJuegoAPI();
+                            await juegoAPI.asignarAlumnoTarea(
                               widget.origen,
                               alumnoSeleccionado,
                               _selectedDate!,
@@ -324,22 +331,34 @@ class _AsignarTareaAlumnoState extends State<AsignarTareaAlumno> {
                             break;
                         }
                         Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
-                          _showSuccessModal(context, 'Éxito', 'Tarea asignada con éxito');
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AsignarTareaAlumno(
+                                    origen: widget.origen,
+                                    tipoTarea: widget.tipoTarea)));
+                        _showSuccessModal(
+                            context, 'Éxito', 'Tarea asignada con éxito');
                       } catch (e) {
                         Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
-                          _showErrorModal(context, 'Error', 'Error al asignar la tarea');
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AsignarTareaAlumno(
+                                    origen: widget.origen,
+                                    tipoTarea: widget.tipoTarea)));
+                        _showErrorModal(
+                            context, 'Error', 'Error al asignar la tarea');
                       }
 
                       _resetTimes();
                     } else {
                       Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => AsignarTareaAlumno(origen: widget.origen, tipoTarea: widget.tipoTarea)));
-                        _showErrorModal(context, 'Error', 'Por favor selecciona una fecha y hora');
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AsignarTareaAlumno(
+                                  origen: widget.origen,
+                                  tipoTarea: widget.tipoTarea)));
+                      _showErrorModal(context, 'Error',
+                          'Por favor selecciona una fecha y hora');
                     }
                   },
                   color: Color(colorPrincipal),

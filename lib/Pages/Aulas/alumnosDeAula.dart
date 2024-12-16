@@ -14,7 +14,11 @@ class AlumnosDeAula extends StatefulWidget {
   final String claveAula;
   final int cupoAula;
 
-  AlumnosDeAula({required this.aulaId, required this.claveAula, required this.cupoAula});
+  const AlumnosDeAula(
+      {super.key,
+      required this.aulaId,
+      required this.claveAula,
+      required this.cupoAula});
 
   @override
   _AlumnosDeAulaState createState() => _AlumnosDeAulaState();
@@ -26,7 +30,7 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
   List<dynamic> alumnos = [];
   List<dynamic> alumnosDisponibles = [];
 
-  dynamic alumnoSeleccionado = null;
+  dynamic alumnoSeleccionado;
 
   @override
   void initState() {
@@ -78,9 +82,11 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
         alumnoSeleccionado = null;
       });
       fetchAlumnosAula(widget.aulaId);
-      _showSuccessModal(context, 'Alumno asignado', 'El alumno ha sido asignado correctamente');
+      _showSuccessModal(context, 'Alumno asignado',
+          'El alumno ha sido asignado correctamente');
     } catch (e) {
-      _showErrorModal(context, 'Error al asignar alumno', e.toString().replaceFirst('Exception: ', ''));
+      _showErrorModal(context, 'Error al asignar alumno',
+          e.toString().replaceFirst('Exception: ', ''));
     }
   }
 
@@ -89,9 +95,11 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
       await _apiAulas.eliminarAlumnoAula(idUsuario);
       setState(() => isLoading = true);
       fetchAlumnosAula(widget.aulaId);
-      _showSuccessModal(context, 'Alumno eliminado', 'El alumno ha sido eliminado correctamente');
+      _showSuccessModal(context, 'Alumno eliminado',
+          'El alumno ha sido eliminado correctamente');
     } catch (e) {
-      _showErrorModal(context, 'Error al eliminar alumno', e.toString().replaceFirst('Exception: ', ''));
+      _showErrorModal(context, 'Error al eliminar alumno',
+          e.toString().replaceFirst('Exception: ', ''));
     }
   }
 
@@ -116,9 +124,10 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide( color: Color(colorPrincipal) ),
+                    borderSide: BorderSide(color: Color(colorPrincipal)),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: -100),
+                  contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: -100),
                   labelText: 'Elige un alumno',
                 ),
                 items: alumnosDisponibles.map((alumno) {
@@ -133,19 +142,21 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
                   });
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   if (alumnoSeleccionado != null) {
-                    aniadirAlumnoAula(widget.aulaId, alumnoSeleccionado!['id_usuario']);
+                    aniadirAlumnoAula(
+                        widget.aulaId, alumnoSeleccionado!['id_usuario']);
                     Navigator.pop(context);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Por favor, selecciona un alumno')),
+                      const SnackBar(
+                          content: Text('Por favor, selecciona un alumno')),
                     );
                   }
                 },
-                child: Text('Aceptar'),
+                child: const Text('Aceptar'),
               ),
             ],
           ),
@@ -168,50 +179,54 @@ class _AlumnosDeAulaState extends State<AlumnosDeAula> {
         onBackPressed: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => AulasPage()),
+            MaterialPageRoute(builder: (context) => const AulasPage()),
           );
         },
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : alumnos.isEmpty
-          ? Center(
-        child: Text(
-          'Aún no hay alumnos asignados',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-          ),
-        ),
-      )
-          : Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Wrap(
-          spacing: 8.0, // Space between cards horizontally
-          runSpacing: 8.0, // Space between cards vertically
-          children: alumnos.map((alumno) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width / 6,
-              height: 250,
-              child: AlumnoDeAulaCard(
-                id_usuario: alumno['id_usuario'],
-                imagenBase64: alumno['imagenBase64'] ?? '',
-                nickname: alumno["nickname"],
-                onDelete: () {
-                  eliminarAlumnoAula(alumno['id_usuario']);
-                },
-              ),
-            );
-          }).toList(),
-        ),
-      ),
+              ? const Center(
+                  child: Text(
+                    'Aún no hay alumnos asignados',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Wrap(
+                    spacing: 8.0, // Space between cards horizontally
+                    runSpacing: 8.0, // Space between cards vertically
+                    children: alumnos.map((alumno) {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width / 6,
+                        height: 250,
+                        child: AlumnoDeAulaCard(
+                          id_usuario: alumno['id_usuario'],
+                          imagenBase64: alumno['imagenBase64'] ?? '',
+                          nickname: alumno["nickname"],
+                          onDelete: () {
+                            eliminarAlumnoAula(alumno['id_usuario']);
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
       floatingActionButton: FloatingActionButton(
         onPressed: alumnos.length >= widget.cupoAula
             ? null
-            : () { _mostrarModalSeleccion(context);},
+            : () {
+                _mostrarModalSeleccion(context);
+              },
+        backgroundColor: alumnos.length >= widget.cupoAula
+            ? const Color(0xDDDDDDDD)
+            : const Color(0xFF2EC4B6),
         child: const Icon(Icons.add),
-        backgroundColor: alumnos.length >= widget.cupoAula ? const Color(0xDDDDDDDD) : const Color(0xFF2EC4B6),
       ),
     );
   }

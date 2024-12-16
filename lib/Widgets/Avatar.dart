@@ -13,7 +13,7 @@ class Avatar extends StatelessWidget {
   final Color borderColor;
 
   const Avatar({
-    Key? key,
+    super.key,
     this.base64Image = '',
     this.radius = 50.0,
     this.size = 150.0,
@@ -22,9 +22,8 @@ class Avatar extends StatelessWidget {
     this.onClear,
     this.borderWidth = 0.5,
     this.borderColor = Colors.black,
-  })  : placeholderIcon = placeholderIcon ??
-            const Icon(Icons.person, size: 150.0, color: Colors.white),
-        super(key: key);
+  }) : placeholderIcon = placeholderIcon ??
+            const Icon(Icons.person, size: 150.0, color: Colors.white);
 
   @override
   Widget build(BuildContext context) {

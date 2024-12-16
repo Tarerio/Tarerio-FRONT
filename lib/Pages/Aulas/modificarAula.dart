@@ -20,7 +20,12 @@ class ModificarAula extends StatefulWidget {
   final int cupoAula;
   final String imagenAula;
 
-  ModificarAula({required this.aulaId, required this.claveAula, required this.cupoAula, required this.imagenAula});
+  const ModificarAula(
+      {super.key,
+      required this.aulaId,
+      required this.claveAula,
+      required this.cupoAula,
+      required this.imagenAula});
 
   @override
   _ModificarAulaState createState() => _ModificarAulaState();
@@ -91,14 +96,15 @@ class _ModificarAulaState extends State<ModificarAula> {
   }
 
   Future<String> _testAula(BuildContext context) async {
-    var jsonResponse = await _api.modificarAula(widget.aulaId.toString(), _claveController.text, _cupoController.text, _base64Image);
+    var jsonResponse = await _api.modificarAula(widget.aulaId.toString(),
+        _claveController.text, _cupoController.text, _base64Image);
     if (jsonResponse['status'] == 'error') {
       _showErrorModal(
           context, 'Error al modificar aula', jsonResponse['message']);
     }
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => AulasPage()),
+      MaterialPageRoute(builder: (context) => const AulasPage()),
     );
 
     return jsonResponse['aula']['clave_aula'];
@@ -107,7 +113,7 @@ class _ModificarAulaState extends State<ModificarAula> {
   void _modificarAula(BuildContext context) async {
     if (_claveController.text.isEmpty || _cupoController.text.isEmpty) {
       _showErrorModal(context, 'Falta la clave o el cupo',
-          'Por favor, llena todos los campos.');  
+          'Por favor, llena todos los campos.');
     } else {
       String aula = await _testAula(context);
       if (aula != '') {
@@ -137,7 +143,7 @@ class _ModificarAulaState extends State<ModificarAula> {
         onBackPressed: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => AulasPage()),
+            MaterialPageRoute(builder: (context) => const AulasPage()),
           );
         },
       ),

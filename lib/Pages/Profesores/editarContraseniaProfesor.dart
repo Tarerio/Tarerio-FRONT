@@ -10,7 +10,7 @@ import '../../Widgets/SuccessModal.dart';
 import '../../consts.dart';
 
 class EditarContraseniaProfesor extends StatefulWidget {
-  const EditarContraseniaProfesor({Key? key}) : super(key: key);
+  const EditarContraseniaProfesor({super.key});
 
   @override
   _EditarContraseniaProfesorState createState() =>
@@ -56,7 +56,7 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
       setState(() {
         _showSuccessModal(context, "Exito", "Contraseña cambiada exitosamente");
       });
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 3), () {
         Navigator.pop(context);
       });
       //Navigator.pop(context); // Regresa a la pantalla anterior
@@ -110,7 +110,7 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
               TextFieldDefault(
                 label: "Contraseña actual",
                 controller: _contraseniaActualController,
-                labelColor: Color(0xFF2EC4B6),
+                labelColor: const Color(0xFF2EC4B6),
                 padding: const EdgeInsets.only(top: 10.0),
                 obscureText: true,
               ),
@@ -118,7 +118,7 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
               TextFieldDefault(
                 label: "Nueva Contraseña",
                 controller: _contraseniaNuevaController,
-                labelColor: Color(0xFF2EC4B6),
+                labelColor: const Color(0xFF2EC4B6),
                 padding: const EdgeInsets.only(top: 10.0),
                 obscureText: true,
               ),
@@ -131,13 +131,13 @@ class _EditarContraseniaProfesorState extends State<EditarContraseniaProfesor> {
               const SizedBox(height: 8.0),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 _isLoading
-                    ? CircularProgressIndicator()
+                    ? const CircularProgressIndicator()
                     : DefaultButton(
                         text: "Cambiar Contraseña",
                         onPressed: () {
                           _cambiarContrasenia(idUsuario);
                         },
-                        color: Color(0xFF2EC4B6),
+                        color: const Color(0xFF2EC4B6),
                         width: 400,
                       ),
                 /*: ElevatedButton(

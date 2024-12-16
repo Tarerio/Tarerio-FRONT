@@ -14,7 +14,7 @@ class AlumnoCard extends StatefulWidget {
   final VoidCallback? onGetTasks;
 
   const AlumnoCard({
-    Key? key,
+    super.key,
     required this.id_usuario,
     required this.imagenBase64,
     required this.nickname,
@@ -24,8 +24,9 @@ class AlumnoCard extends StatefulWidget {
     this.onSelect,
     this.onAccesibilidad,
     this.onGetTasks,
-  }) : super(key: key);
+  });
 
+  @override
   _AlumnoCardState createState() => _AlumnoCardState();
 }
 
@@ -44,7 +45,7 @@ class _AlumnoCardState extends State<AlumnoCard> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             // Imagen del profesor
             widget.imagenBase64.isNotEmpty
                 ? CircleAvatar(

@@ -19,7 +19,7 @@ import '../../consts.dart';
 class CrearTareaJuego extends StatefulWidget {
   final int IdAdministrador;
 
-  CrearTareaJuego({required this.IdAdministrador});
+  const CrearTareaJuego({super.key, required this.IdAdministrador});
 
   @override
   _CrearTareaJuegoState createState() => _CrearTareaJuegoState();
@@ -30,7 +30,7 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
 
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
-  final TextEditingController   _urlJuegoController = TextEditingController();
+  final TextEditingController _urlJuegoController = TextEditingController();
 
   //Variables para la imagen
   File? _image;
@@ -57,37 +57,41 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
   }
 
   void _crearTarea(BuildContext context) async {
-    if(_tituloController.text.isEmpty ||
+    if (_tituloController.text.isEmpty ||
         _descripcionController.text.isEmpty ||
         _urlJuegoController.text.isEmpty) {
-        _showErrorModal(context, 'Error al crear la tarea', 'Por favor, llena todos los campos.');
+      _showErrorModal(context, 'Error al crear la tarea',
+          'Por favor, llena todos los campos.');
 
-      return ;
+      return;
     }
 
     try {
       DateTime fechaCreacion = DateTime.now();
 
       await _api.crearTareaJuego(
-          _tituloController.text,
-          _descripcionController.text,
-          fechaCreacion,
-          _urlJuegoController.text,
-          widget.IdAdministrador,
-          _base64Image,
+        _tituloController.text,
+        _descripcionController.text,
+        fechaCreacion,
+        _urlJuegoController.text,
+        widget.IdAdministrador,
+        _base64Image,
       );
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TareasPage()));
-      _showSuccessModal(context, 'Tarea creada', 'La tarea se ha creado correctamente');
-
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => TareasPage()));
+      _showSuccessModal(
+          context, 'Tarea creada', 'La tarea se ha creado correctamente');
     } catch (e) {
       print('Request failed with error: $e');
-      _showErrorModal(context, 'Error al crear la tarea', 'Ha ocurrido un error al crear la tarea');
+      _showErrorModal(context, 'Error al crear la tarea',
+          'Ha ocurrido un error al crear la tarea');
     }
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) return;
 
@@ -97,7 +101,6 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
       _image = File(pickedFile.path);
       _base64Image = base64Encode(bytes);
     });
-
   }
 
   @override
@@ -175,9 +178,8 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
                         base64Image: _base64Image,
                         radius: 80.0,
                         backgroundColor: Colors.grey[300]!,
-                        placeholderIcon: const Icon(
-                            Icons.games,
-                            color: Colors.white),
+                        placeholderIcon:
+                            const Icon(Icons.games, color: Colors.white),
                         onClear: () {
                           setState(() {
                             _base64Image = '';
@@ -199,7 +201,7 @@ class _CrearTareaJuegoState extends State<CrearTareaJuego> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                    DefaultButton(
+                  DefaultButton(
                     text: 'Crear Tarea',
                     onPressed: () {
                       _crearTarea(context);

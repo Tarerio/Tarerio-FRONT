@@ -38,7 +38,8 @@ class InicioAdministrador extends StatelessWidget {
   Future<String> _testAdmin(BuildContext context) async {
     try {
       var jsonResponse = await _api.inicioSesionAdministrador(
-          usuarioController.text.replaceAll(" ", ""), contrasenaController.text.replaceAll(" ", ""));
+          usuarioController.text.replaceAll(" ", ""),
+          contrasenaController.text.replaceAll(" ", ""));
       return jsonResponse['administrador']['nickname'];
     } catch (e) {
       print('Request failed with error: $e');
@@ -71,7 +72,7 @@ class InicioAdministrador extends StatelessWidget {
     if (admin.isNotEmpty) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AdminDashboard()),
+        MaterialPageRoute(builder: (context) => const AdminDashboard()),
       );
       return;
     }
@@ -81,10 +82,13 @@ class InicioAdministrador extends StatelessWidget {
 
     if (profesor.isNotEmpty) {
       print('Profesor');
-       Navigator.push( // TO ADD
-         context,
-         MaterialPageRoute(builder: (context) => AularioPage(nickname: usuarioController.text )),
-       );
+      Navigator.push(
+        // TO ADD
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                AularioPage(nickname: usuarioController.text)),
+      );
     } else {
       _showErrorModal(context, 'Error al iniciar sesión',
           'Usuario o contraseña incorrectos.');

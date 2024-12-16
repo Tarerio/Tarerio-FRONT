@@ -27,9 +27,7 @@ class Subtarea {
 class CrearTareaPorPasos extends StatefulWidget {
   final int idAdministrador;
 
-  const CrearTareaPorPasos({
-    super.key,
-    required this.idAdministrador});
+  const CrearTareaPorPasos({super.key, required this.idAdministrador});
 
   @override
   _CrearTareaPorPasosState createState() => _CrearTareaPorPasosState();
@@ -53,7 +51,8 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
     // Controladores para los campos de texto
     final textoController = TextEditingController(text: subtareaActual.texto);
     final imagenController = TextEditingController(text: subtareaActual.imagen);
-    final pictogramaController = TextEditingController(text: subtareaActual.pictograma);
+    final pictogramaController =
+        TextEditingController(text: subtareaActual.pictograma);
     final videoController = TextEditingController(text: subtareaActual.video);
 
     String? texto = subtareaActual.texto;
@@ -64,14 +63,15 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
         return AlertDialog(
           title: const Text('Editar Subtarea'),
           content: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: textoController,
-                    decoration: const InputDecoration(labelText: 'Texto de la Subtarea'),
+                    decoration: const InputDecoration(
+                        labelText: 'Texto de la Subtarea'),
                   ),
                   TextField(
                     controller: imagenController,
@@ -79,7 +79,8 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                   ),
                   TextField(
                     controller: pictogramaController,
-                    decoration: const InputDecoration(labelText: 'Pictograma URL'),
+                    decoration:
+                        const InputDecoration(labelText: 'Pictograma URL'),
                   ),
                   TextField(
                     controller: videoController,
@@ -100,12 +101,20 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
               onPressed: () {
                 if (texto != null) {
                   Navigator.of(context).pop(
-                      Subtarea(
-                        texto: textoController.text.isEmpty ? 'No disponible' : textoController.text,
-                        imagen: imagenController.text.isEmpty ? 'No disponible' : imagenController.text,
-                        pictograma: pictogramaController.text.isEmpty ? 'No disponible' : pictogramaController.text,
-                        video: videoController.text.isEmpty ? 'No disponible' : videoController.text,
-                      ),
+                    Subtarea(
+                      texto: textoController.text.isEmpty
+                          ? 'No disponible'
+                          : textoController.text,
+                      imagen: imagenController.text.isEmpty
+                          ? 'No disponible'
+                          : imagenController.text,
+                      pictograma: pictogramaController.text.isEmpty
+                          ? 'No disponible'
+                          : pictogramaController.text,
+                      video: videoController.text.isEmpty
+                          ? 'No disponible'
+                          : videoController.text,
+                    ),
                   );
                 }
               },
@@ -135,11 +144,8 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
         return AlertDialog(
           title: const Text('Añadir Subtarea'),
           content: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.8, // Ajusta el ancho
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8, // Ajusta el ancho
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -155,7 +161,7 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                   TextField(
                     onChanged: (value) => pictograma = value,
                     decoration:
-                    const InputDecoration(labelText: 'Pictograma URL'),
+                        const InputDecoration(labelText: 'Pictograma URL'),
                   ),
                   TextField(
                     onChanged: (value) => video = value,
@@ -233,12 +239,12 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
       DateTime fechaCreacion = DateTime.now();
 
       await _api.crearTareaPorPasos(
-          _tituloController.text,
-          _descripcionController.text,
-          fechaCreacion,
-          widget.idAdministrador,
-          _subtareas, // Enviar la lista de subtareas
-          _base64Image,
+        _tituloController.text,
+        _descripcionController.text,
+        fechaCreacion,
+        widget.idAdministrador,
+        _subtareas, // Enviar la lista de subtareas
+        _base64Image,
       );
 
       Navigator.pushReplacement(
@@ -257,7 +263,8 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) return;
 
@@ -267,7 +274,6 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
       _image = File(pickedFile.path);
       _base64Image = base64Encode(bytes);
     });
-
   }
 
   @override
@@ -306,13 +312,13 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                         children: [
                           const SizedBox(height: 10),
                           TextFieldDefault(
-                              width: 800,
-                              label: 'Nombre de la actividad',
-                              controller: _tituloController,
-                              labelColor: Color(colorPrincipal),
-                              labelFontSize: 18,
-                              hintText: 'Nombre de la actividad',
-                              padding: const EdgeInsets.symmetric(vertical: 5),
+                            width: 800,
+                            label: 'Nombre de la actividad',
+                            controller: _tituloController,
+                            labelColor: Color(colorPrincipal),
+                            labelFontSize: 18,
+                            hintText: 'Nombre de la actividad',
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                           ),
                           const SizedBox(height: 20),
                           TextFieldDefault(
@@ -373,7 +379,7 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xFF2EC4B6)),
+                          border: Border.all(color: const Color(0xFF2EC4B6)),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -388,14 +394,16 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                                       Text(
                                         "${index + 1}. ",
                                         style: const TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.bold),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       Flexible(
                                         child: Text(
                                           _subtareas[index].texto ??
                                               'Título de la subtarea',
                                           style: const TextStyle(
-                                              fontSize: 18, fontWeight: FontWeight.bold),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -403,21 +411,22 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                                   ),
                                   const SizedBox(height: 10),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Imagen: ${_subtareas[index].imagen ?? 'No disponible'}",
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
                                         "Pictograma: ${_subtareas[index].pictograma ?? 'No disponible'}",
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
                                         "Video: ${_subtareas[index].video ?? 'No disponible'}",
-                                        style: TextStyle(fontSize: 16),
+                                        style: const TextStyle(fontSize: 16),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
@@ -429,11 +438,13 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                             Column(
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.teal),
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.teal),
                                   onPressed: () => _editSubtarea(index),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.close, color: Colors.red),
+                                  icon: const Icon(Icons.close,
+                                      color: Colors.red),
                                   onPressed: () => _eliminarSubtarea(index),
                                 ),
                               ],

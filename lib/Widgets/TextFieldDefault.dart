@@ -13,7 +13,7 @@ class TextFieldDefault extends StatelessWidget {
   final bool information;
 
   const TextFieldDefault({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     this.labelColor = Colors.black,
@@ -26,7 +26,7 @@ class TextFieldDefault extends StatelessWidget {
     this.information = false,
     this.titleInformation = '',
     this.textInformation = '',
-  }) : super(key: key);
+  });
 
   void _showInformationModal(
       BuildContext context, String title, String content) {
@@ -86,7 +86,7 @@ class TextFieldDefault extends StatelessWidget {
                 fillColor: Colors.grey[200],
                 filled: true,
                 contentPadding:
-                const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
                   borderSide: const BorderSide(color: Colors.black12),

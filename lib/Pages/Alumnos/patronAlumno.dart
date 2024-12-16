@@ -46,7 +46,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
 
       try {
         var jsonResponse =
-        await _api.inicioSesionAlumno(widget.nickname, concatenatedCodes);
+            await _api.inicioSesionAlumno(widget.nickname, concatenatedCodes);
         String nickname = jsonResponse['alumno']['nickname'];
         Navigator.push(
           context,
@@ -105,7 +105,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
             style: const TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF2EC4B6))),
+                color: Color(0xFF2EC4B6))),
         actions: [
           Padding(
             padding: const EdgeInsets.all(20.0),
@@ -138,7 +138,7 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF2EC4B6)),
+                        color: Color(0xFF2EC4B6)),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -204,14 +204,15 @@ class _PatronAlumnoState extends State<PatronAlumno> {
                   ),
                   // Añade texto al botón
 
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.login, size: 24),
                       SizedBox(width: 8),
                       Text(
                         'INICIAR SESIÓN',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

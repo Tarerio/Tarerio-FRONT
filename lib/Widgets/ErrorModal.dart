@@ -4,8 +4,7 @@ class ErrorModal extends StatelessWidget {
   final String title;
   final String content;
 
-  const ErrorModal({Key? key, required this.title, required this.content})
-      : super(key: key);
+  const ErrorModal({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {

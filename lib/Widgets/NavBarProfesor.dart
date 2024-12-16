@@ -17,15 +17,16 @@ const List<ExampleDestination> destinations = <ExampleDestination>[
       Icon(Icons.class_),
       Icon(Icons.class_outlined),
       '/profesor/aulario'), // ruta
-  ExampleDestination(
-      'Pedidos',
-      Icon(Icons.question_mark),
-      Icon(Icons.question_mark_outlined),
-      '/profesor/pedidos'), // ruta
+  ExampleDestination('Pedidos', Icon(Icons.question_mark),
+      Icon(Icons.question_mark_outlined), '/profesor/pedidos'), // ruta
 ];
 
 class Navbar extends StatefulWidget {
-  const Navbar({super.key, this.onLogout, required this.screenIndex, required this.nickname});
+  const Navbar(
+      {super.key,
+      this.onLogout,
+      required this.screenIndex,
+      required this.nickname});
 
   final VoidCallback? onLogout;
   final int screenIndex;
@@ -57,7 +58,7 @@ class _NavbarState extends State<Navbar> {
                 ),
               ),
               tileColor:
-              isSelected ? const Color(0xFF2EC4B6) : Colors.transparent,
+                  isSelected ? const Color(0xFF2EC4B6) : Colors.transparent,
               onTap: () {
                 Navigator.pushReplacementNamed(
                   context,
@@ -82,8 +83,9 @@ class _NavbarState extends State<Navbar> {
             onTap: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
-                    (Route<dynamic> route) => false, // elimina todas las rutas anteriores
+                MaterialPageRoute(builder: (context) => const Home()),
+                (Route<dynamic> route) =>
+                    false, // elimina todas las rutas anteriores
               );
             },
           ),

@@ -18,18 +18,17 @@ import 'package:tarerio/Models/enunciado.dart';
 class CrearTareaPeticion extends StatefulWidget {
   final int idAdministrador;
 
-  CrearTareaPeticion({required this.idAdministrador});
+  const CrearTareaPeticion({super.key, required this.idAdministrador});
 
   @override
   _CrearTareaPeticionState createState() => _CrearTareaPeticionState();
 }
 
 class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
-  List<Enunciado> _enunciados = []; // Lista de enunciados
+  final List<Enunciado> _enunciados = []; // Lista de enunciados
 
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
-
 
   //Variables para la imagen
   File? _image;
@@ -59,7 +58,8 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
     final enunciadoActual = _enunciados[index];
 
     final textoController = TextEditingController(text: enunciadoActual.texto);
-    final imagenController = TextEditingController(text: enunciadoActual.imagen);
+    final imagenController =
+        TextEditingController(text: enunciadoActual.imagen);
     final videoController = TextEditingController(text: enunciadoActual.video);
 
     String? texto = enunciadoActual.texto;
@@ -70,14 +70,15 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
         return AlertDialog(
           title: const Text('Editar Enunciado'),
           content: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: textoController,
-                    decoration: const InputDecoration(labelText: 'Texto del enunciado'),
+                    decoration:
+                        const InputDecoration(labelText: 'Texto del enunciado'),
                   ),
                   TextField(
                     controller: imagenController,
@@ -102,11 +103,17 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
               onPressed: () {
                 if (texto != null) {
                   Navigator.of(context).pop(
-                      Enunciado(
-                        texto: textoController.text.isEmpty ? 'No disponible' : textoController.text,
-                        imagen: imagenController.text.isEmpty ? 'No disponible' : imagenController.text,
-                        video: videoController.text.isEmpty ? 'No disponible' : videoController.text,
-                      ),
+                    Enunciado(
+                      texto: textoController.text.isEmpty
+                          ? 'No disponible'
+                          : textoController.text,
+                      imagen: imagenController.text.isEmpty
+                          ? 'No disponible'
+                          : imagenController.text,
+                      video: videoController.text.isEmpty
+                          ? 'No disponible'
+                          : videoController.text,
+                    ),
                   );
                 }
               },
@@ -135,7 +142,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
         return AlertDialog(
           title: const Text('Añadir Enunciado'),
           content: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8, // Ajusta el ancho
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -143,7 +150,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                   TextField(
                     onChanged: (value) => texto = value,
                     decoration:
-                    const InputDecoration(labelText: 'Texto del enunciado'),
+                        const InputDecoration(labelText: 'Texto del enunciado'),
                   ),
                   TextField(
                     onChanged: (value) => imagen = value,
@@ -205,17 +212,17 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
       DateTime fechaCreacion = DateTime.now();
 
       await _api.crearTareaPeticion(
-          _tituloController.text,
-          _descripcionController.text,
-          fechaCreacion,
-          widget.idAdministrador,
-          _enunciados, // Enviar la lista de enunciados
-          _base64Image,
+        _tituloController.text,
+        _descripcionController.text,
+        fechaCreacion,
+        widget.idAdministrador,
+        _enunciados, // Enviar la lista de enunciados
+        _base64Image,
       );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TareasPage()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => TareasPage()));
       _showSuccessModal(context, 'Tarea creada',
           'La tarea de petición se ha creado exitosamente');
-
     } catch (e) {
       _showErrorModal(context, 'Error al crear tarea',
           'Ha ocurrido un error al crear la tarea de petición');
@@ -224,7 +231,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
 
   Future<void> _pickImage() async {
     final pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) return;
 
@@ -301,8 +308,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                           base64Image: _base64Image,
                           radius: 80.0,
                           backgroundColor: Colors.grey[300]!,
-                          placeholderIcon: const Icon(
-                              Icons.question_answer,
+                          placeholderIcon: const Icon(Icons.question_answer,
                               color: Colors.white),
                           onClear: () {
                             setState(() {
@@ -338,7 +344,7 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xFF2EC4B6)),
+                          border: Border.all(color: const Color(0xFF2EC4B6)),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -353,14 +359,16 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                                       Text(
                                         "${index + 1}. ",
                                         style: const TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.bold),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                       Flexible(
                                         child: Text(
                                           _enunciados[index].texto ??
                                               'Título del enunciado',
                                           style: const TextStyle(
-                                              fontSize: 18, fontWeight: FontWeight.bold),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
@@ -368,7 +376,8 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                                   ),
                                   const SizedBox(height: 10),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     children: [
                                       Text(
                                         "Imagen: ${_enunciados[index].imagen ?? 'No disponible'}",
@@ -389,11 +398,13 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                             Column(
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.teal),
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.teal),
                                   onPressed: () => _editEnunciado(index),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.close, color: Colors.red),
+                                  icon: const Icon(Icons.close,
+                                      color: Colors.red),
                                   onPressed: () => _eliminarEnunciado(index),
                                 ),
                               ],
@@ -430,7 +441,6 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                 ),
               ],
             );
-
           },
         ),
       ),

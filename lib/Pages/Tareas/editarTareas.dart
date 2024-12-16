@@ -45,12 +45,11 @@ class EditarTareas extends StatefulWidget {
   final String tipoTarea;
   final int idTarea;
 
-
   const EditarTareas({
-    Key? key,
+    super.key,
     required this.tipoTarea,
     required this.idTarea,
-  }) : super(key: key);
+  });
 
   @override
   _EditarTareasState createState() => _EditarTareasState();
@@ -62,9 +61,9 @@ class _EditarTareasState extends State<EditarTareas> {
   List<dynamic>? _subtareas = [];
   bool isLoading = true;
 
-  TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
-  TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
-  TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
+  final TareaPeticionAPI _peticionAPI = TareaPeticionAPI();
+  final TareaPorPasosAPI _porPasosAPI = TareaPorPasosAPI();
+  final TareaJuegoAPI _juegoAPI = TareaJuegoAPI();
 
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _descripcionController = TextEditingController();
@@ -110,7 +109,8 @@ class _EditarTareasState extends State<EditarTareas> {
 
   // Imagen
   Future<void> _pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) return;
 
@@ -120,7 +120,6 @@ class _EditarTareasState extends State<EditarTareas> {
       _image = File(pickedFile.path);
       _base64Image = base64Encode(bytes);
     });
-
   }
 
   // Enunciados
@@ -145,7 +144,7 @@ class _EditarTareasState extends State<EditarTareas> {
         return AlertDialog(
           title: const Text('Editar Enunciado'),
           content: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -153,7 +152,8 @@ class _EditarTareasState extends State<EditarTareas> {
                   TextField(
                     onChanged: (value) => texto = value,
                     controller: TextEditingController(text: texto),
-                    decoration: const InputDecoration(labelText: 'Texto del enunciado'),
+                    decoration:
+                        const InputDecoration(labelText: 'Texto del enunciado'),
                   ),
                   TextField(
                     onChanged: (value) => imagen = value,
@@ -212,18 +212,15 @@ class _EditarTareasState extends State<EditarTareas> {
         return AlertDialog(
           title: const Text('Añadir Enunciado'),
           content: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.8, // Ajusta el ancho
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8, // Ajusta el ancho
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     onChanged: (value) => texto = value,
                     decoration:
-                    const InputDecoration(labelText: 'Texto del enunciado'),
+                        const InputDecoration(labelText: 'Texto del enunciado'),
                   ),
                   TextField(
                     onChanged: (value) => imagen = value,
@@ -269,7 +266,6 @@ class _EditarTareasState extends State<EditarTareas> {
         });
       });
     }
-
   }
 
   Widget _buildTareaPeticion() {
@@ -285,7 +281,7 @@ class _EditarTareasState extends State<EditarTareas> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Container(
+          SizedBox(
             height: 295, // Limitar el contenido
             child: ListView.builder(
               shrinkWrap: true,
@@ -308,7 +304,7 @@ class _EditarTareasState extends State<EditarTareas> {
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            border: Border.all(color: Color(0xFF2EC4B6)),
+            border: Border.all(color: const Color(0xFF2EC4B6)),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -322,12 +318,15 @@ class _EditarTareasState extends State<EditarTareas> {
                       children: [
                         Text(
                           "${index + 1}. ",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         Flexible(
                           child: Text(
-                            _enunciados?[index]['Texto'] ?? 'Título del enunciado',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            _enunciados?[index]['Texto'] ??
+                                'Título del enunciado',
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -336,28 +335,28 @@ class _EditarTareasState extends State<EditarTareas> {
                     const SizedBox(height: 10),
                     Text(
                       "Imagen: ${_enunciados?[index]['Imagen'] ?? 'No disponible'}",
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       "Video: ${_enunciados?[index]['Video'] ?? 'No disponible'}",
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
               Column(
-              children: [
+                children: [
                   IconButton(
-                    icon: Icon(Icons.edit, color: Colors.teal),
+                    icon: const Icon(Icons.edit, color: Colors.teal),
                     onPressed: () => _editEnunciado(index),
                   ),
                   IconButton(
-                  icon: Icon(Icons.close, color: Colors.red),
-                  onPressed: () => _eliminarEnunciado(index),
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: () => _eliminarEnunciado(index),
                   ),
-              ],
+                ],
               ),
             ],
           ),
@@ -389,7 +388,7 @@ class _EditarTareasState extends State<EditarTareas> {
         return AlertDialog(
           title: const Text('Editar Subtarea'),
           content: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -397,7 +396,8 @@ class _EditarTareasState extends State<EditarTareas> {
                   TextField(
                     onChanged: (value) => texto = value,
                     controller: TextEditingController(text: texto),
-                    decoration: const InputDecoration(labelText: 'Texto de la Subtarea'),
+                    decoration: const InputDecoration(
+                        labelText: 'Texto de la Subtarea'),
                   ),
                   TextField(
                     onChanged: (value) => imagen = value,
@@ -407,7 +407,8 @@ class _EditarTareasState extends State<EditarTareas> {
                   TextField(
                     onChanged: (value) => pictograma = value,
                     controller: TextEditingController(text: pictograma),
-                    decoration: const InputDecoration(labelText: 'Pictograma URL'),
+                    decoration:
+                        const InputDecoration(labelText: 'Pictograma URL'),
                   ),
                   TextField(
                     onChanged: (value) => video = value,
@@ -428,8 +429,11 @@ class _EditarTareasState extends State<EditarTareas> {
             TextButton(
               onPressed: () {
                 if (texto != null) {
-                  Navigator.of(context).pop(
-                      Subtarea(texto: texto, imagen: imagen, pictograma: pictograma, video: video));
+                  Navigator.of(context).pop(Subtarea(
+                      texto: texto,
+                      imagen: imagen,
+                      pictograma: pictograma,
+                      video: video));
                 }
               },
               child: const Text('Guardar'),
@@ -463,11 +467,8 @@ class _EditarTareasState extends State<EditarTareas> {
         return AlertDialog(
           title: const Text('Añadir Subtarea'),
           content: SingleChildScrollView(
-            child: Container(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.8, // Ajusta el ancho
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8, // Ajusta el ancho
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -483,7 +484,7 @@ class _EditarTareasState extends State<EditarTareas> {
                   TextField(
                     onChanged: (value) => pictograma = value,
                     decoration:
-                    const InputDecoration(labelText: 'Pictograma URL'),
+                        const InputDecoration(labelText: 'Pictograma URL'),
                   ),
                   TextField(
                     onChanged: (value) => video = value,
@@ -543,7 +544,7 @@ class _EditarTareasState extends State<EditarTareas> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Container(
+          SizedBox(
             height: 295, // Limitar el contenido
             child: ListView.builder(
               shrinkWrap: true,
@@ -566,7 +567,7 @@ class _EditarTareasState extends State<EditarTareas> {
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            border: Border.all(color: Color(0xFF2EC4B6)),
+            border: Border.all(color: const Color(0xFF2EC4B6)),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -580,12 +581,15 @@ class _EditarTareasState extends State<EditarTareas> {
                       children: [
                         Text(
                           "${index + 1}. ",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         Flexible(
                           child: Text(
-                            _subtareas?[index]['Texto'] ?? 'Título de la subtarea',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            _subtareas?[index]['Texto'] ??
+                                'Título de la subtarea',
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -594,17 +598,17 @@ class _EditarTareasState extends State<EditarTareas> {
                     const SizedBox(height: 10),
                     Text(
                       "Imagen: ${_subtareas?[index]['Imagen'] ?? 'No disponible'}",
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       "Pictograma: ${_subtareas?[index]['Pictograma'] ?? 'No disponible'}",
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       "Video: ${_subtareas?[index]['Video'] ?? 'No disponible'}",
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -613,11 +617,11 @@ class _EditarTareasState extends State<EditarTareas> {
               Column(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.edit, color: Colors.teal),
+                    icon: const Icon(Icons.edit, color: Colors.teal),
                     onPressed: () => _editSubtarea(index),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close, color: Colors.red),
+                    icon: const Icon(Icons.close, color: Colors.red),
                     onPressed: () => _eliminarSubtarea(index),
                   ),
                 ],
@@ -636,7 +640,10 @@ class _EditarTareasState extends State<EditarTareas> {
       children: [
         const Text(
           'Url del juego/aplicación',
-          style: TextStyle(color: Color(0xFF2EC4B6), fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Color(0xFF2EC4B6),
+              fontSize: 18,
+              fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         TextField(
@@ -644,7 +651,7 @@ class _EditarTareasState extends State<EditarTareas> {
             tarea['Enlace'] = value;
           },
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             hintText: url,
           ),
         ),
@@ -657,18 +664,18 @@ class _EditarTareasState extends State<EditarTareas> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("¿Desea confirmar los cambios?"),
+          title: const Text("¿Desea confirmar los cambios?"),
           // se podrían añadir los campos cambiados
           actions: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround, // Distribuye los botones de manera uniforme
+              mainAxisAlignment: MainAxisAlignment
+                  .spaceAround, // Distribuye los botones de manera uniforme
               children: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop(); // Cierra el diálogo
                   },
                   style: TextButton.styleFrom(
-
                     backgroundColor: Colors.red, // Color de fondo del botón
                     foregroundColor: Colors.white, // Color del texto
                   ),
@@ -725,7 +732,8 @@ class _EditarTareasState extends State<EditarTareas> {
         await _juegoAPI.updateTarea(widget.idTarea, tarea);
       }
 
-      _showSuccessModal(context, 'Tarea editada correctamente', 'Campos modificados correctamene');
+      _showSuccessModal(context, 'Tarea editada correctamente',
+          'Campos modificados correctamene');
     } catch (e) {
       _showErrorModal(context, 'Error al editar la tarea', '');
       print("Error al obtener tareas: $e");
@@ -741,7 +749,8 @@ class _EditarTareasState extends State<EditarTareas> {
       case TAREA_POR_PASOS:
         return const Icon(Icons.list_rounded, color: Colors.white);
       default:
-        return const Icon(Icons.edit_square, color: Colors.white); // Icono por defecto
+        return const Icon(Icons.edit_square,
+            color: Colors.white); // Icono por defecto
     }
   }
 
@@ -760,135 +769,140 @@ class _EditarTareasState extends State<EditarTareas> {
         },
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.only(
-          left: 48.0,
-          top: 16.0,
-          right: 48.0,
-          bottom: 16.0,
-        ),
-        child: SingleChildScrollView( // Añadido para poder hacer scroll si la pantalla es pequeña
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Columna con los campos de nombre y descripción
-                  Expanded(
-                    child: Column(
+              padding: const EdgeInsets.only(
+                left: 48.0,
+                top: 16.0,
+                right: 48.0,
+                bottom: 16.0,
+              ),
+              child: SingleChildScrollView(
+                // Añadido para poder hacer scroll si la pantalla es pequeña
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 10),
-                        TextFieldDefault(
-                          width: 800,
-                          label: 'Nombre de la actividad',
-                          controller: _tituloController,
-                          labelColor: Color(colorPrincipal),
-                          labelFontSize: 18,
-                          hintText: 'Nombre de la actividad',
-                          padding: const EdgeInsets.symmetric(vertical: 5),
+                        // Columna con los campos de nombre y descripción
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 10),
+                              TextFieldDefault(
+                                width: 800,
+                                label: 'Nombre de la actividad',
+                                controller: _tituloController,
+                                labelColor: Color(colorPrincipal),
+                                labelFontSize: 18,
+                                hintText: 'Nombre de la actividad',
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                              ),
+                              const SizedBox(height: 20),
+                              TextFieldDefault(
+                                width: 800,
+                                label: 'Descripción de la actividad',
+                                controller: _descripcionController,
+                                labelColor: Color(colorPrincipal),
+                                labelFontSize: 18,
+                                hintText: 'Descripción',
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 20),
-                        TextFieldDefault(
-                          width: 800,
-                          label: 'Descripción de la actividad',
-                          controller: _descripcionController,
-                          labelColor: Color(colorPrincipal),
-                          labelFontSize: 18,
-                          hintText: 'Descripción',
-                          padding: const EdgeInsets.symmetric(vertical: 5),
+                        const SizedBox(
+                            width: 20), // Espaciado entre las secciones
+                        // Columna con el Avatar y el botón para subir imagen
+                        Column(
+                          children: [
+                            Avatar(
+                              size: 100,
+                              base64Image: _base64Image,
+                              radius: 80.0,
+                              backgroundColor: Colors.grey[300]!,
+                              placeholderIcon:
+                                  _getIconForTipoTarea(widget.tipoTarea),
+                              onClear: () {
+                                setState(() {
+                                  _base64Image = '';
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            DefaultButton(
+                              text: 'Subir Foto',
+                              onPressed: _pickImage,
+                              color: const Color(0xFF2EC4B6),
+                              colorText: Colors.white,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(width: 20), // Espaciado entre las secciones
-                  // Columna con el Avatar y el botón para subir imagen
-                  Column(
-                    children: [
-                      Avatar(
-                        size: 100,
-                        base64Image: _base64Image,
-                        radius: 80.0,
-                        backgroundColor: Colors.grey[300]!,
-                        placeholderIcon: _getIconForTipoTarea(widget.tipoTarea),
-                        onClear: () {
-                          setState(() {
-                            _base64Image = '';
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      DefaultButton(
-                        text: 'Subir Foto',
-                        onPressed: _pickImage,
-                        color: const Color(0xFF2EC4B6),
-                        colorText: Colors.white,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-              // Condiciones para mostrar diferentes secciones según el tipo de tarea
-              if (widget.tipoTarea == TAREA_PETICION)
-                _buildTareaPeticion(),
-              if (widget.tipoTarea == TAREA_POR_PASOS)
-                _buildTareaPorPasos(),
-              if (widget.tipoTarea == TAREA_JUEGO)
-                _buildTareaJuego(tarea['Enlace'] ?? 'No disponible'),
+                    // Condiciones para mostrar diferentes secciones según el tipo de tarea
+                    if (widget.tipoTarea == TAREA_PETICION)
+                      _buildTareaPeticion(),
+                    if (widget.tipoTarea == TAREA_POR_PASOS)
+                      _buildTareaPorPasos(),
+                    if (widget.tipoTarea == TAREA_JUEGO)
+                      _buildTareaJuego(tarea['Enlace'] ?? 'No disponible'),
 
-              const SizedBox(height: 30),
+                    const SizedBox(height: 30),
 
-              // Filas con botones de acción
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Botón "Añadir Subtarea" si es "Tarea Por Pasos"
-                  if (widget.tipoTarea == TAREA_POR_PASOS)
-                    DefaultButton(
-                      width: 250,
-                      text: 'Añadir Subtarea',
-                      onPressed: _addSubtarea,
-                      color: const Color(0xFF2EC4B6),
-                      colorText: Colors.white,
-                      fontSize: 20,
-                      upperCase: false,
+                    // Filas con botones de acción
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Botón "Añadir Subtarea" si es "Tarea Por Pasos"
+                        if (widget.tipoTarea == TAREA_POR_PASOS)
+                          DefaultButton(
+                            width: 250,
+                            text: 'Añadir Subtarea',
+                            onPressed: _addSubtarea,
+                            color: const Color(0xFF2EC4B6),
+                            colorText: Colors.white,
+                            fontSize: 20,
+                            upperCase: false,
+                          ),
+
+                        // Botón "Añadir Enunciado" si es "Tarea Peticion"
+                        if (widget.tipoTarea == TAREA_PETICION)
+                          DefaultButton(
+                            width: 250,
+                            text: 'Añadir Enunciado',
+                            onPressed: _addEnunciado,
+                            color: const Color(0xFF2EC4B6),
+                            colorText: Colors.white,
+                            fontSize: 20,
+                            upperCase: false,
+                          ),
+
+                        const SizedBox(width: 10), // Espacio entre los botones
+                        // Botón "Modificar Tarea"
+                        DefaultButton(
+                          width: 250,
+                          text: 'Modificar Tarea',
+                          onPressed: () {
+                            _showConfirmationDialog(context);
+                          },
+                          color: const Color(0xFF2EC4B6),
+                          colorText: Colors.white,
+                          fontSize: 20,
+                          upperCase: false,
+                        ),
+                      ],
                     ),
-
-                  // Botón "Añadir Enunciado" si es "Tarea Peticion"
-                  if (widget.tipoTarea == TAREA_PETICION)
-                    DefaultButton(
-                      width: 250,
-                      text: 'Añadir Enunciado',
-                      onPressed: _addEnunciado,
-                      color: const Color(0xFF2EC4B6),
-                      colorText: Colors.white,
-                      fontSize: 20,
-                      upperCase: false,
-                    ),
-
-                  const SizedBox(width: 10), // Espacio entre los botones
-                  // Botón "Modificar Tarea"
-                  DefaultButton(
-                    width: 250,
-                    text: 'Modificar Tarea',
-                    onPressed: () {
-                      _showConfirmationDialog(context);
-                    },
-                    color: const Color(0xFF2EC4B6),
-                    colorText: Colors.white,
-                    fontSize: 20,
-                    upperCase: false,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

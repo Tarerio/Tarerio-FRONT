@@ -4,7 +4,7 @@ import 'package:tarerio/Widgets/Navbar.dart';
 //import 'package:tarerio/API/menusAPI.dart';
 
 class MenusPage extends StatefulWidget {
-  MenusPage({super.key});
+  const MenusPage({super.key});
 
   @override
   _MenusPageState createState() => _MenusPageState();
@@ -13,7 +13,6 @@ class MenusPage extends StatefulWidget {
 class _MenusPageState extends State<MenusPage> {
   List<dynamic> menus = [];
   bool isLoadingMenus = true;
-
 
   @override
   void initState() {
@@ -64,14 +63,14 @@ class _MenusPageState extends State<MenusPage> {
       body: isLoadingMenus
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
-          children: menus.map((menu) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width > 800 ? 200 : 150,
-              /*child: MenuCard(
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: menus.map((menu) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width > 800 ? 200 : 150,
+                    /*child: MenuCard(
                 idMenu: menu['id_menu'],
                 nombreMenu: menu['nombre'],
                 imagenMenu: menu['imagenBase64'] ?? '',
@@ -85,16 +84,16 @@ class _MenusPageState extends State<MenusPage> {
                   _confirmarEliminacion(menu['id_menu'].toString());
                 },
               ),*/
-            );
-          }).toList(),
-        ),
-      ),
+                  );
+                }).toList(),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navegación para crear un nuevo menú
         },
-        child: const Icon(Icons.add),
         backgroundColor: const Color(0xFF2EC4B6),
+        child: const Icon(Icons.add),
       ),
       drawer: Navbar(
         screenIndex: 1,
@@ -114,34 +113,35 @@ class _MenusPageState extends State<MenusPage> {
           content: isLoadingMenus
               ? const Center(child: CircularProgressIndicator())
               : SizedBox(
-            width: double.maxFinite,
-            child: ListView.builder(
-              itemCount: 0,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 192, 184, 184),
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    title: Text('Recurso $index'), // Muestra el nombre del recurso
-                    onTap: () {
-                      // Lógica para asignar recurso al menú
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                    itemCount: 0,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 4.0),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 192, 184, 184),
+                          borderRadius: BorderRadius.circular(8.0),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text(
+                              'Recurso $index'), // Muestra el nombre del recurso
+                          onTap: () {
+                            // Lógica para asignar recurso al menú
+                          },
+                        ),
+                      );
                     },
                   ),
-                );
-              },
-            ),
-          ),
+                ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),

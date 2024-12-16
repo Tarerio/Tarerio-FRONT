@@ -36,7 +36,7 @@ class _AulasPageState extends State<AulasPage> {
     fetchAulas();
   }
 
-  void _cleanFiltros(){
+  void _cleanFiltros() {
     setState(() {
       _claveController.text = '';
       fetchAulas();
@@ -77,7 +77,7 @@ class _AulasPageState extends State<AulasPage> {
     }
   }
 
-  Future<void> _filterAulas(String claveAula ) async {
+  Future<void> _filterAulas(String claveAula) async {
     try {
       final response = await _api.filteredObtenerAulas(claveAula);
       setState(() {
@@ -87,7 +87,8 @@ class _AulasPageState extends State<AulasPage> {
     } catch (e) {
       print("Error al obtener las Aulas: $e");
       setState(() {
-        isloadingAulas = false; // Cambia el estado de carga incluso si hay un error
+        isloadingAulas =
+            false; // Cambia el estado de carga incluso si hay un error
       });
     }
   }
@@ -109,9 +110,9 @@ class _AulasPageState extends State<AulasPage> {
             ),
             TextButton(
               onPressed: () async {
-
                 await _borrarAula(id);
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AulasPage()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const AulasPage()));
               },
               child: const Text('Eliminar'),
             ),
@@ -272,15 +273,15 @@ class _AulasPageState extends State<AulasPage> {
               children: [
                 IconButton(
                   icon: Icon(
-                      Icons.refresh_sharp,
-                      color: Color(colorPrincipal),
+                    Icons.refresh_sharp,
+                    color: Color(colorPrincipal),
                   ),
                   onPressed: () {
                     _cleanFiltros();
                   },
                 ),
-                SizedBox(width: 10),
-                Container(
+                const SizedBox(width: 10),
+                SizedBox(
                   width: 213,
                   child: TextField(
                     controller: _claveController,
@@ -291,22 +292,23 @@ class _AulasPageState extends State<AulasPage> {
                         borderSide: BorderSide(color: Color(colorPrincipal)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                        borderSide: BorderSide(
+                            color: Color(colorPrincipal), width: 2.0),
                       ),
-                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                      suffixIcon:
+                          Icon(Icons.search, color: Color(colorPrincipal)),
                     ),
                     onChanged: (value) async {
-                      
                       final response = await _api.filteredObtenerAulas(value);
                       setState(() {
                         aulas = response;
                       });
-                      
+
                       //_filterAulas(_claveController.text);
                     },
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
               ],
             ),
           ),
@@ -315,44 +317,53 @@ class _AulasPageState extends State<AulasPage> {
       body: isloadingAulas
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Wrap(
-          spacing: 8.0,
-          runSpacing: 8.0,
-          children: aulas.map((aula) {
-            return SizedBox(
-              width: MediaQuery.of(context).size.width / 5,
-              height: 370,
-              child: AulaCard(
-                idAula: aula['id_aula'],
-                claveAula: aula['clave_aula'],
-                cupoAula: aula['cupo'],
-                imagenAula: aula['imagenBase64'] ?? '',
-                onEdit: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => 
-                      ModificarAula(claveAula: aula['clave_aula'], aulaId: aula['id_aula'], 
-                      cupoAula: aula['cupo'], imagenAula: aula['imagenBase64'] ?? ''),),
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 8.0,
+                children: aulas.map((aula) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width / 5,
+                    height: 370,
+                    child: AulaCard(
+                      idAula: aula['id_aula'],
+                      claveAula: aula['clave_aula'],
+                      cupoAula: aula['cupo'],
+                      imagenAula: aula['imagenBase64'] ?? '',
+                      onEdit: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ModificarAula(
+                                claveAula: aula['clave_aula'],
+                                aulaId: aula['id_aula'],
+                                cupoAula: aula['cupo'],
+                                imagenAula: aula['imagenBase64'] ?? ''),
+                          ),
+                        );
+                      },
+                      onAssign: () {
+                        _mostrarDialogProfesores(context, aula['id_aula']);
+                      },
+                      onDelete: () {
+                        _confirmarEliminacion(aula['id_aula'].toString());
+                      },
+                      onSeeStudents: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AlumnosDeAula(
+                                claveAula: aula['clave_aula'],
+                                aulaId: aula['id_aula'],
+                                cupoAula: aula['cupo']),
+                          ),
+                        );
+                      },
+                    ),
                   );
-                },
-                onAssign: () {
-                  _mostrarDialogProfesores(context, aula['id_aula']);
-                },
-                onDelete: () {
-                  _confirmarEliminacion(aula['id_aula'].toString());
-                },
-                onSeeStudents: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AlumnosDeAula(claveAula: aula['clave_aula'], aulaId: aula['id_aula'], cupoAula: aula['cupo']),),
-                  );
-                },
+                }).toList(),
               ),
-            );
-          }).toList(),
-        ),
-      ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

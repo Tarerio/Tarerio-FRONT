@@ -12,7 +12,8 @@ class PedidosAdministradorPage extends StatefulWidget {
   const PedidosAdministradorPage({super.key, required this.nickname});
 
   @override
-  _PedidosAdministradorPageState createState() => _PedidosAdministradorPageState();
+  _PedidosAdministradorPageState createState() =>
+      _PedidosAdministradorPageState();
 }
 
 class _PedidosAdministradorPageState extends State<PedidosAdministradorPage> {
@@ -49,8 +50,8 @@ class _PedidosAdministradorPageState extends State<PedidosAdministradorPage> {
       final response = await api.obtenerPedidos(widget.nickname);
       final List<dynamic> allPedidos = response['pedidos'] ?? [];
       final DateTime now = DateTime.now();
-      final DateTime sevenDaysBefore = now.subtract(Duration(days: 7));
-      final DateTime sevenDaysAfter = now.add(Duration(days: 7));
+      final DateTime sevenDaysBefore = now.subtract(const Duration(days: 7));
+      final DateTime sevenDaysAfter = now.add(const Duration(days: 7));
 
       setState(() {
         pedidos = allPedidos.where((pedido) {
@@ -85,108 +86,112 @@ class _PedidosAdministradorPageState extends State<PedidosAdministradorPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : pedidos.isEmpty
-          ? const Center(
-        child: Text(
-          'No hay peticiones de material',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-          ),
-        ),
-      )
-          : Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: ListView.builder(
-          itemCount: pedidos.length,
-          itemBuilder: (context, index) {
-            final pedido = pedidos[index];
-            return Card(
-              margin: const EdgeInsets.symmetric(
-                  horizontal: 300, vertical: 10),
-              child: ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Pedido con fecha: ${pedido['fecha_pedido'].substring(0, 10)} y hora: ${pedido['fecha_pedido'].substring(11, 19)}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20)),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: pedido['estado'] == 'Pendiente'
-                            ? Colors.orange
-                            : Colors.green,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        pedido['estado'],
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                      ),
+              ? const Center(
+                  child: Text(
+                    'No hay peticiones de material',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
                     ),
-                  ],
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 18),
-                    Text(
-                      'Materiales:',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    ...pedido['materiales'].map<Widget>((material) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(material['nombre']),
-                            Flexible(
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 8),
-                                child: const Divider(
-                                  color: Colors.black,
-                                  thickness: 1,
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: ListView.builder(
+                    itemCount: pedidos.length,
+                    itemBuilder: (context, index) {
+                      final pedido = pedidos[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 300, vertical: 10),
+                        child: ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  'Pedido con fecha: ${pedido['fecha_pedido'].substring(0, 10)} y hora: ${pedido['fecha_pedido'].substring(11, 19)}',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20)),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: pedido['estado'] == 'Pendiente'
+                                      ? Colors.orange
+                                      : Colors.green,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  pedido['estado'],
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                 ),
                               ),
-                            ),
-                            Text(material['cantidad'].toString()),
-                          ],
+                            ],
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 18),
+                              const Text(
+                                'Materiales:',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              ...pedido['materiales'].map<Widget>((material) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(material['nombre']),
+                                      Flexible(
+                                        child: Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: const Divider(
+                                            color: Colors.black,
+                                            thickness: 1,
+                                          ),
+                                        ),
+                                      ),
+                                      Text(material['cantidad'].toString()),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              if (pedido['estado'] == 'Pendiente')
+                                Center(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              WizardPage(pedido: pedido),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('Crear tarea y asignar',
+                                        style: TextStyle(fontSize: 18)),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          onTap: () {
+                            // Handle tap on pedido
+                          },
                         ),
                       );
-                    }).toList(),
-                    if (pedido['estado'] == 'Pendiente')
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => WizardPage(pedido: pedido),
-                              ),
-                            );
-                          },
-                          child: const Text('Crear tarea y asignar', style: TextStyle(fontSize: 18)),
-                        ),
-                      ),
-                  ],
+                    },
+                  ),
                 ),
-                onTap: () {
-                  // Handle tap on pedido
-                },
-              ),
-            );
-          },
-        ),
-      ),
       drawer: Navbar(
         screenIndex: 3,
         onLogout: () {

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tarerio/consts.dart';
-import 'package:tarerio/consts.dart';
 
 class InicioSesionAPI {
   // A GET request to fetch all students from the system.

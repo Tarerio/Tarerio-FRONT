@@ -21,7 +21,7 @@ class WizardPage extends StatefulWidget {
 }
 
 class _WizardPageState extends State<WizardPage> {
-  TareaPeticionAPI _api = TareaPeticionAPI();
+  final TareaPeticionAPI _api = TareaPeticionAPI();
   final PageController _pageController = PageController();
   bool isLoading = false;
   String base64Image = '';
@@ -41,7 +41,6 @@ class _WizardPageState extends State<WizardPage> {
     _loadImage();
     _cargarItems();
     _loadIdAdministrador();
-
   }
 
   Future<void> _loadIdAdministrador() async {
@@ -56,7 +55,8 @@ class _WizardPageState extends State<WizardPage> {
   }
 
   Future<int> fetchIdAdministrador() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/administradores/getIdAdmin'));
+    final response = await http
+        .get(Uri.parse('http://localhost:3000/administradores/getIdAdmin'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -67,10 +67,10 @@ class _WizardPageState extends State<WizardPage> {
   }
 
   Future<void> _cargarItems() async {
-    AlumnosAPI _api = AlumnosAPI();
+    AlumnosAPI api = AlumnosAPI();
 
     try {
-      final alumnos = await _api.getAlumnos();
+      final alumnos = await api.getAlumnos();
       setState(() {
         Alumnos = alumnos;
       });
@@ -80,8 +80,10 @@ class _WizardPageState extends State<WizardPage> {
   }
 
   void _initializeFormFields() {
-    taskName = 'Recogida material con fecha ${widget.pedido['fecha_pedido'].substring(0, 10)} y hora ${widget.pedido['fecha_pedido'].substring(11, 16)}';
-    description = 'Recogida de material para profesor ${widget.pedido['nickname']}';
+    taskName =
+        'Recogida material con fecha ${widget.pedido['fecha_pedido'].substring(0, 10)} y hora ${widget.pedido['fecha_pedido'].substring(11, 16)}';
+    description =
+        'Recogida de material para profesor ${widget.pedido['nickname']}';
     fechaCierre = DateTime.now().toIso8601String().substring(0, 10);
     enunciados = widget.pedido['materiales'].map<Enunciado>((material) {
       return Enunciado(
@@ -93,8 +95,8 @@ class _WizardPageState extends State<WizardPage> {
   }
 
   Future<void> _loadImage() async {
-    final ByteData bytes = await rootBundle.load(
-        'assets/images/tareapeticion.jpg');
+    final ByteData bytes =
+        await rootBundle.load('assets/images/tareapeticion.jpg');
     setState(() {
       base64Image = base64Encode(bytes.buffer.asUint8List());
     });
@@ -120,7 +122,7 @@ class _WizardPageState extends State<WizardPage> {
 
   void _createTask() {
     _pageController.nextPage(
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
+        duration: const Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   Future<void> _assignTask() async {
@@ -129,7 +131,7 @@ class _WizardPageState extends State<WizardPage> {
     });
     try {
       _pageController.nextPage(
-          duration: Duration(milliseconds: 300), curve: Curves.ease);
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
     } catch (e) {
       _showErrorModal(context, "Error", "Error al asignar tarea");
     } finally {
@@ -144,7 +146,6 @@ class _WizardPageState extends State<WizardPage> {
       isLoading = true;
     });
     try {
-
       final Map<String, dynamic> body = {
         'Titulo': taskName,
         'Descripcion': description,
@@ -167,10 +168,10 @@ class _WizardPageState extends State<WizardPage> {
           base64Image,
           selectedAlumnoId!,
           dueDate,
-          widget.pedido['id_pedido']
-      );
+          widget.pedido['id_pedido']);
 
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfesoresPage()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => ProfesoresPage()));
 
       _showSuccessModal(context, "Éxito", "Pedido marcado como 'Pedido'");
     } catch (e) {
@@ -188,29 +189,28 @@ class _WizardPageState extends State<WizardPage> {
       appBar: AppBar(
         title: const Text('Crear y asignar pedido de material',
             style: TextStyle(
-                color: const Color(0xFF2EC4B6),
+                color: Color(0xFF2EC4B6),
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : PageView(
-        controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          _buildCreateTaskStep(),
-          _buildAssignTaskStep(),
-          _buildMarkPedidoStep(),
-        ],
-      ),
+              controller: _pageController,
+              physics: const NeverScrollableScrollPhysics(),
+              children: [
+                _buildCreateTaskStep(),
+                _buildAssignTaskStep(),
+                _buildMarkPedidoStep(),
+              ],
+            ),
     );
   }
 
   Widget _buildCreateTaskStep() {
     DateTime parsedFechaCierre = DateTime.parse(fechaCierre);
-    String formattedFechaCierre = "${parsedFechaCierre.day.toString().padLeft(
-        2, '0')}-${parsedFechaCierre.month.toString().padLeft(
-        2, '0')}-${parsedFechaCierre.year}";
+    String formattedFechaCierre =
+        "${parsedFechaCierre.day.toString().padLeft(2, '0')}-${parsedFechaCierre.month.toString().padLeft(2, '0')}-${parsedFechaCierre.year}";
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -218,24 +218,24 @@ class _WizardPageState extends State<WizardPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Paso 1: Crear Tarea',
+          const Text('Paso 1: Crear Tarea',
               style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold)),
-          SizedBox(height: 20),
-          Text('Título:',
+          const SizedBox(height: 20),
+          const Text('Título:',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-          Text(taskName, style: TextStyle(fontSize: 28)),
-          SizedBox(height: 10),
-          Text('Descripción:',
+          Text(taskName, style: const TextStyle(fontSize: 28)),
+          const SizedBox(height: 10),
+          const Text('Descripción:',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-          Text(description, style: TextStyle(fontSize: 28)),
-          SizedBox(height: 10),
-          Text('Fecha estimada de cierre:',
+          Text(description, style: const TextStyle(fontSize: 28)),
+          const SizedBox(height: 10),
+          const Text('Fecha estimada de cierre:',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-          Text(formattedFechaCierre, style: TextStyle(fontSize: 28)),
-          SizedBox(height: 10),
-          Text('Enunciados:',
+          Text(formattedFechaCierre, style: const TextStyle(fontSize: 28)),
+          const SizedBox(height: 10),
+          const Text('Enunciados:',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Container(
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
@@ -249,18 +249,18 @@ class _WizardPageState extends State<WizardPage> {
                 children: enunciados.map((enunciado) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Text(enunciado.texto!, style: TextStyle(
-                        fontSize: 26)),
+                    child: Text(enunciado.texto!,
+                        style: const TextStyle(fontSize: 26)),
                   );
                 }).toList(),
               ),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           DefaultButton(
             text: 'Siguiente',
             onPressed: _createTask,
-            color: Color(0xFF2EC4B6),
+            color: const Color(0xFF2EC4B6),
             fontSize: 18,
           ),
         ],
@@ -274,14 +274,14 @@ class _WizardPageState extends State<WizardPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Paso 2: Asignar Tarea a Alumno',
+          const Text('Paso 2: Asignar Tarea a Alumno',
               style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold)),
-          Text('Asignar tarea a:', style: TextStyle(fontSize: 28)),
-          SizedBox(height: 20),
+          const Text('Asignar tarea a:', style: TextStyle(fontSize: 28)),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 300),
             child: DropdownButtonFormField<int>(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Seleccionar Alumno',
                 border: OutlineInputBorder(),
               ),
@@ -299,7 +299,7 @@ class _WizardPageState extends State<WizardPage> {
               value: selectedAlumnoId,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 300),
             child: Row(
@@ -309,7 +309,7 @@ class _WizardPageState extends State<WizardPage> {
                   text: 'Anterior',
                   onPressed: () {
                     _pageController.previousPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.ease);
                   },
                   color: Colors.grey,
@@ -317,8 +317,11 @@ class _WizardPageState extends State<WizardPage> {
                 ),
                 DefaultButton(
                   text: 'Siguiente',
-                  onPressed: selectedAlumnoId != null ? _assignTask : () => _showErrorModal(context, "Error", "Selecciona un alumno"),
-                  color: Color(0xFF2EC4B6),
+                  onPressed: selectedAlumnoId != null
+                      ? _assignTask
+                      : () => _showErrorModal(
+                          context, "Error", "Selecciona un alumno"),
+                  color: const Color(0xFF2EC4B6),
                   fontSize: 18,
                 ),
               ],
@@ -335,7 +338,7 @@ class _WizardPageState extends State<WizardPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Paso 3: Finalizar y marcar como "Pedido"',
+          const Text('Paso 3: Finalizar y marcar como "Pedido"',
               style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold)),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 50),
@@ -348,7 +351,7 @@ class _WizardPageState extends State<WizardPage> {
                     text: 'Anterior',
                     onPressed: () {
                       _pageController.previousPage(
-                          duration: Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.ease);
                     },
                     color: Colors.grey,
@@ -357,7 +360,7 @@ class _WizardPageState extends State<WizardPage> {
                   DefaultButton(
                     text: 'Finalizar',
                     onPressed: _markPedido,
-                    color: Color(0xFF2EC4B6),
+                    color: const Color(0xFF2EC4B6),
                     fontSize: 18,
                   ),
                 ],
@@ -368,5 +371,4 @@ class _WizardPageState extends State<WizardPage> {
       ),
     );
   }
-
 }

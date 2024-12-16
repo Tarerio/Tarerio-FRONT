@@ -5,10 +5,10 @@ class InformationModal extends StatelessWidget {
   final String content;
 
   const InformationModal({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

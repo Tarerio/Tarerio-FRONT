@@ -12,18 +12,17 @@ class AulaCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onSeeStudents;
 
-  const AulaCard(
-      {Key? key,
-        required this.idAula,
-        required this.imagenAula,
-        required this.claveAula,
-        required this.cupoAula,
-        required this.onAssign,
-        required this.onEdit,
-        required this.onDelete,
-        required this.onSeeStudents,
-      })
-      : super(key: key);
+  const AulaCard({
+    super.key,
+    required this.idAula,
+    required this.imagenAula,
+    required this.claveAula,
+    required this.cupoAula,
+    required this.onAssign,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onSeeStudents,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +54,7 @@ class AulaCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Aula : " + claveAula,
+                "Aula : $claveAula",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

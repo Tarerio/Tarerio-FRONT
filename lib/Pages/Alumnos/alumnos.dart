@@ -7,7 +7,7 @@ import 'package:tarerio/consts.dart';
 import '../../API/alumnosAPI.dart';
 
 class AlumnosPage extends StatefulWidget {
-  AlumnosPage({super.key});
+  const AlumnosPage({super.key});
 
   @override
   _AlumnosState createState() => _AlumnosState();
@@ -16,7 +16,7 @@ class AlumnosPage extends StatefulWidget {
 class _AlumnosState extends State<AlumnosPage> {
   List<dynamic> Alumnos = [];
   bool isLoading = true; // Indicador de carga
-  AlumnosAPI _api = AlumnosAPI();
+  final AlumnosAPI _api = AlumnosAPI();
 
   // Filter alumnos
   final TextEditingController nicknameController = TextEditingController();
@@ -35,7 +35,7 @@ class _AlumnosState extends State<AlumnosPage> {
     fetchAlumnos(); // Llamar a la función para obtener los Alumnos
   }
 
-  void _cleanFiltros(){
+  void _cleanFiltros() {
     setState(() {
       categoriaSeleccionada = null;
       nicknameController.text = '';
@@ -57,7 +57,7 @@ class _AlumnosState extends State<AlumnosPage> {
     }
   }
 
-  Future<void> _filterAlumnos({String? nickname, String? categoria }) async {
+  Future<void> _filterAlumnos({String? nickname, String? categoria}) async {
     try {
       final response = await _api.getFilteredAlumnos(nickname, categoria);
       setState(() {
@@ -70,7 +70,6 @@ class _AlumnosState extends State<AlumnosPage> {
         isLoading = false; // Cambia el estado de carga incluso si hay un error
       });
     }
-
   }
 
   @override
@@ -79,7 +78,7 @@ class _AlumnosState extends State<AlumnosPage> {
       appBar: AppBar(
         title: const Text('Alumnos',
             style: TextStyle(
-                color: const Color(0xFF2EC4B6),
+                color: Color(0xFF2EC4B6),
                 fontSize: 24,
                 fontWeight: FontWeight.bold)),
         actions: [
@@ -91,40 +90,41 @@ class _AlumnosState extends State<AlumnosPage> {
               children: [
                 IconButton(
                   icon: Icon(
-                      Icons.refresh_sharp,
-                      color: Color(colorPrincipal),
+                    Icons.refresh_sharp,
+                    color: Color(colorPrincipal),
                   ),
                   onPressed: () {
                     _cleanFiltros();
                   },
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Container(
                   child: DropdownButton<String>(
                     alignment: Alignment.center,
-                    hint: Text('Filtrar por categoria'),
+                    hint: const Text('Filtrar por categoria'),
                     value: categoriaSeleccionada,
                     items: categorias.entries.map((categoria) {
                       return DropdownMenuItem<String>(
                         value: categoria.value,
-                        child: Text(categoria.key),
                         alignment: Alignment.center,
+                        child: Text(categoria.key),
                       );
                     }).toList(),
                     onChanged: (newValue) {
                       setState(() {
                         categoriaSeleccionada = newValue;
-                        _filterAlumnos(categoria: categoriaSeleccionada, nickname: nicknameController.text);
-
+                        _filterAlumnos(
+                            categoria: categoriaSeleccionada,
+                            nickname: nicknameController.text);
                       });
                     },
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    underline: SizedBox.shrink(),
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    underline: const SizedBox.shrink(),
                     iconEnabledColor: Color(colorPrincipal),
                   ),
                 ),
-                SizedBox(width: 10),
-                Container(
+                const SizedBox(width: 10),
+                SizedBox(
                   width: 213,
                   child: TextField(
                     controller: nicknameController,
@@ -135,26 +135,29 @@ class _AlumnosState extends State<AlumnosPage> {
                         borderSide: BorderSide(color: Color(colorPrincipal)),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                        borderSide: BorderSide(
+                            color: Color(colorPrincipal), width: 2.0),
                       ),
-                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                      suffixIcon:
+                          Icon(Icons.search, color: Color(colorPrincipal)),
                     ),
                     onChanged: (value) async {
-                      final response = await _api.getFilteredAlumnos(value, categoriaSeleccionada);
+                      final response = await _api.getFilteredAlumnos(
+                          value, categoriaSeleccionada);
                       setState(() {
                         Alumnos = response;
                       });
                     },
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
               ],
             ),
           ),
         ],
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Wrap(
@@ -194,11 +197,11 @@ class _AlumnosState extends State<AlumnosPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => RegistrarAlumno()),
+            MaterialPageRoute(builder: (context) => const RegistrarAlumno()),
           );
         },
-        child: const Icon(Icons.add),
         backgroundColor: const Color(0xFF2EC4B6),
+        child: const Icon(Icons.add),
       ),
       drawer: Navbar(
         screenIndex: 4,

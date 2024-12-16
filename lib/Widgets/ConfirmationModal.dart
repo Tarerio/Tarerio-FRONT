@@ -6,11 +6,11 @@ class ConfirmationModal extends StatelessWidget {
   final VoidCallback onAccept;
 
   const ConfirmationModal({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
     required this.onAccept,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +43,13 @@ class ConfirmationModal extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('Cancelar'),
+          child: const Text('Cancelar'),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
         TextButton(
-          child: Text('Aceptar'),
+          child: const Text('Aceptar'),
           onPressed: () {
             onAccept();
             Navigator.of(context).pop();

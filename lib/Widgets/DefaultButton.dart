@@ -11,7 +11,7 @@ class DefaultButton extends StatelessWidget {
   final bool upperCase;
 
   const DefaultButton({
-    Key? key,
+    super.key,
     required this.text,
     this.colorText,
     this.fontSize,
@@ -20,7 +20,7 @@ class DefaultButton extends StatelessWidget {
     this.width = 200,
     this.height = 40,
     this.upperCase = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class DefaultButton extends StatelessWidget {
           child: Text(
             upperCase ? text.toUpperCase() : text,
             style: TextStyle(
-            fontSize: fontSize ?? 20,
+              fontSize: fontSize ?? 20,
               color: colorText,
             ),
           ),

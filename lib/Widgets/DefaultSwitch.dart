@@ -8,13 +8,13 @@ class DefaultSwitch extends StatelessWidget {
   final Color activeTrackColor;
 
   const DefaultSwitch({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     required this.onChanged,
     this.activeColor = Colors.white,
     this.activeTrackColor = Colors.blue,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

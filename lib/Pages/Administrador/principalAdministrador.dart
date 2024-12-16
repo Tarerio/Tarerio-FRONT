@@ -4,13 +4,13 @@ import '../../Widgets/Navbar.dart';
 class SimpleBarChart extends StatelessWidget {
   final List<int> data;
 
-  SimpleBarChart({required this.data});
+  const SimpleBarChart({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: CustomPaint(
-        size: Size(200, 150), // Smaller size
+        size: const Size(200, 150), // Smaller size
         painter: BarChartPainter(data),
       ),
     );
@@ -53,7 +53,11 @@ class AdminDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Estadísticas de administrador', style: TextStyle(color: Color(0xFF2EC4B6), fontSize: 24, fontWeight: FontWeight.bold)),
+        title: const Text('Estadísticas de administrador',
+            style: TextStyle(
+                color: Color(0xFF2EC4B6),
+                fontSize: 24,
+                fontWeight: FontWeight.bold)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -62,22 +66,29 @@ class AdminDashboard extends StatelessWidget {
           children: [
             const Text(
               'Tareas Completadas en el Mes',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold), // Larger font size
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold), // Larger font size
             ),
             SizedBox(
               height: 200,
-              child: SimpleBarChart(data: [50, 75, 100, 150, 200]), // Add data
+              child: SimpleBarChart(
+                  data: const [50, 75, 100, 150, 200]), // Add data
             ),
             const SizedBox(height: 20),
             const Text(
               'Menús Pedidos para esta Semana',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold), // Larger font size
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold), // Larger font size
             ),
             _buildMenuList(),
             const SizedBox(height: 20),
             const Text(
               'Ranking de Alumnos por Tareas Completadas',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold), // Larger font size
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold), // Larger font size
             ),
             _buildRankingList(),
           ],
@@ -103,7 +114,8 @@ class AdminDashboard extends StatelessWidget {
     return Column(
       children: menus.map((menu) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduce vertical padding
+          padding: const EdgeInsets.symmetric(
+              vertical: 4.0), // Reduce vertical padding
           child: ListTile(
             title: Text(menu['type'].toString()),
             trailing: Text('${menu['count']} pedidos'),
@@ -124,7 +136,8 @@ class AdminDashboard extends StatelessWidget {
     return Column(
       children: ranking.map((student) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0), // Reduce vertical padding
+          padding: const EdgeInsets.symmetric(
+              vertical: 4.0), // Reduce vertical padding
           child: ListTile(
             title: Text(student['name'].toString()),
             trailing: Text('${student['tasks']} tareas completadas'),
