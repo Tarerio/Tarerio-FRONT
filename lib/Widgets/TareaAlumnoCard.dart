@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
+import 'package:tarerio/Pages/Alumnos/tareaPeticion.dart';
 import 'package:tarerio/Pages/Alumnos/tareaPorPasos.dart';
 import 'package:tarerio/Pages/Alumnos/tareaJuego.dart';
 
@@ -85,27 +86,36 @@ class _TareaAlumnoCardState extends State<TareaAlumnoCard> {
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
                   Navigator.push(
-                    context,
-                    widget.tipoTarea == 'Juego'
-                        ? MaterialPageRoute(
-                            builder: (context) => TareaAlumnoJuego(
-                              idTarea: widget.idTarea,
-                              nickname: widget.nickname,
-                              colorPalette: widget.colorPalette,
-                              textFontSize: widget.textFontSize,
-                              titleFontSize: widget.titleFontSize,
-                            ),
-                          )
-                        : MaterialPageRoute(
-                            builder: (context) => TareaAlumnoPorPasos(
-                              idTarea: widget.idTarea,
-                              nickname: widget.nickname,
-                              colorPalette: widget.colorPalette,
-                              textFontSize: widget.textFontSize,
-                              titleFontSize: widget.titleFontSize,
-                            ),
-                          ),
-                  );
+                      context,
+                      widget.tipoTarea == 'Juego'
+                          ? MaterialPageRoute(
+                              builder: (context) => TareaAlumnoJuego(
+                                idTarea: widget.idTarea,
+                                nickname: widget.nickname,
+                                colorPalette: widget.colorPalette,
+                                textFontSize: widget.textFontSize,
+                                titleFontSize: widget.titleFontSize,
+                              ),
+                            )
+                          : widget.tipoTarea == 'Por Pasos'
+                              ? MaterialPageRoute(
+                                  builder: (context) => TareaAlumnoPorPasos(
+                                    idTarea: widget.idTarea,
+                                    nickname: widget.nickname,
+                                    colorPalette: widget.colorPalette,
+                                    textFontSize: widget.textFontSize,
+                                    titleFontSize: widget.titleFontSize,
+                                  ),
+                                )
+                              : MaterialPageRoute(
+                                  builder: (context) => TareaAlumnoPeticion(
+                                    nickname: widget.nickname,
+                                    colorPalette: widget.colorPalette,
+                                    titleFontSize: widget.titleFontSize,
+                                    textFontSize: widget.textFontSize,
+                                    idTarea: widget.idTarea,
+                                  ),
+                                ));
                 },
                 child: Row(
                   children: [

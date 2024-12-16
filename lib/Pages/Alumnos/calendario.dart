@@ -73,7 +73,9 @@ class _CalendarPageState extends State<CalendarPage> {
         for (var tarea in tareasPorPasos) {
           int idTarea = tarea['ID_tarea'];
           final tareaData = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
-          _tasks[diasSemana[i]]?.add(tareaData);
+          setState(() {
+            _tasks[diasSemana[i]]?.add(tareaData);
+          });
         }
 
         List<Map<String, dynamic>> tareasPeticion = await _tareaPeticionAPI
@@ -82,7 +84,9 @@ class _CalendarPageState extends State<CalendarPage> {
         for (var tarea in tareasPeticion) {
           int idTarea = tarea['ID_tarea'];
           final tareaData = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
-          _tasks[diasSemana[i]]?.add(tareaData);
+          setState(() {
+            _tasks[diasSemana[i]]?.add(tareaData);
+          });
         }
 
         List<Map<String, dynamic>> tareasJuego = await _tareaJuegoAPI
@@ -91,10 +95,13 @@ class _CalendarPageState extends State<CalendarPage> {
         for (var tarea in tareasJuego) {
           int idTarea = tarea['ID_tarea'];
           final tareaData = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
-          _tasks[diasSemana[i]]?.add(tareaData);
+          setState(() {
+            _tasks[diasSemana[i]]?.add(tareaData);
+          });
         }
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Error al cargar las tareas de la semana: $e");
     }
   }
@@ -126,11 +133,17 @@ class _CalendarPageState extends State<CalendarPage> {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios_new,
-                        color: widget.colorPalette.colorSecundario,
-                        size: 90,
-                      ),
+                      icon: _currentDayIndex == 0
+                          ? const Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.transparent,
+                              size: 90,
+                            )
+                          : Icon(
+                              Icons.arrow_back_ios_new,
+                              color: widget.colorPalette.colorPrincipal,
+                              size: 90,
+                            ),
                       onPressed: _currentDayIndex > 0
                           ? () {
                               setState(() {
@@ -171,11 +184,17 @@ class _CalendarPageState extends State<CalendarPage> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward_ios,
-                        color: widget.colorPalette.colorSecundario,
-                        size: 90,
-                      ),
+                      icon: _currentDayIndex == 6
+                          ? const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.transparent,
+                              size: 90,
+                            )
+                          : Icon(
+                              Icons.arrow_forward_ios,
+                              color: widget.colorPalette.colorPrincipal,
+                              size: 90,
+                            ),
                       onPressed: _currentDayIndex < _tasks.keys.length - 1
                           ? () {
                               setState(() {
