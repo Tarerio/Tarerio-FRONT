@@ -52,6 +52,29 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
     // Simulación de pasos de la tarea
   }
 
+  void cambiarPaso(int incremento) {
+    setState(() {
+      final nuevoPaso = pasoActual + incremento;
+      if (nuevoPaso >= 0 && nuevoPaso < enunciados.length) {
+        pasoActual = nuevoPaso;
+      } else if (nuevoPaso == enunciados.length) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FinalizarTareaPage(
+              nickname: widget.nickname,
+              colorPalette: widget.colorPalette,
+              titleFontSize: widget.titleFontSize,
+              textFontSize: widget.textFontSize,
+            ),
+          ),
+        );
+      } else {
+        Navigator.pop(context);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +84,33 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
         titleFontSize: widget.titleFontSize,
         textFontSize: widget.textFontSize,
       ),
-      body: Text('Tarea Peticion'),
+      body: enunciados.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Expanded(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios_new,
+                          color: widget.colorPalette.componentes, size: 90),
+                      onPressed: () => cambiarPaso(-1), // Retroceder paso
+                    ),
+                    Expanded(
+                      child:
+                          Center(child: Text(enunciados[pasoActual]['Texto'])),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.arrow_forward_ios,
+                          color: widget.colorPalette.componentes, size: 90),
+                      onPressed: () => cambiarPaso(1), // Avanzar paso
+                    ),
+                  ],
+                ))
+              ],
+            ),
     );
   }
 }

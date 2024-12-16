@@ -106,15 +106,36 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
               color: widget.colorPalette.fuente,
             ));
       case 'imagenes':
-        return Image.asset(
-          'assets/images/tareaPorPasos/imagenes/${paso['Imagen']}',
+        final imagenUrl = paso['Imagen']
+            .replaceAll('/file/d/', '/uc?export=view&id=')
+            .replaceAll('/view?usp=sharing', '');
+        return Image.network(
+          imagenUrl,
           fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const Center(child: CircularProgressIndicator());
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(child: Text('ERROR AL CARGAR LA IMAGEN'));
+          },
         );
+
       case 'pictograma':
-        return Image.asset(
-          'assets/images/tareaPorPasos/pictogramas/${paso['Pictograma']}',
-          height: 400,
+
+        final pictogramaURL = paso['Pictograma']
+            .replaceAll('/file/d/', '/uc?export=view&id=')
+            .replaceAll('/view?usp=sharing', '');
+        return Image.network(
+          pictogramaURL,
           fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const Center(child: CircularProgressIndicator());
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return const Center(child: Text('ERROR AL CARGAR EL PICTOGRAMA'));
+          },
         );
       case 'audio':
         return const Text('Audio');
@@ -124,7 +145,7 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
           return const Text('VIDEO NO DISPONIBLE');
         }
         return VideoPlayerWidget(videoPath: videoPath);
-            
+
       default:
         return const Text('Tipo no soportado.');
     }

@@ -90,9 +90,6 @@ flutter:
     - assets/images/insectos/insectos3.png
     - assets/images/tareapeticion.jpg
     - assets/images/explicaciones/
-    - assets/images/tareaPorPasos/imagenes/
-    - assets/images/tareaPorPasos/pictogramas/
-    - assets/images/tareaPorPasos/video/
     - assets/images/tareaCompletada.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
