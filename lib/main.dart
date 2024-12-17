@@ -90,7 +90,7 @@ class MyApp extends StatelessWidget {
         '/profesor/pedidos': (context) => PedidosPage(
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
-        '/chat': (context) => Chat(),
+        '/chat': (context) => const Chat(),
       },
     );
   }

@@ -37,10 +37,10 @@ class ProfesoresAPI {
         'Content-Type': 'application/json',
       },
     );
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
       return data;
-    }else{
+    } else {
       throw Exception('Failed to filter profesor');
     }
   }
@@ -86,7 +86,7 @@ class ProfesoresAPI {
     }
   }
 
-   eliminarProfesor(String idProfesor) async {
+  eliminarProfesor(String idProfesor) async {
     String url = '$baseUrl/profesores/$idProfesor';
 
     final response = await http.delete(Uri.parse(url));
@@ -99,7 +99,8 @@ class ProfesoresAPI {
   }
 
   Future<Map<String, dynamic>> obtenerAulaYAlumnos(String nickname) async {
-    final response = await http.get(Uri.parse('$baseUrl/profesores/aulario/obtener/$nickname'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/profesores/aulario/obtener/$nickname'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -110,7 +111,8 @@ class ProfesoresAPI {
 
   //profesores/pedidoMaterial/obtener/{nickname}
   Future<Map<String, dynamic>> obtenerPedidos(String nickname) async {
-    final response = await http.get(Uri.parse('$baseUrl/profesores/pedidoMaterial/obtener/$nickname'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/profesores/pedidoMaterial/obtener/$nickname'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -119,7 +121,8 @@ class ProfesoresAPI {
     }
   }
 
-  Future<Map<String, dynamic>> crearPedidoMaterial(String nickname, List<Map<String, dynamic>> materiales) async {
+  Future<Map<String, dynamic>> crearPedidoMaterial(
+      String nickname, List<Map<String, dynamic>> materiales) async {
     final Map<String, dynamic> data = {
       'nickname': nickname,
       'materiales': materiales,
@@ -141,7 +144,8 @@ class ProfesoresAPI {
   }
 
   Future<Map<String, dynamic>> marcarPedidoRecibido(int idPedido) async {
-    final response = await http.put(Uri.parse('$baseUrl/profesores/pedidoMaterial/marcarPedido/$idPedido'));
+    final response = await http.put(
+        Uri.parse('$baseUrl/profesores/pedidoMaterial/marcarPedido/$idPedido'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -149,7 +153,7 @@ class ProfesoresAPI {
       throw Exception('Error al marcar pedido como recibido');
     }
   }
-  
+
   getProfesor(int id) async {
     final response = await http.get(Uri.parse('$baseUrl/profesores/$id'));
 
@@ -179,6 +183,5 @@ class ProfesoresAPI {
     } else {
       throw Exception('Error al editar profesor');
     }
-
   }
 }

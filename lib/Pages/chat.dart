@@ -18,9 +18,10 @@ class _ChatState extends State<Chat> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   String _userType = 'Alumno';
-  List<String> messages = [];
+  List<String> myMessages = [];
+  List<String> otherMessages = [];
   List<String> users = [];
-  String? selectedUser;
+  String selectedUser = '';
   final _apiAlumnos = AlumnosAPI();
   final _apiProfesores = ProfesoresAPI();
 
@@ -33,8 +34,8 @@ class _ChatState extends State<Chat> {
 
     socket.connect();
 
+    print(User);
     socket.on('connect', (_) {
-      print(User['administrador']['id_usuario']);
       socket.emit('register', User['administrador']['id_usuario']);
     });
 
@@ -42,8 +43,25 @@ class _ChatState extends State<Chat> {
 
     socket.on('message', (data) {
       setState(() {
-        messages.add(data['message']);
+        myMessages.add(data['message']);
       });
+    });
+
+    socket.on('receiveMessage', (data) {
+      setState(() {
+        otherMessages.add(data['message']);
+      });
+    });
+  }
+
+  void _selectedUser(user, otherUser) {
+    setState(() {
+      myMessages.clear();
+      otherMessages.clear();
+      selectedUser = user;
+    });
+    socket.emit('join', (otherUser) {
+      socket.on('getChat', (data) {});
     });
   }
 
@@ -53,22 +71,15 @@ class _ChatState extends State<Chat> {
     super.dispose();
   }
 
-  void _cleanFiltros() {
-    setState(() {
-      selectedUser = null;
-      _controller.text = '';
-    });
-  }
-
   _filterUsuarios({nickname}) async {
-    print(nickname);
     if (_userType == 'Alumno') {
       final response = await _apiAlumnos.getAlumnos(nickname: nickname);
+      _filteredUsuarios.clear();
       _filteredUsuarios = response;
-      print(_filteredUsuarios);
     } else if (_userType == 'Profesor') {
-      // final response = await _apiProfesores.getProfesores(nickname: nickname);
-      // print(response);
+      final response = await _apiProfesores.filtrarProfesor(nickname);
+      _filteredUsuarios.clear();
+      _filteredUsuarios = response;
     }
   }
 
@@ -86,7 +97,7 @@ class _ChatState extends State<Chat> {
     };
     socket.emit('message', data);
     setState(() {
-      messages.add(_controller.text);
+      myMessages.add(_controller.text);
     });
     _controller.clear();
   }
@@ -99,9 +110,9 @@ class _ChatState extends State<Chat> {
       ),
       body: Row(
         children: [
-          // Left Side: Search and Select User Type
           Container(
             width: 250,
+            color: Colors.grey[200],
             padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,8 +150,6 @@ class _ChatState extends State<Chat> {
                 const SizedBox(height: 20),
                 const Text('Resultados de búsqueda',
                     style: TextStyle(fontSize: 18)),
-
-                // Datalist functionality: Showing filtered users dynamically
                 Expanded(
                   child: ListView.builder(
                     itemCount: _filteredUsuarios.length,
@@ -149,7 +158,8 @@ class _ChatState extends State<Chat> {
                         title: Text(_filteredUsuarios[index]['nickname']),
                         onTap: () {
                           setState(() {
-                            selectedUser = _filteredUsuarios[index]['nickname'];
+                            _selectedUser(
+                                User, _filteredUsuarios[index]['nickname']);
                           });
                           _searchController.text =
                               _filteredUsuarios[index]['nickname'];
@@ -166,12 +176,47 @@ class _ChatState extends State<Chat> {
           Expanded(
             child: Column(
               children: [
+                Text(selectedUser, style: const TextStyle(fontSize: 18)),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: messages.length,
+                    itemCount: myMessages.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(messages[index]),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(myMessages[index]),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: otherMessages.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(otherMessages[index]),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -196,36 +241,6 @@ class _ChatState extends State<Chat> {
             ),
           ),
         ],
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Seleccionar Usuario',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ...users
-                .map((user) => ListTile(
-                      title: Text(user),
-                      onTap: () {
-                        setState(() {
-                          selectedUser = user;
-                        });
-                        Navigator.pop(context);
-                      },
-                    ))
-                .toList(),
-          ],
-        ),
       ),
     );
   }
