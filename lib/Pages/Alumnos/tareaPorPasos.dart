@@ -6,6 +6,7 @@ import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import 'package:tarerio/Widgets/VideoPlayer.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class TareaAlumnoPorPasos extends StatefulWidget {
   final String nickname;
@@ -28,6 +29,7 @@ class TareaAlumnoPorPasos extends StatefulWidget {
 }
 
 class _TareaAlumno extends State<TareaAlumnoPorPasos> {
+  final FlutterTts _flutterTts = FlutterTts();
   final AlumnosAPI _api = AlumnosAPI();
   final TareaPorPasosAPI _tareaPorPasosAPI = TareaPorPasosAPI();
   VideoPlayerController? _videoController;
@@ -92,6 +94,37 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
     }
   }
 
+  String transformGoogleDriveUrl(String url) {
+    return url
+        .replaceAll('/file/d/', '/uc?export=view&id=')
+        .replaceAll('/view?usp=drive_link', '');
+  }
+
+  Widget loadImage(String url) {
+    String transformedUrl = transformGoogleDriveUrl(url);
+    return SizedBox(
+      width: 400, // Set the desired width
+      height: 400, // Set the desired height
+      child: Image.network(
+        transformedUrl,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return const Center(child: Text('ERROR AL CARGAR LA IMAGEN'));
+        },
+      ),
+    );
+  }
+
   Widget getContenidoPorTipo() {
     if (tipoExplicacionSeleccionado == null || pasos.isEmpty) {
       return const Text('No hay contenido disponible.');
@@ -106,44 +139,31 @@ class _TareaAlumno extends State<TareaAlumnoPorPasos> {
               color: widget.colorPalette.fuente,
             ));
       case 'imagenes':
-        final imagenUrl = paso['Imagen']
-            .replaceAll('/file/d/', '/uc?export=view&id=')
-            .replaceAll('/view?usp=sharing', '');
-        return Image.network(
-          imagenUrl,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return const Center(child: CircularProgressIndicator());
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return const Center(child: Text('ERROR AL CARGAR LA IMAGEN'));
-          },
-        );
+        final imagenUrl = transformGoogleDriveUrl(paso['Imagen']);
+        return loadImage(imagenUrl);
 
       case 'pictograma':
-        final pictogramaURL = paso['Pictograma']
-            .replaceAll('/file/d/', '/uc?export=view&id=')
-            .replaceAll('/view?usp=sharing', '');
-        return Image.network(
-          pictogramaURL,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return const Center(child: CircularProgressIndicator());
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return const Center(child: Text('ERROR AL CARGAR EL PICTOGRAMA'));
-          },
-        );
+        final pictogramaURL = transformGoogleDriveUrl(paso['Pictograma']);
+        return loadImage(pictogramaURL);
+
       case 'audio':
-        return const Text('Audio');
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            IconButton(
+              //Color de fondo
+              color: widget.colorPalette.colorSecundario,
+              icon: Icon(Icons.volume_up, size: 250, color: widget.colorPalette.fuente),
+              onPressed: () async {
+                await _flutterTts.speak(paso['Texto'] ?? 'Texto no disponible');
+              },
+            ),
+          ],
+        );
       case 'video':
-        final videoPath = 'assets/images/tareaPorPasos/video/${paso['Video']}';
-        if (videoPath.isEmpty) {
-          return const Text('VIDEO NO DISPONIBLE');
-        }
-        return VideoPlayerWidget(videoPath: videoPath);
+        final videoUrl = transformGoogleDriveUrl(paso['Video']);
+        return VideoPlayerWidget(videoUrl: videoUrl);
 
       default:
         return const Text('Tipo no soportado.');

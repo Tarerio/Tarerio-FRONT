@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
-  final String videoPath;
+  final String videoUrl;
 
-  const VideoPlayerWidget({Key? key, required this.videoPath})
-      : super(key: key);
+  const VideoPlayerWidget({Key? key, required this.videoUrl}) : super(key: key);
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
@@ -22,17 +21,17 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   void dispose() {
-    _controller?.dispose(); // Libera los recursos del controlador de video.
+    _controller?.dispose(); // Release video controller resources.
     super.dispose();
   }
 
   void _initializeVideo() {
-    _controller = VideoPlayerController.asset(widget.videoPath)
+    _controller = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
-        setState(() {}); // Refresca para mostrar el primer frame.
+        setState(() {}); // Refresh to show the first frame.
       }).catchError((error) {
-        // Manejo de errores en caso de que el video no pueda cargarse.
-        print('Error al cargar el video: $error');
+        // Handle errors if the video cannot be loaded.
+        print('Error loading video: $error');
       });
   }
 
@@ -43,29 +42,36 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     }
 
     return _controller!.value.isInitialized
-        ? Column(
-            children: [
-              AspectRatio(
-                aspectRatio: _controller!.value.aspectRatio,
-                child: VideoPlayer(_controller!),
+        ? Padding(
+          padding: const EdgeInsets.only(top:30),
+          child: Column(
+                children: [
+          SizedBox(
+            width: 600, // Set the desired width
+            height: 400, // Set the desired height
+            child: AspectRatio(
+              aspectRatio: _controller!.value.aspectRatio,
+              child: VideoPlayer(_controller!),
+            ),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                if (_controller!.value.isPlaying) {
+                  _controller!.pause();
+                } else {
+                  _controller!.play();
+                }
+              });
+            },
+            child: Icon(
+              _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+            ),
+          ),
+                ],
               ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    if (_controller!.value.isPlaying) {
-                      _controller!.pause();
-                    } else {
-                      _controller!.play();
-                    }
-                  });
-                },
-                child: Text(
-                  _controller!.value.isPlaying ? 'Pausar' : 'Reproducir',
-                ),
-              ),
-            ],
-          )
+        )
         : const Center(child: CircularProgressIndicator());
   }
 }

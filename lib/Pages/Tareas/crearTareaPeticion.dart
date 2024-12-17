@@ -341,52 +341,39 @@ class _CrearTareaPeticionState extends State<CrearTareaPeticion> {
                           border: Border.all(color: Color(0xFF2EC4B6)),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "${index + 1}. ",
-                                        style: const TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.bold),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          _enunciados[index].texto ??
-                                              'Título del enunciado',
-                                          style: const TextStyle(
-                                              fontSize: 18, fontWeight: FontWeight.bold),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
+                            Row(
+                              children: [
+                                Text(
+                                  "${index + 1}. ",
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    _enunciados[index].texto ?? 'Título del enunciado',
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Text(
-                                        "Imagen: ${_enunciados[index].imagen ?? 'No disponible'}",
-                                        style: const TextStyle(fontSize: 16),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        "Video: ${_enunciados[index].video ?? 'No disponible'}",
-                                        style: const TextStyle(fontSize: 16),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 20),
-                            Column(
+                            const SizedBox(height: 10),
+                            Text(
+                              "Imagen: ${_enunciados[index].imagen ?? 'No disponible'}",
+                              style: const TextStyle(fontSize: 16),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "Video: ${_enunciados[index].video ?? 'No disponible'}",
+                              style: const TextStyle(fontSize: 16),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.edit, color: Colors.teal),
