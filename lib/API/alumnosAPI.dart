@@ -4,11 +4,15 @@ import 'package:tarerio/consts.dart';
 
 class AlumnosAPI {
 // A GET request to fetch all students from the system.
-  Future<List<dynamic>> getAlumnos({int? aula}) async {
+  Future<List<dynamic>> getAlumnos({int? aula, String nickname = ''}) async {
     String url = '$baseUrl/alumnos';
     if (aula != null) {
       url += '?aula=$aula';
+      url += '&nickname=$nickname';
+    } else {
+      url += '?nickname=$nickname';
     }
+
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -248,8 +252,6 @@ class AlumnosAPI {
       throw Exception('Failed to load data');
     }
   }
-<<<<<<< HEAD
-=======
 
   eliminarAlumno(String id) async {
     String url = '$baseUrl/alumnos/$id';
@@ -261,6 +263,4 @@ class AlumnosAPI {
       throw Exception('Failed to delete data');
     }
   }
-
->>>>>>> develop
 }

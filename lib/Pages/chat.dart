@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:tarerio/consts.dart';
+import '../../API/alumnosAPI.dart';
+import '../../API/profesoresAPI.dart';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -12,12 +14,15 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   late IO.Socket socket;
   final TextEditingController _controller = TextEditingController();
-  final TextEditingController _nicknameController = TextEditingController();
-  final TextEditingController _tipoUsuarioSeleccionado =
-      TextEditingController();
+  List<dynamic> _filteredUsuarios = [];
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  String _userType = 'Alumno';
   List<String> messages = [];
   List<String> users = [];
   String? selectedUser;
+  final _apiAlumnos = AlumnosAPI();
+  final _apiProfesores = ProfesoresAPI();
 
   @override
   void initState() {
@@ -40,21 +45,12 @@ class _ChatState extends State<Chat> {
         messages.add(data['message']);
       });
     });
-
-    fetchUsers();
   }
 
   @override
   void dispose() {
     socket.dispose();
     super.dispose();
-  }
-
-  void fetchUsers() {
-    // Replace with your method to fetch users from the backend
-    setState(() {
-      users = ['Professor A', 'Professor B', 'Student A', 'Student B'];
-    });
   }
 
   void _cleanFiltros() {
@@ -64,11 +60,16 @@ class _ChatState extends State<Chat> {
     });
   }
 
-  _filterUsuarios({tipo, nickname}) async {
-    //final response = await _api.getFilteredUsuarios(nickname, tipo);
-    // setState(() {
-    //   users = response;
-    // });
+  _filterUsuarios({nickname}) async {
+    print(nickname);
+    if (_userType == 'Alumno') {
+      final response = await _apiAlumnos.getAlumnos(nickname: nickname);
+      _filteredUsuarios = response;
+      print(_filteredUsuarios);
+    } else if (_userType == 'Profesor') {
+      // final response = await _apiProfesores.getProfesores(nickname: nickname);
+      // print(response);
+    }
   }
 
   void sendMessage() {
@@ -81,6 +82,7 @@ class _ChatState extends State<Chat> {
       'fecha': DateTime.now().toString(),
       'tipo_emisor': 'alumno',
       'tipo_receptor': 'profesor',
+      'tipo_mensaje': 'texto',
     };
     socket.emit('message', data);
     setState(() {
@@ -94,98 +96,136 @@ class _ChatState extends State<Chat> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: fetchUsers,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Filtrar usuarios'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: _nicknameController,
-                        decoration: const InputDecoration(hintText: 'Nickname'),
-                      ),
-                      TextField(
-                        controller: _tipoUsuarioSeleccionado,
-                        decoration:
-                            const InputDecoration(hintText: 'Tipo de usuario'),
-                      ),
-                    ],
+      ),
+      body: Row(
+        children: [
+          // Left Side: Search and Select User Type
+          Container(
+            width: 250,
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Buscar usuario', style: TextStyle(fontSize: 18)),
+                TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'Buscar',
                   ),
-                  actions: [
-                    TextButton(
-                      onPressed: _cleanFiltros,
-                      child: const Text('Limpiar filtros'),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                      _filterUsuarios(nickname: _searchQuery);
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+                const Text('Tipo de usuario', style: TextStyle(fontSize: 18)),
+                DropdownButton<String>(
+                  value: _userType,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _userType = newValue!;
+                    });
+                  },
+                  items: <String>['Alumno', 'Profesor', 'Administrador']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 20),
+                const Text('Resultados de búsqueda',
+                    style: TextStyle(fontSize: 18)),
+
+                // Datalist functionality: Showing filtered users dynamically
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _filteredUsuarios.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(_filteredUsuarios[index]['nickname']),
+                        onTap: () {
+                          setState(() {
+                            selectedUser = _filteredUsuarios[index]['nickname'];
+                          });
+                          _searchController.text =
+                              _filteredUsuarios[index]['nickname'];
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Right Side: Chat Area
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(messages[index]),
+                      );
+                    },
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _controller,
+                        decoration: const InputDecoration(
+                          hintText: 'Escribe un mensaje',
+                        ),
+                      ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        _filterUsuarios(
-                          nickname: _nicknameController.text,
-                          tipo: _tipoUsuarioSeleccionado.text,
-                        );
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Filtrar'),
+                    IconButton(
+                      icon: const Icon(Icons.send),
+                      onPressed: sendMessage,
                     ),
                   ],
                 ),
-              );
-            },
+              ],
+            ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          if (users.isNotEmpty)
-            DropdownButton(
-              value: selectedUser,
-              items: users
-                  .map(
-                    (user) => DropdownMenuItem(
-                      value: user,
-                      child: Text(user),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedUser = value.toString();
-                });
-              },
-            ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(messages[index]),
-                );
-              },
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(hintText: 'Mensaje'),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Seleccionar Usuario',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: sendMessage,
-              ),
-            ],
-          ),
-        ],
+            ),
+            ...users
+                .map((user) => ListTile(
+                      title: Text(user),
+                      onTap: () {
+                        setState(() {
+                          selectedUser = user;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ))
+                .toList(),
+          ],
+        ),
       ),
     );
   }
