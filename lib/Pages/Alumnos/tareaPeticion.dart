@@ -4,6 +4,7 @@ import 'package:tarerio/Widgets/Header.dart';
 import 'package:tarerio/Models/menuAccesible.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class TareaAlumnoPeticion extends StatefulWidget {
   final String nickname;
@@ -26,6 +27,7 @@ class TareaAlumnoPeticion extends StatefulWidget {
 }
 
 class _TareaAlumno extends State<TareaAlumnoPeticion> {
+  final FlutterTts _flutterTts = FlutterTts();
   final AlumnosAPI _api = AlumnosAPI();
   final TareaPeticionAPI _tareaPeticionAPI = TareaPeticionAPI();
   Map<String, dynamic> infoTarea = {};
@@ -36,6 +38,7 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
   @override
   void initState() {
     super.initState();
+    _flutterTts.setLanguage("es-ES"); // Set TTS language to Spanish
     cargarEnunciadosTarea();
   }
 
@@ -49,7 +52,6 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
       // ignore: avoid_print
       print(e);
     }
-    // Simulación de pasos de la tarea
   }
 
   void cambiarPaso(int incremento) {
@@ -77,6 +79,38 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
     });
   }
 
+  String transformGoogleDriveUrl(String url) {
+    return url
+        .replaceAll('/file/d/', '/uc?export=view&id=')
+        .replaceAll('/view?usp=drive_link', '');
+  }
+
+  Widget loadImage(String url) {
+    String transformedUrl = transformGoogleDriveUrl(url);
+    return SizedBox(
+      width: 300, // Set the desired width
+      height: 300, // Set the desired height
+      child: Image.network(
+        transformedUrl,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                  : null,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error');
+          return const Center(child: Text('ERROR AL CARGAR LA IMAGEN'));
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,86 +123,70 @@ class _TareaAlumno extends State<TareaAlumnoPeticion> {
       body: enunciados.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios_new,
+                      color: widget.colorPalette.componentes, size: 90),
+                  onPressed: () => cambiarPaso(-1), // Retroceder paso
+                ),
                 Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new,
-                            color: widget.colorPalette.componentes, size: 90),
-                        onPressed: () => cambiarPaso(-1), // Retroceder paso
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  enunciados[pasoActual]['Texto'].toUpperCase(),
-                                  style: TextStyle(
-                                    fontSize: widget.titleFontSize,
-                                    fontWeight: FontWeight.bold,
-                                    color: widget.colorPalette.fuente,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  child: cargarPictograma(
-                                      enunciados[pasoActual]['Imagen']),
-                                ),
-                              ),
-                            ],
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            enunciados[pasoActual]['Texto'].toUpperCase(),
+                            style: TextStyle(
+                              fontSize: widget.titleFontSize,
+                              fontWeight: FontWeight.bold,
+                              color: widget.colorPalette.fuente,
+                            ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.arrow_forward_ios,
-                            color: widget.colorPalette.componentes, size: 90),
-                        onPressed: () => cambiarPaso(1), // Avanzar paso
-                      ),
-                    ],
-                  ),
-                ),
-                // Aquí añadimos el enunciado centrado en la parte inferior
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    'ENUNCIADO ${pasoActual + 1}',
-                    style: TextStyle(
-                      fontSize: widget.textFontSize,
-                      fontWeight: FontWeight.bold,
-                      color: widget.colorPalette.fuente,
+                        loadImage(enunciados[pasoActual]['Imagen']),
+                        IconButton(
+                          icon: Icon(Icons.volume_up,
+                              size: 100,
+                              color: widget.colorPalette.fuente),
+                          onPressed: () async {
+                            await _flutterTts.speak(
+                                enunciados[pasoActual]['Texto'] ??
+                                    'Texto no disponible');
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward_ios,
+                      color: widget.colorPalette.componentes, size: 90),
+                  onPressed: () => cambiarPaso(1), // Avanzar paso
+                ),
               ],
             ),
-    );
-  }
-
-  Widget cargarPictograma(String url) {
-    final pictogramaURL = url
-        .replaceAll('/file/d/', '/uc?export=view&id=')
-        .replaceAll('/view?usp=sharing', '');
-
-    return Image.network(
-      pictogramaURL,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const Center(child: CircularProgressIndicator());
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return const Center(child: Text('ERROR AL CARGAR EL PICTOGRAMA'));
-      },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            child: Text(
+              'ENUNCIADO ${pasoActual + 1}',
+              style: TextStyle(
+                fontSize: widget.textFontSize,
+                fontWeight: FontWeight.bold,
+                color: widget.colorPalette.fuente,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

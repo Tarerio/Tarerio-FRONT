@@ -61,7 +61,10 @@ class _TareaAlumno extends State<TareaAlumnoJuego> {
     if (await canLaunchUrl(link)) {
       await launchUrl(link);
     } else {
-      throw 'No se pudo abrir el enlace';
+      // Show a snackbar or dialog to inform the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('No se pudo abrir el enlace')),
+      );
     }
   }
 
