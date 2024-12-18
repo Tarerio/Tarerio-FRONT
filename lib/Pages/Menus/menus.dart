@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tarerio/Widgets/DefaultButton.dart';
+import 'package:tarerio/Widgets/SuccessModal.dart';
+import 'package:tarerio/Widgets/ErrorModal.dart';
 import 'package:tarerio/Widgets/Navbar.dart';
-//import 'package:tarerio/Widgets/MenuCard.dart';
-//import 'package:tarerio/API/menusAPI.dart';
+import 'package:tarerio/consts.dart';
+import 'package:tarerio/Widgets/Cards/MenuCard.dart';
+import 'package:tarerio/API/menusAPI.dart';
+import 'package:tarerio/Pages/Menus/crearMenu.dart';
+
+import 'modificarMenu.dart';
 
 class MenusPage extends StatefulWidget {
   MenusPage({super.key});
@@ -14,6 +21,18 @@ class _MenusPageState extends State<MenusPage> {
   List<dynamic> menus = [];
   bool isLoadingMenus = true;
 
+  final MenusAPI _api = MenusAPI();
+
+  String? tipoMenuSeleccionado;
+  final TextEditingController nombreTareaController = TextEditingController();
+
+  // No pinta ni con cola esto aqu
+  final Map<String, String> categorias = {
+    'Tareas de Juegos': TAREA_JUEGO,
+    'Tareas Por Pasos': TAREA_POR_PASOS,
+    'Tareas de Petición': TAREA_PETICION,
+  };
+
 
   @override
   void initState() {
@@ -23,15 +42,11 @@ class _MenusPageState extends State<MenusPage> {
 
   Future<void> fetchMenus() async {
     try {
-      isLoadingMenus = false; // borrar
-      /*
-      MenusAPI _api = MenusAPI();
       final response = await _api.obtenerMenus();
       setState(() {
         menus = response;
         isLoadingMenus = false;
       });
-       */
     } catch (e) {
       print("Error al obtener menús: $e");
       setState(() {
@@ -40,29 +55,210 @@ class _MenusPageState extends State<MenusPage> {
     }
   }
 
-  void _confirmarEliminacion(String id) {
-    // Muestra un cuadro de diálogo para confirmar la eliminación de un menú
+  // TO DO
+  Future<void> _filterMenus({String? nombreTarea, String? tipoTarea}) async {
+    /*try {
+      setState(() {
+        isLoading = true; // Mostrar indicador de carga
+      });
+
+      List<Map<String, dynamic>>? tareasPorPasos = [];
+      List<Map<String, dynamic>>? tareasPeticion = [];
+      List<Map<String, dynamic>>? tareasJuego = [];
+
+      print(nombreTarea);
+
+      if (tipoTarea != null) {
+        switch (tipoTarea) {
+          case TAREA_POR_PASOS:
+            tareasPorPasos = await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            break;
+
+          case TAREA_PETICION:
+            tareasPeticion = await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            break;
+
+          case TAREA_JUEGO:
+            tareasJuego = await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
+            break;
+        }
+      } else{
+        tareasPorPasos = await _porPasosAPI.getFilteredTareas(nombreTarea: nombreTarea);
+        tareasPeticion = await _peticionAPI.getFilteredTareas(nombreTarea: nombreTarea);
+        tareasJuego = await _juegoAPI.getFilteredTareas(nombreTarea: nombreTarea);
+      }
+
+      setState(() {
+        Tareas = [
+          ...?tareasPorPasos?.map((tarea) => {'tipo': TAREA_POR_PASOS, ...tarea}),
+          ...?tareasPeticion?.map((tarea) => {'tipo': TAREA_PETICION, ...tarea}),
+          ...?tareasJuego?.map((tarea) => {'tipo': TAREA_JUEGO, ...tarea}),
+        ];
+        isLoading = false; // Oculta indicador de carga
+      });
+
+    } catch (e) {
+      print("Error al obtener tareas: $e");
+      setState(() {
+        isLoading = false; // Oculta indicador de carga en caso de error
+      });
+    }*/
   }
 
-  Future<void> _borrarMenu(String id) async {
-    // Método para borrar un menú usando la API
+  void _showErrorModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ErrorModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _showSuccessModal(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SuccessModal(title: title, content: content);
+      },
+    );
+  }
+
+  void _confirmarEliminacion(int id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Eliminación'),
+          content:
+          const Text('¿Estás seguro de que deseas eliminar este Menú?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+
+                await _borrarMenu(id);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MenusPage()));
+                _showSuccessModal(context, 'Menú eliminado',
+                    'El menú ha sido eliminado exitosamente');
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _borrarMenu(int id) async{
+     try {
+          await _api.eliminarMenu(id);
+          setState(() {
+            menus.removeWhere((menu) => menu['id'] == id); // Filtrar el menú eliminado
+          });
+     } catch (e) {
+          _showErrorModal(context, 'Error al eliminar',
+              'No ha sido posible eliminar el menú');
+     }
+  }
+
+  void _cleanFiltros(){
+    setState(() {
+      tipoMenuSeleccionado = null;
+      nombreTareaController.text = '';
+      fetchMenus();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Menús',
-          style: TextStyle(
-            color: Color(0xFF2EC4B6),
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+        title: const Text('Menús',
+            style: TextStyle(
+                color: const Color(0xFF2EC4B6),
+                fontSize: 24,
+                fontWeight: FontWeight.bold)),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.refresh_sharp,
+                    color: Color(colorPrincipal),
+                  ),
+                  onPressed: () {
+                    _cleanFiltros();
+                  },
+                ),
+                const SizedBox(width: 10),
+                DropdownButton<String>(
+                  alignment: Alignment.center,
+                  hint: const Text('Filtrar por categoria'),
+                  value: tipoMenuSeleccionado,
+                  items: categorias.entries.map((tiposMenu) {
+                    return DropdownMenuItem<String>(
+                      value: tiposMenu.value,
+                      alignment: Alignment.center,
+                      child: Text(tiposMenu.key),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      tipoMenuSeleccionado = newValue;
+                      _filterMenus(tipoTarea: tipoMenuSeleccionado, nombreTarea: nombreTareaController.text);
+                    });
+                  },
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  underline: SizedBox.shrink(),
+                  iconEnabledColor: Color(colorPrincipal),
+                ),
+                const SizedBox(width: 10),
+                Container(
+                  width: 213,
+                  child: TextField(
+                    controller: nombreTareaController,
+                    decoration: InputDecoration(
+                      labelText: 'Buscar por nombre',
+                      labelStyle: TextStyle(color: Color(colorPrincipal)),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color(colorPrincipal), width: 2.0),
+                      ),
+                      suffixIcon: Icon(Icons.search, color: Color(colorPrincipal)),
+                    ),
+                    onChanged: (value) async {
+                      await _filterMenus(nombreTarea: value, tipoTarea: tipoMenuSeleccionado);
+                      setState(() {
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
-      body: isLoadingMenus
-          ? const Center(child: CircularProgressIndicator())
+      body: menus.isEmpty
+                ? const Center(child: Text(
+            'No hay menús creados',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ))
           : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Wrap(
@@ -71,30 +267,56 @@ class _MenusPageState extends State<MenusPage> {
           children: menus.map((menu) {
             return SizedBox(
               width: MediaQuery.of(context).size.width > 800 ? 200 : 150,
-              /*child: MenuCard(
+              child: MenuCard(
                 idMenu: menu['id_menu'],
-                nombreMenu: menu['nombre'],
+                tipoMenu: menu['tipo'],
+                contenidoMenu: menu['contenido'],
                 imagenMenu: menu['imagenBase64'] ?? '',
                 onEdit: () {
-                  // Lógica para editar menú
-                },
-                onAssign: () {
-                  // Lógica para asignar algún recurso al menú
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ModificarMenu(menuId: menu['id_menu'], tipoMenu: menu['tipo'], contenidoMenu: menu['contenido'], imagenMenu: menu['imagenBase64'],),
+                    ),
+                  );
                 },
                 onDelete: () {
-                  _confirmarEliminacion(menu['id_menu'].toString());
+                  _confirmarEliminacion(menu['id_menu']);
                 },
-              ),*/
+              ),
             );
           }).toList(),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navegación para crear un nuevo menú
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: const Color(0xFF2EC4B6),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CrearMenu()),
+                );
+              },
+              backgroundColor: const Color(0xFF2EC4B6),
+              child: const Icon(Icons.add_shopping_cart),
+            ),
+            const SizedBox(width: 16),
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CrearMenu()),
+                );
+              },
+              backgroundColor: const Color(0xFF2EC4B6),
+              child: const Icon(Icons.add),
+            ),
+          ],
+        ),
       ),
       drawer: Navbar(
         screenIndex: 1,
@@ -102,54 +324,6 @@ class _MenusPageState extends State<MenusPage> {
           print("Cerrar sesión");
         },
       ),
-    );
-  }
-
-  void _mostrarDialogRecursos(BuildContext context, int idMenu) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Seleccionar Recurso'),
-          content: isLoadingMenus
-              ? const Center(child: CircularProgressIndicator())
-              : SizedBox(
-            width: double.maxFinite,
-            child: ListView.builder(
-              itemCount: 0,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 192, 184, 184),
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: ListTile(
-                    title: Text('Recurso $index'), // Muestra el nombre del recurso
-                    onTap: () {
-                      // Lógica para asignar recurso al menú
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cerrar'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
