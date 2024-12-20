@@ -13,6 +13,7 @@ import 'package:tarerio/Pages/Alumnos/registrarAlumno.dart';
 import 'package:tarerio/Pages/Profesores/registrarProfesor.dart';
 import 'package:tarerio/Pages/Profesores/editarContraseniaProfesor.dart';
 import 'package:tarerio/Pages/Alumnos/accesibilidad.dart';
+import 'package:tarerio/Pages/Alumnos/estadisticasAlumno.dart';
 
 import 'Pages/Alumnos/tareasdelalumno.dart';
 import 'Pages/Profesores/aularioProfesor.dart';
@@ -80,6 +81,9 @@ class MyApp extends StatelessWidget {
             ),
         '/administrador/estadisticas': (context) => const AdminDashboard(),
         '/administrador/alumnos/tareas': (context) => TareasDelAlumno(
+              nickname: ModalRoute.of(context)!.settings.arguments as String,
+            ),
+        '/administrador/alumnos/estadisticas': (context) => EstadisticasAlumno(
               nickname: ModalRoute.of(context)!.settings.arguments as String,
             ),
         '/profesor/aulario' : (context) => AularioPage(

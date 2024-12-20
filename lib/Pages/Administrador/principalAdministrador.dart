@@ -4,7 +4,9 @@ import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
 import '../../API/alumnosAPI.dart';
 import '../../Widgets/Navbar.dart';
+import '../../Widgets/SimpleBarChart.dart';
 
+/*
 class SimpleBarChart extends StatelessWidget {
   final List<int> data;
 
@@ -49,6 +51,7 @@ class BarChartPainter extends CustomPainter {
     return false;
   }
 }
+*/
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -80,11 +83,11 @@ class _AdminDashboard extends State< AdminDashboard> {
       final response = await _api.getAlumnos();
       setState(() {
         Alumnos = response; // Actualiza la lista de tareas
-        isLoading = false; // Cambia el estado de carga
+//        isLoading = false; // Cambia el estado de carga
       });
     } catch (e) {
       setState(() {
-        isLoading = false; // Cambia el estado de carga incluso si hay un error
+ //       isLoading = false; // Cambia el estado de carga incluso si hay un error
       });
     }
 
@@ -146,8 +149,11 @@ class _AdminDashboard extends State< AdminDashboard> {
           'tasksJuegoDone' : tareasJuegoCompletas, 'tasksPasosDone' : tareasPasosCompletas, 'tasksPeticionDone' : tareasPeticionCompletas,
           'tasksJuegoToDo' : tareasJuegoPorHacer, 'tasksPasosToDo' : tareasPasosPorHacer, 'tasksPeticionToDo' : tareasPeticionPorHacer};
         AlumnoTarea.add(tupla);
+
+        isLoading = false; // Cambia el estado de carga
       } catch (e) {
         print("Error al cargar tareas: $e");
+        isLoading = false; // Cambia el estado de carga
       }
     }
 
@@ -162,28 +168,36 @@ class _AdminDashboard extends State< AdminDashboard> {
       appBar: AppBar(
         title: const Text('Estadísticas de administrador', style: TextStyle(color: Color(0xFF2EC4B6), fontSize: 24, fontWeight: FontWeight.bold)),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      body: isLoading
+      ? Center(child: CircularProgressIndicator())
+      : SingleChildScrollView(
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Tareas Completadas en el Mes',
+              'Tareas Completadas esta semana',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold), // Larger font size
             ),
             SizedBox(
-              height: 200,
+              height: 300,
               child: SimpleBarChart(
-                data: [50, 75, 100, 150, 200]
+                data: [60, 40, 60, 20, 40],
+                xLabels: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'],
+                yLabel: '',
+                yStep: 15,
+                width: 800,
+                heigth: 200,
+                yScale: 1,
               ), // Add data
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             const Text(
               'Menús Pedidos para esta Semana',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold), // Larger font size
             ),
             _buildMenuList(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             const Text(
               'Tareas pendientes/completadas de los alumnos',
               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold), // Larger font size
@@ -231,12 +245,17 @@ class _AdminDashboard extends State< AdminDashboard> {
           padding: const EdgeInsets.symmetric(vertical: 3.0), // Reduce vertical padding
           child: ListTile(
             title: Text(student['name'].toString(), style: const TextStyle(fontSize: 20),),
+/*
             trailing: Text('Pendientes: ${student['tasksToDo']} (Juego: ${student['tasksJuegoToDo']} | Pasos: ${student['tasksPasosToDo']} | '
             'Peticion: ${student['tasksPeticionToDo']})   -   Completadas: ${student['tasksDone']} (Juego: ${student['tasksJuegoDone']} | '
             'Pasos: ${student['tasksPasosDone']} | Peticion: ${student['tasksPeticionDone']})',
               style: const TextStyle(fontSize: 16),
             ),
-            
+*/
+            trailing: Text('Totales: ${student['tasksToDo']}/${student['tasksDone']} (Juego: ${student['tasksJuegoToDo']}/${student['tasksJuegoDone']}'
+             ' | Pasos: ${student['tasksPasosToDo']}/${student['tasksPasosDone']} | Peticion: ${student['tasksPeticionToDo']}/${student['tasksPeticionDone']})',
+              style: const TextStyle(fontSize: 16),
+            ),
           ),
         );
       }).toList(),
