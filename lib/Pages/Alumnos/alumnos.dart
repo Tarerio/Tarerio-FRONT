@@ -255,6 +255,11 @@ class _AlumnosState extends State<AlumnosPage> {
                             context, '/administrador/alumnos/accesibilidad',
                             arguments: alumno["nickname"]);
                       },
+                      onStatistics: () {
+                        Navigator.pushNamed(
+                            context, '/administrador/alumnos/estadisticas',
+                            arguments: alumno["nickname"]);
+                      },
                     ),
                   );
                 }).toList(),
