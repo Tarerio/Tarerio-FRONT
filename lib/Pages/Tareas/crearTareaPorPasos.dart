@@ -376,57 +376,45 @@ class _CrearTareaPorPasosState extends State<CrearTareaPorPasos> {
                           border: Border.all(color: Color(0xFF2EC4B6)),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "${index + 1}. ",
-                                        style: const TextStyle(
-                                            fontSize: 18, fontWeight: FontWeight.bold),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          _subtareas[index].texto ??
-                                              'Título de la subtarea',
-                                          style: const TextStyle(
-                                              fontSize: 18, fontWeight: FontWeight.bold),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
+                            Row(
+                              children: [
+                                Text(
+                                  "${index + 1}. ",
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    _subtareas[index].texto ?? 'Título de la subtarea',
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Imagen: ${_subtareas[index].imagen ?? 'No disponible'}",
-                                        style: TextStyle(fontSize: 16),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        "Pictograma: ${_subtareas[index].pictograma ?? 'No disponible'}",
-                                        style: TextStyle(fontSize: 16),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        "Video: ${_subtareas[index].video ?? 'No disponible'}",
-                                        style: TextStyle(fontSize: 16),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 20),
-                            Column(
+                            const SizedBox(height: 10),
+                            Text(
+                              "Imagen: ${_subtareas[index].imagen ?? 'No disponible'}",
+                              style: TextStyle(fontSize: 16),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "Pictograma: ${_subtareas[index].pictograma ?? 'No disponible'}",
+                              style: TextStyle(fontSize: 16),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "Video: ${_subtareas[index].video ?? 'No disponible'}",
+                              style: TextStyle(fontSize: 16),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.edit, color: Colors.teal),

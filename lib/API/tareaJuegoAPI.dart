@@ -24,7 +24,7 @@ class TareaJuegoAPI {
       "Fecha_creacion": formattedCreacionDate,
       "Enlace": urlJuego,
       "creatorId": IdAdministrador,
-      "imagen" : imagen,
+      "imagen": imagen,
     };
 
     final response = await http.post(Uri.parse(url),
@@ -51,7 +51,8 @@ class TareaJuegoAPI {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getFilteredTareas({String? nombreTarea}) async {
+  Future<List<Map<String, dynamic>>> getFilteredTareas(
+      {String? nombreTarea}) async {
     String url = '$baseUrl/tareaJuego/filtered?nombreTarea=$nombreTarea';
 
     final response = await http.get(Uri.parse(url));
@@ -66,7 +67,8 @@ class TareaJuegoAPI {
     }
   }
 
-  Future<Map<String, dynamic>> asignarAlumnoTarea(int idTarea, int idAlumno, DateTime dueDate,TimeOfDay dueTime) async {
+  Future<Map<String, dynamic>> asignarAlumnoTarea(
+      int idTarea, int idAlumno, DateTime dueDate, TimeOfDay dueTime) async {
     String url = '$baseUrl/tareaJuego/$idTarea/asignar';
 
     final DateTime fullDueDateTime = DateTime(
@@ -95,7 +97,7 @@ class TareaJuegoAPI {
     }
   }
 
-  Future<Map<String, dynamic>> obtenerTareaByID(int idTarea) async{
+  Future<Map<String, dynamic>> obtenerTareaByID(int idTarea) async {
     String url = '$baseUrl/tareaJuego/$idTarea';
 
     final response = await http.get(Uri.parse(url));
@@ -108,14 +110,14 @@ class TareaJuegoAPI {
     }
   }
 
-  Future<Map<String, dynamic>> updateTarea(int idTarea, Map<String, dynamic> tarea) async
-  {
+  Future<Map<String, dynamic>> updateTarea(
+      int idTarea, Map<String, dynamic> tarea) async {
     String url = '$baseUrl/tareaJuego/$idTarea';
 
     final Map<String, dynamic> body = {
       "Titulo": tarea['Titulo'] ?? ' ',
       "Descripcion": tarea['Descripcion'],
-      "imagen" : tarea['imagenBase64'],
+      "imagen": tarea['imagenBase64'],
       "Enlace": tarea['Enlace'],
     };
 
@@ -125,7 +127,8 @@ class TareaJuegoAPI {
       body: jsonEncode(body),
     );
 
-    if (response.statusCode == 200) { // Aseguramos que la API responde con un 200 OK para una actualización exitosa
+    if (response.statusCode == 200) {
+      // Aseguramos que la API responde con un 200 OK para una actualización exitosa
       return jsonDecode(response.body);
     } else {
       print('Error: ${response.statusCode}');
@@ -165,7 +168,9 @@ class TareaJuegoAPI {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       List<dynamic> jsonResponse = jsonDecode(response.body);
-      return jsonResponse.map((tarea) => tarea as Map<String, dynamic>).toList();
+      return jsonResponse
+          .map((tarea) => tarea as Map<String, dynamic>)
+          .toList();
     } else {
       throw Exception('Failed to load tasks');
     }
@@ -194,7 +199,30 @@ class TareaJuegoAPI {
       print('Response body: ${response.body}');
       throw Exception('Failed to mark task as done');
     }
-
   }
-  
+
+  Future<void> markAsDoneByALumno(int idTarea, String idAlumno) async {
+    String url = '$baseUrl/tareaJuego/marcarTarea/marcar';
+
+    final Map<String, dynamic> body = {
+      "nickname": idAlumno,
+      "ID_tarea": idTarea,
+      "completado": true,
+      "revisado": false
+    };
+
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to mark task as done');
+    }
+  }
 }
