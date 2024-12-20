@@ -194,7 +194,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 20),
 
               // Área de tareas
               Expanded(

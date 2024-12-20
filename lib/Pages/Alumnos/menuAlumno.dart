@@ -38,16 +38,17 @@ class _PanelAlumnoState extends State<PanelAlumno> {
         titleFontSize: titleFontSize,
         textFontSize: textFontSize,
       ),
+
       body: Container(
         color: colorPalette.fondo,
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(top:20),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 340.0),
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16.0,
-              mainAxisSpacing: 16.0,
+              crossAxisSpacing: 25.0,
+              mainAxisSpacing: 25.0,
               childAspectRatio: 1.0, // Ensures the items are square
             ),
             itemCount: 4,

@@ -101,7 +101,7 @@ class _FinalizarTareaPageState extends State<FinalizarTareaPage> {
                 ),
                 const SizedBox(height: 50),
                 Text(
-                  "!Enhorabuena ${widget.nickname}!\nHas completado todos la tarea!"
+                  "!Enhorabuena ${widget.nickname}!\nHas completado toda la tarea!"
                       .toUpperCase(),
                   style: TextStyle(
                       fontSize: widget.titleFontSize,
