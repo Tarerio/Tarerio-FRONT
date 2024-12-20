@@ -98,7 +98,7 @@ class _NavbarState extends State<Navbar> {
             onTap: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => Home()),
+                MaterialPageRoute(builder: (context) => const Home()),
                     (Route<dynamic> route) => false, // elimina todas las rutas anteriores
               );
             },

@@ -46,8 +46,8 @@ class _TareasPageState extends State<TareasPage> {
   @override
   void initState() {
     super.initState();
-    fetchTareas(); // Obtener tareas
     _loadIdAdministrador();
+    fetchTareas(); // Obtener tareas
   }
 
   Future<void> _loadIdAdministrador() async {
@@ -70,7 +70,7 @@ class _TareasPageState extends State<TareasPage> {
   }
 
   Future<int> fetchIdAdministrador() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/administradores/getIdAdmin'));
+    final response = await http.get(Uri.parse('$baseUrl/administradores/getIdAdmin'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -318,6 +318,7 @@ class _TareasPageState extends State<TareasPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          _loadIdAdministrador();
           _showTaskTypeDialog(context);
         },
         backgroundColor: const Color(0xFF2EC4B6),

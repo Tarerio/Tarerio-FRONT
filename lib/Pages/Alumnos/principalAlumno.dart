@@ -1,14 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatear la fecha
 import 'package:tarerio/Models/menuAccesible.dart';
-import 'package:tarerio/Pages/Alumnos/tarea.dart';
 import 'package:tarerio/Widgets/Header.dart';
 import 'package:tarerio/API/alumnosAPI.dart';
 import 'package:tarerio/API/tareaJuegoAPI.dart';
 import 'package:tarerio/API/tareaPeticionAPI.dart';
 import 'package:tarerio/API/tareaPorPasosAPI.dart';
+import 'package:tarerio/Widgets/TareaAlumnoCard.dart';
 
 class PrincipalAlumno extends StatefulWidget {
   final String nickname;
@@ -76,6 +74,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
       for (var tarea in tareasJuegoAsignadas) {
         tareas.add({'tarea': tarea, 'tipo': 'Juego'});
       }
+
       tareas.sort((a, b) {
         DateTime fechaA = DateTime.parse(a['tarea']['Fecha_fin_asignacion']);
         DateTime fechaB = DateTime.parse(b['tarea']['Fecha_fin_asignacion']);
@@ -87,15 +86,27 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
           case 'Juego':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaJuegoAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add(tarea);
+            tareasAlumnoDeHoy.add({
+              'tarea': tarea,
+              'tipo': 'Juego',
+              'completado': tareas[i]['tarea']['completado']
+            });
           case 'Por Pasos':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaPorPasosAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add(tarea);
+            tareasAlumnoDeHoy.add({
+              'tarea': tarea,
+              'tipo': 'Por Pasos',
+              'completado': tareas[i]['tarea']['completado']
+            });
           case 'Peticion':
             final idTarea = tareas[i]['tarea']['ID_tarea'];
             final tarea = await _tareaPeticionAPI.obtenerTareaByID(idTarea);
-            tareasAlumnoDeHoy.add(tarea);
+            tareasAlumnoDeHoy.add({
+              'tarea': tarea,
+              'tipo': 'Peticion',
+              'completado': tareas[i]['tarea']['completado']
+            });
         }
       }
       setState(() {
@@ -154,17 +165,18 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
   @override
   Widget build(BuildContext context) {
     final colorPalette = _getColorPalette(_selectedPalette);
+    final textFontSize = _getFontSize(_selectedTextFontSize);
+    final titleFontSize = _getFontSize(_selectedTitleFontSize);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         double titleFontSize = constraints.maxWidth * 0.05;
-
         return Scaffold(
           appBar: Header(
             nickname: widget.nickname,
             colorPalette: colorPalette,
-            titleFontSize: 28,
-            textFontSize: 16,
+            titleFontSize: titleFontSize,
+            textFontSize: textFontSize,
           ),
           backgroundColor: colorPalette.fondo,
           body: Column(
@@ -182,7 +194,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                   textAlign: TextAlign.center,
                 ),
               ),
-              const SizedBox(height: 20),
 
               // Área de tareas
               Expanded(
@@ -193,7 +204,7 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                           child: Text(
                             "NO HAY TAREAS PARA EL USUARIO EL DÍA DE HOY.",
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: textFontSize,
                               color: colorPalette.fuente,
                             ),
                           ),
@@ -212,14 +223,25 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
                                 itemBuilder: (context, index) {
-                                  return _buildTaskCard(
-                                    _tareasDeHoy[index]['Titulo'] ??
+                                  return TareaAlumnoCard(
+                                    idTarea: _tareasDeHoy[index]['tarea']
+                                        ['ID_tarea'],
+                                    text: _tareasDeHoy[index]['tarea']
+                                            ['Titulo'] ??
                                         'Tarea sin nombre',
-                                    _tareasDeHoy[index]['Descripcion'] ??
+                                    descripcion: _tareasDeHoy[index]['tarea']
+                                            ['Descripcion'] ??
                                         'No hay descripción',
-                                    _tareasDeHoy[index]['imagenBase64'] ?? '',
-                                    context,
-                                    constraints,
+                                    imagen: _tareasDeHoy[index]['tarea']
+                                            ['imagenBase64'] ??
+                                        '',
+                                    nickname: widget.nickname,
+                                    colorPalette: colorPalette,
+                                    titleFontSize: titleFontSize,
+                                    textFontSize: textFontSize,
+                                    constraints: constraints,
+                                    tipoTarea: _tareasDeHoy[index]['tipo'],
+                                    completada: _tareasDeHoy[index]['completado'],
                                   );
                                 },
                               ),
@@ -232,115 +254,6 @@ class _PrincipalAlumnoState extends State<PrincipalAlumno> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildTaskCard(
-    String text,
-    String descripcion,
-    String imagen,
-    BuildContext context,
-    BoxConstraints constraints,
-  ) {
-    final colorPalette = _getColorPalette(_selectedPalette);
-    final isTablet = constraints.maxWidth >= 1200;
-    final cardWidth =
-        isTablet ? constraints.maxWidth * 0.7 : constraints.maxWidth * 0.9;
-    final cardHeight = constraints.maxHeight * 0.15;
-
-    return Focus(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TareaAlumno(
-                title: text,
-                descripcion: descripcion,
-                image: imagen,
-                nickname: widget.nickname,
-                colorPalette: colorPalette,
-              ),
-            ),
-          );
-        },
-        child: Semantics(
-          label: "Tarjeta de tarea: $text",
-          button: true,
-          child: Card(
-            color: colorPalette.componentes,
-            elevation: 6,
-            margin: EdgeInsets.symmetric(
-              vertical: constraints.maxHeight * 0.04,
-              horizontal: isTablet
-                  ? constraints.maxWidth * 0.2
-                  : constraints.maxWidth * 0.1,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: SizedBox(
-              width: cardWidth,
-              height: cardHeight,
-              child: InkWell(
-                focusColor: Colors.blue.withOpacity(0.2),
-                hoverColor: Colors.blue.withOpacity(0.1),
-                splashColor: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(16),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TareaAlumno(
-                        title: text,
-                        descripcion: descripcion,
-                        image: imagen,
-                        nickname: widget.nickname,
-                        colorPalette: colorPalette,
-                      ),
-                    ),
-                  );
-                },
-                child: Row(
-                  children: [
-                    // Imagen
-                    Semantics(
-                      label: "Imagen relacionada con la tarea",
-                      child: Container(
-                        width: cardWidth * 0.3,
-                        height: cardHeight,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
-                        ),
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: Image.memory(base64Decode(imagen)),
-                        ),
-                      ),
-                    ),
-
-                    // Texto de la tarea
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          text.toUpperCase(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: colorPalette.fuente,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

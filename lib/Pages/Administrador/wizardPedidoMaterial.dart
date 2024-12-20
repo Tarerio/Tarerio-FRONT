@@ -10,6 +10,7 @@ import 'package:tarerio/Models/enunciado.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../API/alumnosAPI.dart';
+import '../../consts.dart';
 
 class WizardPage extends StatefulWidget {
   final dynamic pedido;
@@ -56,7 +57,7 @@ class _WizardPageState extends State<WizardPage> {
   }
 
   Future<int> fetchIdAdministrador() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/administradores/getIdAdmin'));
+    final response = await http.get(Uri.parse('$baseUrl/administradores/getIdAdmin'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
